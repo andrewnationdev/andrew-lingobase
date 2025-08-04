@@ -25,6 +25,7 @@ export default async function ProtectedPage() {
         <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
           {JSON.stringify(data.claims, null, 2)}
         </pre>
+        <span>You will be able to see your conlangs and info here in the future</span>
       </div>
     </div>
   );
