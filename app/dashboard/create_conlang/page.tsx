@@ -63,7 +63,7 @@ export default function CreateConlangPage() {
             router.push(`/dashboard/view/${conlang.code}`);
         } catch (err) {
             console.error('Error:', err);
-            setError(err?.message || "Ocorreu um erro inesperado. Por favor, tente novamente.");
+            setError("Unexpected server error");
         } finally {
             setIsLoading(false);
         }
