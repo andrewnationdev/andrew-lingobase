@@ -21,9 +21,9 @@ export default function ViewConlangPage({ params }: { params: { id: string } }) 
     const getConlangFromId = async () => {
       const conlangs = await supabase.from('conlang').select('*').eq('code', id);
 
-      let data = await conlangs?.data;
+      const data = await conlangs?.data;
 
-      if (data?.length! > 0) {
+      if (data?.length > 0) {
         console.log(data![0])
         setConlang(data![0]);
       }

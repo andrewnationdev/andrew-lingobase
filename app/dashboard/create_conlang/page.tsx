@@ -1,6 +1,6 @@
 'use client'
 import { supabase } from "@/lib/supabase/database";
-import { InfoIcon, Router } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ export default function CreateConlangPage() {
         native_name: ""
     });
 
-    //@ts-ignore
+    //@ts-expect-error
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -24,7 +24,7 @@ export default function CreateConlangPage() {
         }));
     };
 
-    //@ts-ignore
+    //@ts-expect-error
     const handleSubmit = async (e) => {
         e.preventDefault();
 
