@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 'use client'
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
