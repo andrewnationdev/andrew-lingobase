@@ -1,6 +1,7 @@
 'use client'
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function ViewConlangPage({ params }: { params: { id: string } }) {
@@ -41,7 +42,7 @@ export default function ViewConlangPage({ params }: { params: { id: string } }) 
       <div className="flex w-full flex-col gap-2 mt-8">
         <span className="text-2xl"><strong>{conlang?.english_name ? conlang?.english_name : 'Unnamed'}</strong></span>
         <span className="text-m">({conlang?.native_name})</span>
-        <span className="text-sm">This language has been created by <a href="/">{conlang?.created_by}</a> on {conlang?.created_at}</span>
+        <span className="text-sm">This language has been created by <Link href="/">{conlang?.created_by}</Link> on {conlang?.created_at}</span>
       </div>
       <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Edit Information</button>
       <hr />
