@@ -2,8 +2,9 @@ import { redirect } from "next/navigation";
 import Link from 'next/link';
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
+import ConlangsList from "@/components/ui/conlangs-list";
 
-export default async function ProtectedPage() {
+export default async function DashboardPage() {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getClaims();
@@ -26,8 +27,10 @@ export default async function ProtectedPage() {
           {JSON.stringify(data.claims, null, 2)}
         </pre>
         <span>You will be able to see your conlangs and info here in the future</span>
-        <Link href="/dashboard/create_conlang">Add Your Conlang</Link>
-        <Link href="/view/DE-PLB">Sample Conlang</Link>
+        <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href="/dashboard/create_conlang">Add Your Conlang</Link>
+        <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href="/dashboard/view/DE-PLB">Sample Conlang</Link>
+        <hr className="my-8"/>
+        <ConlangsList/>
       </div>
     </div>
   );

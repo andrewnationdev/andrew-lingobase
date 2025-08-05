@@ -8,6 +8,7 @@ import { useState } from "react";
 
 export default function CreateConlangPage() {
     const router = useRouter();
+    const [userEmail, setUserEmail] = useState('');
 
     const [conlang, setConlang] = useState({
         english_name: "",
@@ -28,8 +29,17 @@ export default function CreateConlangPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+
+        const conlang_with_user = {
+            ...conlang,
+            created_by: user.email
+        }
+
         try {
-            const { error } = await supabase.from('conlang').insert([conlang]);
+            const { error } = await supabase.from('conlang').insert([conlang_with_user]);
 
             if (error) {
                 throw error;
