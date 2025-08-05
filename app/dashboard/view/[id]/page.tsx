@@ -1,10 +1,10 @@
-/* eslint-disable */
 'use client'
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ViewConlangPage({ params }) {
   const [conlang, setConlang] = useState({
     english_name: "",
