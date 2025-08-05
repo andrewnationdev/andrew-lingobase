@@ -4,13 +4,7 @@ import { InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export default function ViewConlangPage({ params }: PageProps) {
+export default function ViewConlangPage({ params }: {params: {id: string}}) {
   const [conlang, setConlang] = useState({
     english_name: "",
     id: "",
