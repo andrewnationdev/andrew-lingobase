@@ -16,7 +16,6 @@ export default function CreateConlangPage() {
         native_name: ""
     });
 
-    //@ts-expect-error
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -26,7 +25,6 @@ export default function CreateConlangPage() {
         }));
     };
 
-    //@ts-expect-error
     const handleSubmit = async (e) => {
         e.preventDefault();
 
