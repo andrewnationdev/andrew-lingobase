@@ -34,7 +34,7 @@ export default function CreateConlangPage() {
 
         const conlang_with_user = {
             ...conlang,
-            created_by: user.email
+            created_by: user.id
         }
 
         try {
