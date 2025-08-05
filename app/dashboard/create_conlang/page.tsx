@@ -27,7 +27,7 @@ export default function CreateConlangPage() {
     };
 
     useEffect(() => {
-        async const loadUser = () => {
+        const loadUser = async () => {
             const {
                 data: { user },
             } = await supabase.auth.getUser();
