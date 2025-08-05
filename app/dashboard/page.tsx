@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-
+import Link from 'next/link';
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 
@@ -26,6 +26,8 @@ export default async function ProtectedPage() {
           {JSON.stringify(data.claims, null, 2)}
         </pre>
         <span>You will be able to see your conlangs and info here in the future</span>
+        <Link href="/dashboard/create_conlang">Add Your Conlang</Link>
+        <Link href="/view/DE-PLB">Sample Conlang</Link>
       </div>
     </div>
   );
