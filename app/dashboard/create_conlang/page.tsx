@@ -4,7 +4,7 @@ import { InfoIcon, Router } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function CreateConlangPage({ params }: { params: { id: string } }) {
+export default function CreateConlangPage() {
     const router = useRouter();
 
     const [conlang, setConlang] = useState({
