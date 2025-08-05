@@ -8,7 +8,6 @@ import { useState } from "react";
 
 export default function CreateConlangPage() {
     const router = useRouter();
-    const [userEmail, setUserEmail] = useState('');
 
     const [conlang, setConlang] = useState({
         english_name: "",
