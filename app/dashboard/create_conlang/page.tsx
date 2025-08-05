@@ -4,10 +4,11 @@
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function CreateConlangPage() {
     const router = useRouter();
+    const [currentUser, setCurrentUser] = useState(null);
 
     const [conlang, setConlang] = useState({
         english_name: "",
@@ -25,16 +26,24 @@ export default function CreateConlangPage() {
         }));
     };
 
+    useEffect(() => {
+        async const loadUser = () => {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+
+            setCurrentUser(user);
+        }
+
+        loadUser();
+    }, [])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
-
         const conlang_with_user = {
             ...conlang,
-            created_by: user.id
+            created_by: currentUser.id
         }
 
         try {
