@@ -4,12 +4,13 @@
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useEffect } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function EditConlangPage({ params }) {
     const router = useRouter();
     const conlangCode = params.id;
+    const [currentUser, setCurrentUser] = useState(null);
 
     const [conlang, setConlang] = useState({
         english_name: "",
@@ -62,6 +63,8 @@ export default function EditConlangPage({ params }) {
             ...conlang,
             created_by: user?.email,
         };
+            created_by: "anonymous"
+        }
 
         try {
             let error = null;
@@ -184,3 +187,4 @@ export default function EditConlangPage({ params }) {
         </div>
     </div>
 }
+
