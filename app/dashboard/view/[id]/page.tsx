@@ -36,7 +36,7 @@ export default function ViewConlangPage({ params }) {
 
   return <div className="flex-1 w-full flex flex-col gap-12">
     <div className="w-full">
-      <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-8 items-center">
+      <div className="bg-accent text-sm p-3 px-5 rounded-md text-black flex gap-8 items-center">
         <InfoIcon size="16" strokeWidth={2} />
         Here you can find details about this language. Feel free to explore and create your own conlangs!
       </div>
@@ -45,18 +45,19 @@ export default function ViewConlangPage({ params }) {
         <span className="text-m">({conlang?.native_name})</span>
         <span className="text-sm">This language has been created by <Link href="/">{conlang?.created_by}</Link> on {conlang?.created_at}</span>
       </div>
-      <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Edit Information</button>
+      <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href={`/dashboard/create_conlang/${conlang?.code}`}>Edit</Link>
+      <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href={`/dashboard/create_conlang/${conlang?.code}`}>Delete</Link>
       <hr />
       <p className="mt-8">
         {conlang?.summary}
       </p>
-      <hr className="my-8"/>
+      <hr className="my-8" />
       <span className="text-xl">Stats</span>
       <div className="flex flex-col mt-2 w-full gap-4">
         <span>This language has 0 words in its lexicon, 0 vowels, 0 consonants and 0 phrases.</span>
         <span>It belongs to the Indo-European Family</span>
       </div>
-      <hr className="my-8"/>
+      <hr className="my-8" />
       <span className="text-xl">Access Information</span>
       <div className="flex w-full mt-2 flex-col">
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Typology</button>
