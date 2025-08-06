@@ -4,13 +4,13 @@
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function EditConlangPage({ params }) {
+    const conlangCode = params.id; 
     const router = useRouter();
-    const conlangCode = params.id;
-    const [currentUser, setCurrentUser] = useState(null);
+    const [userName, setUserName] = useState(undefined);
 
     const [conlang, setConlang] = useState({
         english_name: "",
@@ -20,7 +20,7 @@ export default function EditConlangPage({ params }) {
     });
     
     const [isLoading, setIsLoading] = useState(false);
-    const isEditing = !!conlangCode;
+    const isEditing = !!conlangCode; 
 
     useEffect(() => {
         const fetchConlang = async () => {
@@ -44,6 +44,22 @@ export default function EditConlangPage({ params }) {
         fetchConlang();
     }, [isEditing, conlangCode]);
 
+    useEffect(()=>{
+        const getUName = async () => {
+            const { data } = await supabase.auth.getClaims();
+
+            const user = data?.claims;
+
+            console.log(user?.exp)
+
+            const uname = user;
+
+            setUserName(uname);
+        }
+
+        getUName();
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -57,14 +73,10 @@ export default function EditConlangPage({ params }) {
         e.preventDefault();
         setIsLoading(true);
 
-        const { data: { user } = { user: null } } = await supabase.auth.getUser();
-
         const conlang_with_user = {
             ...conlang,
-            created_by: user?.email,
+            created_by: userName !== undefined ? userName : 'anonymous',
         };
-            created_by: "anonymous"
-        }
 
         try {
             let error = null;
@@ -88,7 +100,9 @@ export default function EditConlangPage({ params }) {
                 throw error;
             }
 
-            router.push(`/dashboard/view/${conlang.code}`);
+            const redirectToPath = `/dashboard/view/${conlang.code}`;
+            console.log('Redirecting to:', redirectToPath);
+            router.push(redirectToPath);
         } catch (err) {
             console.error('Error:', err);
         } finally {
@@ -187,4 +201,3 @@ export default function EditConlangPage({ params }) {
         </div>
     </div>
 }
-

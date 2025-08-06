@@ -2,10 +2,12 @@
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ViewConlangPage({ params }) {
+  const router = useRouter();
   const [conlang, setConlang] = useState({
     english_name: "",
     id: "",
@@ -17,6 +19,22 @@ export default function ViewConlangPage({ params }) {
   });
 
   const { id } = params;
+
+  const handleDeleteConlang = async () => {
+    let _prompt = confirm("Are you sure you want to delete this conlang? This cannot be undone!");
+
+    if (_prompt) {
+      try {
+        const req = await supabase.from('conlang').delete().eq('code', id);
+
+        if(req?.status === 204){
+          router.push('/dashboard');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
 
   useEffect(() => {
     const getConlangFromId = async () => {
@@ -45,8 +63,14 @@ export default function ViewConlangPage({ params }) {
         <span className="text-m">({conlang?.native_name})</span>
         <span className="text-sm">This language has been created by <Link href="/">{conlang?.created_by}</Link> on {conlang?.created_at}</span>
       </div>
-      <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href={`/dashboard/create_conlang/${conlang?.code}`}>Edit</Link>
-      <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href={`/dashboard/create_conlang/${conlang?.code}`}>Delete</Link>
+      <div className="flex w-full gap-8">
+        <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href={`/dashboard/create_conlang/${conlang?.code}`}>
+          Edit
+        </Link>
+        <button onClick={handleDeleteConlang} className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200">
+          Delete
+        </button>
+      </div>
       <hr />
       <p className="mt-8">
         {conlang?.summary}
