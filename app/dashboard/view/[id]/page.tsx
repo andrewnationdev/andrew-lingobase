@@ -21,7 +21,7 @@ export default function ViewConlangPage({ params }) {
   const { id } = params;
 
   const handleDeleteConlang = async () => {
-    let _prompt = confirm("Are you sure you want to delete this conlang? This cannot be undone!");
+    const _prompt = confirm("Are you sure you want to delete this conlang? This cannot be undone!");
 
     if (_prompt) {
       try {
