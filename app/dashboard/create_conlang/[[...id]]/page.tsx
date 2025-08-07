@@ -46,13 +46,16 @@ export default function EditConlangPage({ params }) {
 
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Auth state changed:', event);
+            console.log('Evento de autenticação:', event);
+            console.log('Sessão de autenticação:', session);
+            
             if (session?.user?.email) {
                 const usernamePart = session.user.email.split('@')[0];
                 setUserName(usernamePart);
-                console.log('Username set from session:', usernamePart);
+                console.log('Nome de usuário definido a partir da sessão:', usernamePart);
             } else {
-                setUserName(null); // Limpa o nome se não houver sessão
+                setUserName(null);
+                console.log('Nenhum usuário logado ou email não encontrado na sessão.');
             }
         });
         return () => subscription.unsubscribe();
