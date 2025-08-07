@@ -23,7 +23,7 @@ export default function UserPageComponent({ user }) {
 
     useEffect(() => {
         if (user?.email) {
-            let uname = user.email?.split('@')[0];
+            const uname = user.email?.split('@')[0];
 
             setUserName(uname);
         }
@@ -37,7 +37,7 @@ export default function UserPageComponent({ user }) {
         <span>You have {conlangCount} conlangs on the website!</span>
         <h2>Your conlangs:</h2>
         <ol>
-            {userLangs.length > 0 && userLangs.map((c) => <li>{c.english_name}</li>)}
+            {userLangs.length > 0 && userLangs.map((c) => <li key={c.id}>{c.english_name}</li>)}
         </ol>
     </div>
 }
