@@ -18,7 +18,7 @@ export default function EditConlangPage({ params }) {
         summary: "",
         native_name: ""
     });
-
+    
     const [isLoading, setIsLoading] = useState(false);
     const isEditing = !!conlangCode;
 
@@ -45,20 +45,17 @@ export default function EditConlangPage({ params }) {
     }, [isEditing, conlangCode]);
 
     useEffect(() => {
-        const fetchUsername = async () => {
-            const { data: { user }, error } = await supabase.auth.getUser();
-
-            if (error) {
-                console.error('Error fetching user:', error);
-            } else if (user?.email) {
-                // Extrai a parte antes do '@' do email
-                const usernamePart = user.email.split('@')[0];
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state changed:', event);
+            if (session?.user?.email) {
+                const usernamePart = session.user.email.split('@')[0];
                 setUserName(usernamePart);
-                console.log('Username:', usernamePart);
+                console.log('Username set from session:', usernamePart);
+            } else {
+                setUserName(null); // Limpa o nome se não houver sessão
             }
-        }
-
-        fetchUsername();
+        });
+        return () => subscription.unsubscribe();
     }, []);
 
     const handleChange = (e) => {
@@ -76,7 +73,6 @@ export default function EditConlangPage({ params }) {
 
         const conlang_with_user = {
             ...conlang,
-            // Usa o `userName` extraído
             created_by: userName || 'anonymous',
         };
 
@@ -128,6 +124,7 @@ export default function EditConlangPage({ params }) {
             </div>
             <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
                 <div className="space-y-6">
+
                     <div>
                         <label htmlFor="english_name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">English Name</label>
                         <input
@@ -141,6 +138,7 @@ export default function EditConlangPage({ params }) {
                             className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
                         />
                     </div>
+
                     <div>
                         <label htmlFor="native_name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Native Name</label>
                         <input
@@ -154,6 +152,7 @@ export default function EditConlangPage({ params }) {
                             className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
                         />
                     </div>
+
                     <div>
                         <label htmlFor="code" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Code</label>
                         <input
@@ -170,6 +169,7 @@ export default function EditConlangPage({ params }) {
                         />
                         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">A short, unique code for the language (e.g., ISO 639-3 style).</p>
                     </div>
+
                     <div>
                         <label htmlFor="summary" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Summary</label>
                         <textarea
@@ -184,6 +184,7 @@ export default function EditConlangPage({ params }) {
                             className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
                         ></textarea>
                     </div>
+
                     <div>
                         <button
                             type="submit"
@@ -197,6 +198,4 @@ export default function EditConlangPage({ params }) {
             </form>
         </div>
     </div>
-
-
 }
