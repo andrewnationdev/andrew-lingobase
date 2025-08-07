@@ -11,6 +11,7 @@ export default function EditConlangPage({ params }) {
     const conlangCode = params.id;
     const router = useRouter();
     const [userName, setUserName] = useState<string | null>(null);
+    const [isAuthReady, setIsAuthReady] = useState(false);
 
     const [conlang, setConlang] = useState({
         english_name: "",
@@ -23,8 +24,23 @@ export default function EditConlangPage({ params }) {
     const isEditing = !!conlangCode;
 
     useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error || !session) {
+                console.log("No session found. Redirecting to login page.");
+                router.push('/login'); 
+            } else {
+                console.log("Session found. Continuing.");
+                setIsAuthReady(true);
+            }
+        };
+
+        checkSession();
+    }, [router]);
+
+    useEffect(() => {
         const fetchConlang = async () => {
-            if (isEditing) {
+            if (isEditing && isAuthReady) {
                 setIsLoading(true);
                 const { data, error } = await supabase
                     .from('conlang')
@@ -42,20 +58,20 @@ export default function EditConlangPage({ params }) {
         };
 
         fetchConlang();
-    }, [isEditing, conlangCode]);
+    }, [isEditing, conlangCode, isAuthReady]);
 
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Evento de autenticação:', event);
-            console.log('Sessão de autenticação:', session);
+            console.log('Auth event:', event);
+            console.log('Auth session:', session);
             
             if (session?.user?.email) {
                 const usernamePart = session.user.email.split('@')[0];
                 setUserName(usernamePart);
-                console.log('Nome de usuário definido a partir da sessão:', usernamePart);
+                console.log('Username set from session:', usernamePart);
             } else {
-                setUserName(null);
-                console.log('Nenhum usuário logado ou email não encontrado na sessão.');
+                setUserName(null); 
+                console.log('No user logged in or email not found in session.');
             }
         });
         return () => subscription.unsubscribe();
