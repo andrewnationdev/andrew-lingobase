@@ -28,7 +28,7 @@ export default function EditConlangPage({ params }) {
             const { data: { session }, error } = await supabase.auth.getSession();
             if (error || !session) {
                 console.log("No session found. Redirecting to login page.");
-                router.push('/login'); 
+                router.push('/auth/login'); 
             } else {
                 console.log("Session found. Continuing.");
                 setIsAuthReady(true);
