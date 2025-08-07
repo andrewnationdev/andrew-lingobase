@@ -51,7 +51,7 @@ export default function Dictionary({ data }: {
                                 {item.lexical_item}
                                 {item.transliteration && (
                                     <span className="ml-2 text-gray-500 dark:text-gray-400 font-normal text-sm">
-                                        ({item.transliteration})
+                                        {item.transliteration}
                                     </span>
                                 )}
                             </h3>
