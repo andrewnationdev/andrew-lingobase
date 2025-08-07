@@ -4,6 +4,7 @@ import { InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import GreenButton from "./green-button";
 
 export default function ViewConlang({id, loggedUser}){
 const router = useRouter();
@@ -81,6 +82,10 @@ const router = useRouter();
       <hr className="my-8" />
       <span className="text-xl">Access Information</span>
       <div className="flex w-full mt-2 flex-col">
+        <GreenButton props={{
+          link: `/dashboard/dictionary/${conlang.code}`,
+          title: 'Dictionary'
+          }}/>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Typology</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Sample Texts</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Articles</button>
@@ -88,7 +93,6 @@ const router = useRouter();
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Morphology</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Syntax</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Semantics and Pragmatics</button>
-        <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Dictionary</button>
       </div>
     </div>
   </div>
