@@ -60,7 +60,7 @@ const router = useRouter();
         <span className="text-m">({conlang?.native_name})</span>
         <span className="text-sm">This language has been created by <Link href="/">{conlang?.created_by}</Link> on {conlang?.created_at}</span>
       </div>
-      {conlang?.created_by === loggedUser && <div className="flex w-full gap-8">
+      {conlang?.created_by === loggedUser && <div className="flex w-full gap-8 my-4">
         <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href={`/dashboard/create_conlang/${conlang?.code}`}>
           Edit
         </Link>

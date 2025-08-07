@@ -18,5 +18,5 @@ export default async function ViewConlangPage({ params }) {
     uname = data?.claims?.email?.split('@')[0];
   }
 
-  return <><ViewConlang id={params.id} loggedUser={uname} /></>
+  return <><ViewConlang id={conlangCode} loggedUser={uname} /></>
 }
