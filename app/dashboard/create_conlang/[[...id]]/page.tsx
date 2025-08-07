@@ -11,7 +11,6 @@ export default function EditConlangPage({ params }) {
     const conlangCode = params.id;
     const router = useRouter();
     const [userName, setUserName] = useState<string | null>(null);
-    const [isAuthReady, setIsAuthReady] = useState(false);
 
     const [conlang, setConlang] = useState({
         english_name: "",
@@ -23,29 +22,9 @@ export default function EditConlangPage({ params }) {
     const [isLoading, setIsLoading] = useState(false);
     const isEditing = !!conlangCode;
 
-    // Checks the session on initial load and redirects if not authenticated.
-    useEffect(() => {
-        const checkSession = async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            if (error || !session) {
-                console.log("No session found. Redirecting to login page.");
-                router.push('/login'); 
-            } else {
-                console.log("Session found. Continuing.");
-                if (session?.user?.email) {
-                    setUserName(session.user.email.split('@')[0]);
-                }
-                setIsAuthReady(true);
-            }
-        };
-
-        checkSession();
-    }, [router]);
-
-    // Fetches the conlang data only after authentication is confirmed.
     useEffect(() => {
         const fetchConlang = async () => {
-            if (isEditing && isAuthReady) {
+            if (isEditing) {
                 setIsLoading(true);
                 const { data, error } = await supabase
                     .from('conlang')
@@ -63,21 +42,20 @@ export default function EditConlangPage({ params }) {
         };
 
         fetchConlang();
-    }, [isEditing, conlangCode, isAuthReady]);
+    }, [isEditing, conlangCode]);
 
-    // Listens for auth state changes to get the user's username.
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Auth event:', event);
-            console.log('Auth session:', session);
+            console.log('Evento de autenticação:', event);
+            console.log('Sessão de autenticação:', session);
             
             if (session?.user?.email) {
                 const usernamePart = session.user.email.split('@')[0];
                 setUserName(usernamePart);
-                console.log('Username set from session:', usernamePart);
+                console.log('Nome de usuário definido a partir da sessão:', usernamePart);
             } else {
-                setUserName(null); 
-                console.log('No user logged in or email not found in session.');
+                setUserName(null);
+                console.log('Nenhum usuário logado ou email não encontrado na sessão.');
             }
         });
         return () => subscription.unsubscribe();
@@ -132,11 +110,6 @@ export default function EditConlangPage({ params }) {
             setIsLoading(false);
         }
     };
-
-    // Displays a loading state until the authentication status is known.
-    if (!isAuthReady) {
-        return <div>Loading...</div>;
-    }
 
     return <div className="flex-1 w-full flex flex-col gap-12">
         <div className="w-full">
