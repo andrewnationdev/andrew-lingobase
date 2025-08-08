@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function EditConlang({conlangCode, userName}){
     const router = useRouter();
-       const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const isEditing = !!conlangCode;
 
     const [conlang, setConlang] = useState({

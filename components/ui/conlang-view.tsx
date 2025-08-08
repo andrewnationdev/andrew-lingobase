@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import GreenButton from "./green-button";
 
-export default function ViewConlang({id, loggedUser}){
-const router = useRouter();
+export default function ViewConlang({ id, loggedUser }) {
+  const router = useRouter();
   const [conlang, setConlang] = useState({
     english_name: "",
     id: "",
@@ -25,7 +25,7 @@ const router = useRouter();
       try {
         const req = await supabase.from('conlang').delete().eq('code', id);
 
-        if(req?.status === 204){
+        if (req?.status === 204) {
           router.push('/dashboard');
         }
       } catch (err) {
@@ -81,12 +81,17 @@ const router = useRouter();
       </div>
       <hr className="my-8" />
       <span className="text-xl">Access Information</span>
-      <div className="flex w-full mt-2 flex-col">
+      <div className="flex mt-2 w-full gap-2">
         <GreenButton props={{
           link: `/dashboard/dictionary/${conlang.code}`,
           title: 'Dictionary'
-          }}/>
-        <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Typology</button>
+        }} />
+        <GreenButton props={{
+          link: `/dashboard/typology/${conlang.code}`,
+          title: 'Typology'
+        }} />
+      </div>
+      <div className="flex w-full mt-2 flex-col gap-2">
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Sample Texts</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Articles</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Phonology</button>
