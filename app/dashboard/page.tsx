@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import Link from 'next/link';
 import { createClient } from "@/lib/supabase/server";
 import ConlangsList from "@/components/ui/conlangs-list";
+import Notepad from "@/components/ui/texteditor";
+import QuickNavigationComponent from "@/components/ui/quicknavigation";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -18,9 +20,19 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
-      <div className="w-full">
-      </div>
+    <div className="flex-1 w-full flex flex-col gap-4">
+      <QuickNavigationComponent data={[
+        {
+          href: '',
+          text: 'Your Conlangs'
+        }, {
+          href: '',
+          text: 'Conlangs in the Website'
+        }, {
+          href: '#notepad',
+          text: 'Notes and Ideas'
+        }
+      ]}/>
       <div className="flex flex-col gap-2 items-start">
         <h2 className="font-bold text-2xl mb-4">Your Conlangs:</h2>
         <ConlangsList authOnly user={uname} />
@@ -29,6 +41,9 @@ export default async function DashboardPage() {
         <hr className="my-8" />
         <h2 className="font-bold text-2xl mb-4">{`Everyone Else's Conlangs`}</h2>
         <ConlangsList />
+      </div>
+      <div className="w-full" id="notepad">
+        <Notepad/>
       </div>
     </div>
   );
