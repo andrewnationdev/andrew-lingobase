@@ -72,7 +72,7 @@ export default async function Home() {
 
           <section id="showcase" className="bg-gray-50 dark:bg-gray-900 py-16 px-8">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-10 text-gray-800 dark:text-white">Explore Our Community's Creations</h2>
+              <h2 className="text-3xl font-bold text-center mb-10 text-gray-800 dark:text-white">{`Explore Our Community's Creations`}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <Card title="Language A">
                   A highly poetic and melodic language designed for a fantasy novel. Features a complex, gendered noun system and beautiful, flowing script.
