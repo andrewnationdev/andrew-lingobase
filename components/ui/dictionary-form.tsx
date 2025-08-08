@@ -120,7 +120,7 @@ const handleSubmit = async (e) => {
 
                 {/* Transliteration */}
                 <div>
-                    <label htmlFor="transliteration" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Transliteration or Transcription (IPA, X-SAMPA or whatever you'd like to use)</label>
+                    <label htmlFor="transliteration" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">{`Transliteration or Transcription (IPA, X-SAMPA or whatever you'd like to use)`}</label>
                     <input
                         type="text"
                         name="transliteration"
