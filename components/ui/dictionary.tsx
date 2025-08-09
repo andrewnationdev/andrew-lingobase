@@ -96,17 +96,17 @@ export default function Dictionary({ data }: {
     return <div>
         <h1 className="text-3xl font-bold">Your Lexicon:</h1>
         <div className="mt-4 flex gap-4 w-full flex-wrap">
-            {lexicon.length == 0 && <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-                <InfoIcon size="16" strokeWidth={2} />
-                The vocabulary of this conlang is empty.
-                {data.loggedUser == data.owner && <span>
-                Remember that languages need words to describe the world.
-                </span>}
-            </div>}
+    {lexicon.length == 0 && <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
+        <InfoIcon size="16" strokeWidth={2} />
+        The vocabulary of this conlang is empty.
+        {data.loggedUser == data.owner && <span>
+        Remember that languages need words to describe the world.
+        </span>}
+    </div>}
             {!editing && lexicon.map((item, index) => (
                 <div
                     key={index}
-                    className="p-6 bg-white dark:bg-gray-800 rounded-xl my-2 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-200"
+                    className="p-6 bg-white dark:bg-gray-800 rounded-xl my-2 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-200 w-full sm:w-[calc(50%-0.5rem)]"
                 >
                     <div className="flex justify-between items-start">
                         <div className="flex-1">
