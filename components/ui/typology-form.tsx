@@ -1,15 +1,40 @@
 "use client"
-import { TypologySchema } from '../../schema/data';
-import { useState } from 'react';
+import { supabase } from '@/lib/supabase/database';
+import { TypologyFieldTitles, TypologySchema } from '../../schema/data';
+import { useState, useEffect } from 'react';
 
-export default function TypologyForm() {
+export default function TypologyForm({ id }) {
+    const conlangCode = id;
+    
     const [typology, setTypology] = useState({
-        wordOrder: '',
-        morphosyntacticAlignment: '',
-        languageFamily: '',
-        verbalTenses: '',
-        typeOfMorphology: ''
+        word_order: '',
+        morphosyntactic_alignment: '',
+        language_family: '',
+        verbal_tenses: '',
+        type_morphology: ''
     });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTypology = async () => {
+            if (!conlangCode) {
+                setLoading(false);
+                return;
+            }
+            const { data, error } = await supabase
+                .from('conlang-typology')
+                .select('*')
+                .eq('conlang_code', conlangCode)
+                .single();
+            if (error) {
+                console.error("Error fetching data:", error);
+            } else if (data) {
+                setTypology(data);
+            }
+            setLoading(false);
+        };
+        fetchTypology();
+    }, [conlangCode]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,10 +44,31 @@ export default function TypologyForm() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        window.alert("Error saving typology data. Endpoint not found!")
-        console.log('Submitted Typology Data:', typology);
+        try {
+            const { data, error } = await supabase
+                .from('conlang-typology')
+                .upsert([{ ...typology, conlang_code: conlangCode }]);
+            if (error) {
+                throw error;
+            }
+            console.log('Data saved successfully:', data);
+            window.alert('Data saved successfully!');
+        } catch (error) {
+            console.error('Error saving data:', error?.message!);
+            window.alert('An error occurred while saving data: ' + error?.message!);
+        }
+    };
+
+    if (loading) {
+        return <div>Loading typological data...</div>;
+    }
+    
+    const formatLabel = (key) => {
+        return key.split('_')
+                  .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(' ');
     };
 
     return (
@@ -38,7 +84,7 @@ export default function TypologyForm() {
                         {Object.entries(TypologySchema).map(([key, options]) => (
                             <div key={key}>
                                 <label htmlFor={key} className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                                    {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim()}
+                                    {formatLabel(TypologyFieldTitles[key])}
                                 </label>
                                 <select
                                     name={key}
@@ -55,13 +101,12 @@ export default function TypologyForm() {
                                 </select>
                             </div>
                         ))}
-
                         <div>
                             <button
                                 type="submit"
                                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
                             >
-                                Save Typology
+                                Save All
                             </button>
                         </div>
                     </div>
@@ -70,3 +115,4 @@ export default function TypologyForm() {
         </div>
     );
 }
+

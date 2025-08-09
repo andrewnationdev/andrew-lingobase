@@ -1,8 +1,8 @@
 import TypologyForm from "@/components/ui/typology-form";
 
 
-export default function TypologyPage() {
-    //const conlangCode = params.id;
+export default function TypologyPage({params}) {
+    const conlangCode = params.id[0];
 
-    return <TypologyForm />;
+    return <TypologyForm id={conlangCode}/>;
 }

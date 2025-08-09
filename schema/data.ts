@@ -11,19 +11,27 @@ export const partsOfSpeech = [
     { value: 'determiner', label: 'Determiner' },
 ];
 
+export const TypologyFieldTitles = {
+    word_order: 'Word Order',
+    morphosyntactic_alignment: 'Morphosyntactic Alignment',
+    language_family: 'Language Family',
+    verbal_tenses: 'Verbal Tenses',
+    type_morphology: 'Type of Morphology'
+}
+
 export const TypologySchema = {
-    wordOrder: ['SVO', 'SOV', 'VSO', 'VOS', 'OVS', 'OSV'],
-    morphosyntacticAlignment: ['Nominative-Accusative',
+    word_order: ['SVO', 'SOV', 'VSO', 'VOS', 'OVS', 'OSV', 'No Default Word Order', 'Pragmatic Word Order'],
+    morphosyntactic_alignment: ['Nominative-Accusative',
         'Ergative-Absolutive',
         'Tripartite',
         'Austronesian/Arusian-like',
         'Other'],
-    languageFamily: ['Indo-European',
+    language_family: ['Indo-European',
         'Sino-Tibetan', 'Afro-Asiatic', 'Niger-Congo', 'Austronesian',
         'Dravidian', 'Turkic', 'Uralic',
         'Other'],
-    verbalTenses: ['Present, Past, Future',
+    verbal_tenses: ['Present, Past, Future',
         'Past, Non-Past', 'Present, Non-Present',
         'No Tenses', 'Other'],
-    typeOfMorphology: ['Analytic', 'Synthetic', 'Agglutinative', 'Isolating', 'Mixed']
+    type_morphology: ['Analytic', 'Synthetic', 'Agglutinative', 'Isolating', 'Mixed']
 }
