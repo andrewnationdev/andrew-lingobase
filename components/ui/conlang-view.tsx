@@ -17,6 +17,7 @@ export default function ViewConlang({ id, loggedUser }) {
     summary: "",
     native_name: ""
   });
+  const [lexiconSize, setLexiconSize] = useState<number>(0);
 
   const handleDeleteConlang = async () => {
     const _prompt = confirm("Are you sure you want to delete this conlang? This cannot be undone!");
@@ -48,7 +49,21 @@ export default function ViewConlang({ id, loggedUser }) {
 
     getConlangFromId();
 
-  }, [])
+  }, []);
+
+  useEffect(()=>{
+    const countNumberOfWords = async () => {
+      const conlangs = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', id);
+
+      const data = await conlangs?.data;
+
+      const len = data?.length;
+
+      setLexiconSize(len ? len : 0);
+    }
+
+    countNumberOfWords();
+  }, [conlang])
 
   return <div className="flex-1 w-full flex flex-col gap-12">
     <div className="w-full">
@@ -69,15 +84,14 @@ export default function ViewConlang({ id, loggedUser }) {
           Delete
         </button>
       </div>}
-      <hr />
+      <hr className="my-4" />
       <p className="mt-8">
         {conlang?.summary}
       </p>
       <hr className="my-8" />
       <span className="text-xl">Stats</span>
       <div className="flex flex-col mt-2 w-full gap-4">
-        <span>This language has 0 words in its lexicon, 0 vowels, 0 consonants and 0 phrases.</span>
-        <span>It belongs to the Indo-European Family</span>
+        <span>This language has {lexiconSize} words in its lexicon, 0 vowels, 0 consonants and 0 phrases.</span>
       </div>
       <hr className="my-8" />
       <span className="text-xl">Access Information</span>

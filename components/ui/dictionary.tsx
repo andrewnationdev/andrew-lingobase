@@ -47,7 +47,7 @@ export default function Dictionary({ data }: {
             owner: ''
         });
 
-        const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', `[\"${data.langCode}\"]`);
+        const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', data.langCode);
 
         setLexicon(lex?.data);
         //router.refresh();
@@ -55,7 +55,7 @@ export default function Dictionary({ data }: {
 
     useEffect(() => {
         const fetchDictionary = async () => {
-            const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', `[\"${data.langCode}\"]`);
+            const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', data.langCode);
 
             setLexicon(lex?.data);
         }
