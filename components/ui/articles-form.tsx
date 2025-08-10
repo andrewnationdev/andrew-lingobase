@@ -137,8 +137,7 @@ export default function ArticleForm({ id, loggedUser }: {id: string, loggedUser:
                                 name="content"
                                 id="content"
                                 required
-                                // @ts-ignore
-                                rows="10"
+                                rows={10}
                                 value={article.content}
                                 onChange={handleChange}
                                 className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
