@@ -45,7 +45,7 @@ export default async function ArticlePage({ params }) {
     {uname !== '' && uname !== undefined && <div id="form"><ArticleForm loggedUser={uname} id={conlangCode} /></div>}
     <hr className="my-2" />
     <div id="view">
-      <ArticleView id={conlangCode} />
+      <ArticleView id={conlangCode} loggedUser={uname ? uname : 'anonymous'} />
     </div>
   </div >
 }

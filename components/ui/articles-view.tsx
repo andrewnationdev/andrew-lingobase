@@ -1,5 +1,6 @@
 "use client"
 import { supabase } from '@/lib/supabase/database';
+import { PencilIcon, TrashIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -8,11 +9,10 @@ interface Article {
     title: string;
     content: string;
     written_by: string;
-    author: string;
     updated_at: string;
 }
 
-export default function ArticleView({ id }: {id: string}) {
+export default function ArticleView({ id, loggedUser }: { id: string, loggedUser: string | undefined }) {
     const conlangCode = id;
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ export default function ArticleView({ id }: {id: string}) {
             } else if (conlangResponse?.data) {
                 setConlangName(conlangResponse?.data?.english_name || 'Unnamed');
             }
-            
+
             const articlesResponse = await supabase
                 .from('conlang-articles')
                 .select('*')
@@ -88,8 +88,24 @@ export default function ArticleView({ id }: {id: string}) {
                             {expandedArticleId === article.id && (
                                 <div className="mt-4 space-y-2">
                                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                                        **Written by:** {article.written_by} | **Author:** {article.author} | **Last updated:** {new Date(article.updated_at).toLocaleDateString()}
+                                        Written by: {article.written_by}, Last updated: {new Date(article.updated_at).toLocaleDateString()}
                                     </p>
+                                    {loggedUser == article.written_by &&
+                                        <>
+                                            <button
+                                                className="ml-4 px-4 py-2 bg-emerald-500 text-white font-medium text-sm rounded-full shadow-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-200"
+                                                onClick={() => { }}
+                                            >
+                                                <PencilIcon />
+                                            </button>
+                                            <button
+                                                className="ml-4 px-4 py-2 bg-red-500 text-white font-medium text-sm rounded-full shadow-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-200"
+                                                onClick={() => { }}
+                                            >
+                                                <TrashIcon />
+                                            </button>
+                                        </>
+                                    }
                                     <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
                                         <ReactMarkdown>{article.content}</ReactMarkdown>
                                     </div>
