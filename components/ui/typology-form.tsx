@@ -2,6 +2,7 @@
 import { supabase } from '@/lib/supabase/database';
 import { TypologyFieldTitles, TypologySchema } from '../../schema/data';
 import { useState, useEffect } from 'react';
+import ReturnComponent from './return';
 
 export default function TypologyForm({ id }) {
     const conlangCode = id;
@@ -14,6 +15,7 @@ export default function TypologyForm({ id }) {
         type_morphology: ''
     });
     const [loading, setLoading] = useState(true);
+    const [conlangName, setConlangName] = useState('Unnamed');
 
     useEffect(() => {
         const fetchTypology = async () => {
@@ -30,6 +32,17 @@ export default function TypologyForm({ id }) {
                 console.error("Error fetching data:", error);
             } else if (data) {
                 setTypology(data);
+
+                const response = await supabase.from('conlang')
+                .select('*')
+                .eq('code', conlangCode)
+                .single();
+
+                if (response?.error) {
+                    console.error("Error fetching conlang name:", response?.error);
+                } else if (response?.data) {
+                    setConlangName(response?.data?.english_name || 'Unnamed');
+                }
             }
             setLoading(false);
         };
@@ -73,13 +86,14 @@ export default function TypologyForm({ id }) {
 
     return (
         <div className="flex-1 w-full flex flex-col gap-12">
+            <ReturnComponent id={conlangCode}/>
             <div className="w-full">
                 <div className="flex w-full flex-col gap-2 mt-8">
                     <span className="text-2xl">
-                        <strong>Typology of [Conlang Name]</strong>
+                        <strong>Typology of {conlangName}</strong>
                     </span>
                 </div>
-                <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
+                <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
                     <div className="space-y-6">
                         {Object.entries(TypologySchema).map(([key, options]) => (
                             <div key={key}>

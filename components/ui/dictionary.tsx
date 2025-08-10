@@ -82,13 +82,13 @@ export default function Dictionary({ data }: {
             .delete()
             .eq('id', item.id)
             .eq('lexical_item', item.lexical_item)
-            .eq('conlang_code', `[\"${data.langCode}\"]`)
+            .eq('conlang_code', data.langCode)
             .eq('owner', data.owner);
 
         const lex = await supabase
             .from('conlang-dictionary')
             .select('*')
-            .eq('conlang_code', `[\"${data.langCode}\"]`);
+            .eq('conlang_code', data.langCode);
 
         setLexicon(lex?.data || []);
     }
@@ -96,13 +96,13 @@ export default function Dictionary({ data }: {
     return <div>
         <h1 className="text-3xl font-bold">Your Lexicon:</h1>
         <div className="mt-4 flex gap-4 w-full flex-wrap">
-    {lexicon.length == 0 && <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-        <InfoIcon size="16" strokeWidth={2} />
-        The vocabulary of this conlang is empty.
-        {data.loggedUser == data.owner && <span>
-        Remember that languages need words to describe the world.
-        </span>}
-    </div>}
+            {lexicon.length == 0 && <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
+                <InfoIcon size="16" strokeWidth={2} />
+                The vocabulary of this conlang is empty.
+                {data.loggedUser == data.owner && <span>
+                    Remember that languages need words to describe the world.
+                </span>}
+            </div>}
             {!editing && lexicon.map((item, index) => (
                 <div
                     key={index}
@@ -112,12 +112,12 @@ export default function Dictionary({ data }: {
                         <div className="flex-1">
                             <h3 className="font-bold text-xl text-gray-900 dark:text-white">
                                 {item.lexical_item}
-                                {item.transliteration && (
+                            </h3>
+                            {item.transliteration && (
                                     <span className="ml-2 text-gray-500 dark:text-gray-400 font-normal text-sm">
                                         {item.transliteration}
                                     </span>
                                 )}
-                            </h3>
                             <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                                 {item.definition} - ({item.pos})
                             </p>

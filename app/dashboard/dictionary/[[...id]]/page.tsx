@@ -1,4 +1,5 @@
 import Dictionary from "@/components/ui/dictionary";
+import ReturnComponent from "@/components/ui/return";
 import { supabase } from "@/lib/supabase/database";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -25,7 +26,11 @@ export default async function DictionaryPage({ params }) {
     }
 
     return <>
-        <h1 className="mt-4 text-3xl font-bold">{`Dictionary for ${conlang?.data[0]?.english_name} (${langCode})`}</h1>
+        <div className="flex gap-4 items-center">
+        <div className="max-w-sm">
+            <ReturnComponent id={langCode} />
+        </div><h1 className="mt-4 text-3xl font-bold">{`Dictionary for ${conlang?.data[0]?.english_name} (${langCode})`}</h1>
+        </div>
         <Dictionary data={{
             owner: c_owner,
             loggedUser: uname,

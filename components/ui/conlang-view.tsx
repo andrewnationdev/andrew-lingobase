@@ -104,10 +104,13 @@ export default function ViewConlang({ id, loggedUser }) {
           link: `/dashboard/typology/${conlang.code}`,
           title: 'Typology'
         }} />
+        <GreenButton props={{
+          link: `/dashboard/articles/${conlang.code}`,
+          title: 'Articles and Literature'
+        }} />
       </div>
       <div className="flex w-full mt-2 flex-col gap-2">
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Sample Texts</button>
-        <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Articles</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Phonology</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Morphology</button>
         <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Syntax</button>
