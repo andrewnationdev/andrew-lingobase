@@ -13,10 +13,11 @@ export default function ProtectedLayout({
   return (
       <main className="min-h-screen flex flex-col items-center">
         <div className="flex-1 w-full flex flex-col gap-20 items-center">
-          <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
+          <nav className="w-full sticky top-0 z-10 flex justify-center border-b border-b-foreground/10 h-16">
             <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
               <div className="flex gap-5 items-center font-semibold">
-                <Link href={"/dashboard"}>Andrew Lingobase</Link>
+                <img src="/img/LINGOBASE_4.webp" width="32px" height="32px"/>
+                <Link href={"/dashboard"}>Andrew Lingobase (Early Access)</Link>
               </div>
               {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
             </div>
