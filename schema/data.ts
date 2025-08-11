@@ -66,6 +66,7 @@ export const TypologySchema = {
     "Synthetic",
     "Agglutinative",
     "Isolating",
+    "Non-Concatenative",
     "Mixed",
   ],
   pro_drop: [
