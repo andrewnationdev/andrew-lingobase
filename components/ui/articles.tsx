@@ -1,3 +1,4 @@
+"use client"
 import ArticleForm from "@/components/ui/articles-form";
 import ArticleView from "@/components/ui/articles-view";
 import { useState } from "react";
