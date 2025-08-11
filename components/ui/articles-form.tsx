@@ -35,7 +35,6 @@ export default function ArticleForm({
   const [conlangName, setConlangName] = useState("Unnamed");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
-  const [isEdit, setIsEdit] = useState(isEditing);
 
   useEffect(() => {
     const fetchConlangName = async () => {
@@ -106,7 +105,7 @@ export default function ArticleForm({
         written_by: currArticle.written_by,
       });
     }
-  }, [isEdit]);
+  }, [isEditing, currArticle]);
 
   if (loading) {
     return (
@@ -119,7 +118,7 @@ export default function ArticleForm({
       <div className="w-full">
         <div className="flex w-full flex-col gap-2 mt-8">
           <span className="text-2xl font-bold text-gray-900 dark:text-white">
-            Add New Article for {conlangName}
+            {isEditing ? 'Edit Article for' : 'Add New Article for'} {conlangName}
           </span>
         </div>
         <form
