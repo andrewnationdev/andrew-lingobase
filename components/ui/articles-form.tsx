@@ -71,26 +71,42 @@ export default function ArticleForm({
     setIsSubmitting(true);
     setMessage(null);
     try {
-      const { error } = await supabase.from("conlang-articles").insert([
-        {
-          ...article,
-          conlang_code: conlangCode,
-          updated_at: new Date().toISOString(),
-          written_by: loggedUser,
-        },
-      ]);
-
+      let error;
+      if (isEditing && currArticle && currArticle.id) {
+        // Editar artículo existente
+        const { error: updateError } = await supabase
+          .from("conlang-articles")
+          .update({
+            ...article,
+            conlang_code: conlangCode,
+            updated_at: new Date().toISOString(),
+            written_by: loggedUser,
+          })
+          .eq("id", currArticle.id);
+        error = updateError;
+      } else {
+        // Agregar nuevo artículo
+        const { error: insertError } = await supabase.from("conlang-articles").insert([
+          {
+            ...article,
+            conlang_code: conlangCode,
+            updated_at: new Date().toISOString(),
+            written_by: loggedUser,
+          },
+        ]);
+        error = insertError;
+      }
       if (error) {
         throw error;
       }
-      console.log("Article added successfully!");
-      setMessage({ type: "success", text: "Article added successfully!" });
-      setArticle({ title: "", content: "", written_by: loggedUser });
+      setMessage({ type: "success", text: isEditing ? "Article updated successfully!" : "Article added successfully!" });
+      if (!isEditing) {
+        setArticle({ title: "", content: "", written_by: loggedUser });
+      }
     } catch (error) {
-      console.error("Error adding article:", error);
       setMessage({
         type: "error",
-        text: "An error occurred while adding the article: " + error,
+        text: `An error occurred while ${isEditing ? "updating" : "adding"} the article: ` + error,
       });
     } finally {
       setIsSubmitting(false);
