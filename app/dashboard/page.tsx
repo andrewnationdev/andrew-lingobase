@@ -23,23 +23,23 @@ export default async function DashboardPage() {
     <div className="flex-1 w-full flex flex-col gap-4">
       <QuickNavigationComponent data={[
         {
-          href: '',
+          href: '#your-conlangs',
           text: 'Your Conlangs'
         }, {
-          href: '',
+          href: '#conlangs-in-website',
           text: 'Conlangs in the Website'
         }, {
           href: '#notepad',
           text: 'Notes and Ideas'
         }
       ]}/>
-      <div className="flex flex-col gap-2 items-start">
+      <div className="flex flex-col gap-2 items-start" id="your-conlangs">
         <h2 className="font-bold text-2xl mb-4">Your Conlangs:</h2>
         <ConlangsList authOnly user={uname} />
         <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href="/dashboard/create_conlang">Add Your Conlang</Link>
         <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href="/dashboard/view/DE-PLB">Sample Conlang</Link>
         <hr className="my-8" />
-        <h2 className="font-bold text-2xl mb-4">{`Everyone Else's Conlangs`}</h2>
+        <h2 className="font-bold text-2xl mb-4" id="conlangs-in-website">{`Everyone Else's Conlangs`}</h2>
         <ConlangsList />
       </div>
       <div className="w-full" id="notepad">

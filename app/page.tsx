@@ -124,12 +124,12 @@ export default async function Home() {
                 Contribute to Lingobase and Help it Grow
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                Our project thrives on community collaboration. As an
+                {`Our project thrives on community collaboration. As an
                 open-source project, we invite developers to contribute their
                 skills. Whether it's adding new features, fixing bugs, or
                 suggesting improvements, your pull requests are what make this
                 project better for everyone. Join us and help shape the future
-                of our project!
+                of our project!`}
               </p>
               <a
                 href={"https://github.com/andrewnationdev/andrew-lingobase"}
