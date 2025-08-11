@@ -1,5 +1,4 @@
-import ArticleForm from "@/components/ui/articles-form";
-import ArticleView from "@/components/ui/articles-view";
+import Articles from "@/components/ui/articles";
 import QuickNavigationComponent from "@/components/ui/quicknavigation";
 import ReturnComponent from "@/components/ui/return";
 import { createClient } from "@/lib/supabase/server";
@@ -42,10 +41,6 @@ export default async function ArticlePage({ params }) {
       You can provide translations, glossing, and anything you want.
       Also, remember that you can use Markdown Syntax to format your articles.
     </p>
-    {uname !== '' && uname !== undefined && <div id="form"><ArticleForm loggedUser={uname} id={conlangCode} /></div>}
-    <hr className="my-2" />
-    <div id="view">
-      <ArticleView id={conlangCode} loggedUser={uname ? uname : 'anonymous'} />
-    </div>
+    <Articles id={conlangCode} loggedUser={uname ? uname : 'anonymous'} />
   </div >
 }
