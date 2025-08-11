@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import ArticleForm from "@/components/ui/articles-form";
 import ArticleView from "@/components/ui/articles-view";
 import { useState } from "react";
@@ -14,7 +14,7 @@ export default function Articles({
     title: "",
     content: "",
     written_by: "",
-    id: ""
+    id: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -28,12 +28,12 @@ export default function Articles({
     <>
       {loggedUser !== "" && loggedUser !== undefined && (
         <div id="form">
-          <ArticleForm loggedUser={loggedUser} id={id} currArticle={{
-            title: "",
-            content: "",
-            written_by: "",
-            id: ""
-          }} isEditing={isEditing} />
+          <ArticleForm
+            loggedUser={loggedUser}
+            id={id}
+            currArticle={currArticle}
+            isEditing={isEditing}
+          />
         </div>
       )}
       <hr className="my-2" />

@@ -35,6 +35,7 @@ export default function ArticleForm({
   const [conlangName, setConlangName] = useState("Unnamed");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
+  const [isEdit, setIsEdit] = useState(isEditing);
 
   useEffect(() => {
     const fetchConlangName = async () => {
@@ -105,7 +106,7 @@ export default function ArticleForm({
         written_by: currArticle.written_by,
       });
     }
-  }, []);
+  }, [isEdit]);
 
   if (loading) {
     return (
