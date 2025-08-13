@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DictionaryForm from "./dictionary-form"
 import { supabase } from "@/lib/supabase/database";
 import { InfoIcon, PencilIcon, TrashIcon } from "lucide-react";
+import WordImport from "./wordimport";
 
 export interface IWord {
     id?: string | number;
@@ -139,6 +140,8 @@ export default function Dictionary({ data }: {
                 </div>
             ))}
         </div>
+        <hr className="my-4"/>
+        {data.owner == data.loggedUser && <WordImport langCode={data.langCode} owner={data.owner} />}
         <hr className="my-4" />
         {data.owner == data.loggedUser && <DictionaryForm editing={editing} word={word} onFinishEditing={onFinishEditing} conlang_code={data.langCode} owner={data.owner} />}
     </div>
