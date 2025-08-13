@@ -13,7 +13,7 @@ const CSV_FIELDS = [
     "owner"
 ];
 
-function arrayToCSV(arr: any[]) {
+function arrayToCSV(arr: string[]) {
     if (!arr.length) return "";
     const header = CSV_FIELDS.join(",");
     const rows = arr.map(obj => CSV_FIELDS.map(f => '"' + (obj[f]?.replaceAll('"', '""') || "") + '"').join(","));
@@ -25,7 +25,7 @@ function csvToArray(csv: string) {
     const headers = headerLine.split(",").map(h => h.replace(/^"|"$/g, ""));
     return lines.map(line => {
         const values = line.match(/("[^"]*("{2})*[^"]*"|[^,]*)/g)?.map(v => v.replace(/^"|"$/g, "").replace(/""/g, '"')) || [];
-        const obj: any = {};
+        const obj = {};
         headers.forEach((h, i) => obj[h] = values[i] || "");
         return obj;
     });
@@ -60,13 +60,13 @@ export default function WordImport({ langCode, owner }: { langCode: string, owne
         setImportResult(null);
         try {
             const arr = csvToArray(csv).map(obj => ({ ...obj, conlang_code: langCode, owner }));
-            const filtered = arr.filter(w => w.lexical_item && w.definition);
+            const filtered = arr.filter(w => w?.lexical_item && w?.definition);
             if (!filtered.length) throw new Error("No valid data to import.");
             const { error } = await supabase.from("conlang-dictionary").insert(filtered);
             if (error) setImportResult("Error importing: " + error.message);
             else setImportResult("Import completed successfully!");
-        } catch (err: any) {
-            setImportResult("Error importing: " + err.message);
+        } catch (err) {
+            setImportResult("Error importing: " + err);
         }
         setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function WordImport({ langCode, owner }: { langCode: string, owne
                 <Button variant={mode === "export" ? "secondary" : "outline"} onClick={() => { setMode("export"); handleExport(); }}>Export CSV</Button>
                 <Button variant={mode === "import" ? "secondary" : "outline"} onClick={() => { setMode("import"); setCsv(""); setImportResult(null); }}>Import CSV</Button>
             </div>
-            <span>The import function isn't working yet. Try the export function instead! <br/> A user manual about how to use it will be released soon!</span>
+            <span>{`The import function isn't working yet. Try the export function instead! <br/> A user manual about how to use it will be released soon!`}</span>
             {mode === "export" && (
                 <div>
                     <label className="block mb-2 font-medium">Copy the CSV below:</label>
