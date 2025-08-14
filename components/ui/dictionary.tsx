@@ -111,7 +111,7 @@ export default function Dictionary({ data }: {
                 >
                     <div className="flex justify-between items-start">
                         <div className="flex-1">
-                            <h3 className="font-bold text-xl text-gray-900 dark:text-white">
+                            <h3 className={`font-bold text-xl text-gray-900 dark:text-white ${item.conlang_code == "AR" ? "semlek" : ""}`}>
                                 {item.lexical_item}
                             </h3>
                             {item.transliteration && (

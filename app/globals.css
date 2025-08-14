@@ -67,3 +67,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+    font-family: 'Buwagat';
+    src: url('/fonts/Buwagat.ttf') format('truetype');
+
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.semlek {
+  font-family: 'Buwagat';
+}
