@@ -107,6 +107,16 @@ export default function WordImport({
         >
           Export CSV
         </Button>
+        <Button
+          variant={mode === "import" ? "secondary" : "outline"}
+          onClick={() => {
+            setMode("import");
+            setJsonImport("");
+            setImportResult(null);
+          }}
+        >
+          Import JSON
+        </Button>
       </div>
       <span>{`The import function isn't working yet. Try the export function instead! <br/> A user manual about how to use it will be released soon!`}</span>
       {mode === "export" && (
