@@ -9,8 +9,6 @@ const CSV_FIELDS = [
   "pos",
   "notes",
   "transliteration",
-  "conlang_code",
-  "owner",
 ];
 
 function arrayToCSV(arr: string[]) {
@@ -65,7 +63,7 @@ export default function WordImport({
     setImportResult(null);
     const { data, error } = await supabase
       .from("conlang-dictionary")
-      .select("*")
+  .select("lexical_item,definition,pos,notes,transliteration")
       .eq("conlang_code", langCode)
       .eq("owner", owner);
     if (error) {
@@ -111,12 +109,17 @@ export default function WordImport({
           }}
         >
           Export CSV
-        </Button>
-        <Button
-          variant={mode === "import" ? "secondary" : "outline"}
-          onClick={() => {
-            setMode("import");
-            setCsv("");
+              let arr: any[] = [];
+              try {
+                arr = JSON.parse(dataText);
+              } catch (err) {
+                throw new Error("JSON inválido. Verifique o formato.");
+              }
+              if (!Array.isArray(arr)) throw new Error("El JSON debe ser un array de objetos.");
+              const arrWithMeta = arr.map((obj) => ({
+                ...obj,
+                conlang_code: langCode,
+                owner,
             setImportResult(null);
           }}
         >
@@ -147,7 +150,7 @@ export default function WordImport({
             value={csv}
             onChange={(e) => setCsv(e.target.value)}
             placeholder={
-              CSV_FIELDS.join(",") +
+                    setDataText("");
               "\nlexical_item,definition,pos,notes,transliteration,..."
             }
             required
