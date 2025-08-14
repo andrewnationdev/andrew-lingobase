@@ -22,20 +22,6 @@ function arrayToCSV(arr: string[] | IWordData[]) {
   return [header, ...rows].join("\n");
 }
 
-function csvToArray(csv: string) {
-  const [headerLine, ...lines] = csv.trim().split(/\r?\n/);
-  const headers = headerLine.split(",").map((h) => h.replace(/^"|"$/g, ""));
-  return lines.map((line) => {
-    const values =
-      line
-        .match(/("[^"]*("{2})*[^"]*"|[^,]*)/g)
-        ?.map((v) => v.replace(/^"|"$/g, "").replace(/""/g, '"')) || [];
-    const obj = {};
-    headers.forEach((h, i) => (obj[h] = values[i] || ""));
-    return obj;
-  });
-}
-
 export interface IWordData {
   lexical_item: string;
   definition: string;
@@ -62,18 +48,18 @@ export default function WordImport({
   async function handleExport() {
     setLoading(true);
     setImportResult(null);
-  const { data, error } = await supabase
-    .from("conlang-dictionary")
-    .select("lexical_item,definition,pos,notes,transliteration")
-    .eq("conlang_code", langCode)
-    .eq("owner", owner);
-  if (error) {
-    setCsv("");
-    setImportResult("Error exporting: " + error.message);
-  } else {
-    setCsv(arrayToCSV((data ?? []) as IWordData[]));
-  }
-  setLoading(false);
+    const { data, error } = await supabase
+      .from("conlang-dictionary")
+      .select("lexical_item,definition,pos,notes,transliteration")
+      .eq("conlang_code", langCode)
+      .eq("owner", owner);
+    if (error) {
+      setCsv("");
+      setImportResult("Error exporting: " + error.message);
+    } else {
+      setCsv(arrayToCSV((data ?? []) as IWordData[]));
+    }
+    setLoading(false);
   }
 
   async function handleImport(e: React.FormEvent) {
@@ -87,13 +73,16 @@ export default function WordImport({
       } catch (err) {
         throw new Error("Invalid JSON");
       }
-      if (!Array.isArray(arr)) throw new Error("JSON must be an array of objects");
+      if (!Array.isArray(arr))
+        throw new Error("JSON must be an array of objects");
       const arrWithMeta = arr.map((obj) => ({
         ...obj,
         conlang_code: langCode,
         owner,
       }));
-      const filtered = arrWithMeta.filter((w) => w?.lexical_item && w?.definition);
+      const filtered = arrWithMeta.filter(
+        (w) => w?.lexical_item && w?.definition
+      );
       if (!filtered.length) throw new Error("No valid data to import.");
       const { error } = await supabase
         .from("conlang-dictionary")
@@ -136,7 +125,7 @@ export default function WordImport({
       {mode === "import" && (
         <form onSubmit={handleImport}>
           <label className="block mb-2 font-medium">
-             Pegue el array JSON para importar:
+            Pegue el array JSON para importar:
           </label>
           <textarea
             className="w-full h-48 p-2 border rounded text-xs"
