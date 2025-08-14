@@ -71,7 +71,7 @@ export default function WordImport({
       try {
         arr = JSON.parse(jsonImport);
       } catch (err) {
-        throw new Error("Invalid JSON");
+        throw new Error("Invalid JSON: " + err);
       }
       if (!Array.isArray(arr))
         throw new Error("JSON must be an array of objects");
