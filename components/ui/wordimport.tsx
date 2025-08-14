@@ -142,7 +142,13 @@ export default function WordImport({
             value={jsonImport}
             onChange={(e) => setJsonImport(e.target.value)}
             placeholder={`[
-  {"lexical_item": "word", "definition": "meaning", "pos": "noun", "notes": "", "transliteration": ""}
+  {
+    "lexical_item": "",
+    "definition": "",
+    "pos": "",
+    "notes": "",
+    "transliteration": ""
+  }
 ]`}
             required
           />
