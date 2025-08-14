@@ -118,7 +118,6 @@ export default function WordImport({
           Import JSON
         </Button>
       </div>
-      <span>{`The import function isn't working yet. Try the export function instead! <br/> A user manual about how to use it will be released soon!`}</span>
       {mode === "export" && (
         <div>
           <label className="block mb-2 font-medium">Copy the CSV below:</label>
@@ -135,21 +134,21 @@ export default function WordImport({
       {mode === "import" && (
         <form onSubmit={handleImport}>
           <label className="block mb-2 font-medium">
-            Pegue el array JSON para importar:
+            Paste a JSON array:
           </label>
           <textarea
             className="w-full h-48 p-2 border rounded text-xs"
             value={jsonImport}
             onChange={(e) => setJsonImport(e.target.value)}
             placeholder={`[
-  {
-    "lexical_item": "",
-    "definition": "",
-    "pos": "",
-    "notes": "",
-    "transliteration": ""
-  }
-]`}
+              {
+                "lexical_item": "",
+                "definition": "",
+                "pos": "",
+                "notes": "",
+                "transliteration": ""
+              }
+            ]`}
             required
           />
           <Button type="submit" className="mt-2" disabled={loading}>
