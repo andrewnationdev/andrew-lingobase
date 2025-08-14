@@ -11,7 +11,7 @@ const CSV_FIELDS = [
   "transliteration",
 ];
 
-function arrayToCSV(arr: string[]) {
+function arrayToCSV(arr: string[] | IWordData[]) {
   if (!arr.length) return "";
   const header = CSV_FIELDS.join(",");
   const rows = arr.map((obj) =>
@@ -57,22 +57,23 @@ export default function WordImport({
   const [csv, setCsv] = useState("");
   const [loading, setLoading] = useState(false);
   const [importResult, setImportResult] = useState<string | null>(null);
+  const [jsonImport, setJsonImport] = useState(""); // Para import JSON
 
   async function handleExport() {
     setLoading(true);
     setImportResult(null);
-    const { data, error } = await supabase
-      .from("conlang-dictionary")
-  .select("lexical_item,definition,pos,notes,transliteration")
-      .eq("conlang_code", langCode)
-      .eq("owner", owner);
-    if (error) {
-      setCsv("");
-      setImportResult("Error exporting: " + error.message);
-    } else {
-      setCsv(arrayToCSV(data || []));
-    }
-    setLoading(false);
+  const { data, error } = await supabase
+    .from("conlang-dictionary")
+    .select("lexical_item,definition,pos,notes,transliteration")
+    .eq("conlang_code", langCode)
+    .eq("owner", owner);
+  if (error) {
+    setCsv("");
+    setImportResult("Error exporting: " + error.message);
+  } else {
+    setCsv(arrayToCSV((data ?? []) as IWordData[]));
+  }
+  setLoading(false);
   }
 
   async function handleImport(e: React.FormEvent) {
@@ -80,12 +81,19 @@ export default function WordImport({
     setLoading(true);
     setImportResult(null);
     try {
-      const arr = (csvToArray(csv) as IWordData[]).map((obj) => ({
+      let arr = [];
+      try {
+        arr = JSON.parse(jsonImport);
+      } catch (err) {
+        throw new Error("Invalid JSON");
+      }
+      if (!Array.isArray(arr)) throw new Error("JSON must be an array of objects");
+      const arrWithMeta = arr.map((obj) => ({
         ...obj,
         conlang_code: langCode,
         owner,
       }));
-      const filtered = arr.filter((w: IWordData) => w?.lexical_item && w?.definition);
+      const filtered = arrWithMeta.filter((w) => w?.lexical_item && w?.definition);
       if (!filtered.length) throw new Error("No valid data to import.");
       const { error } = await supabase
         .from("conlang-dictionary")
@@ -109,21 +117,6 @@ export default function WordImport({
           }}
         >
           Export CSV
-              let arr: any[] = [];
-              try {
-                arr = JSON.parse(dataText);
-              } catch (err) {
-                throw new Error("JSON inválido. Verifique o formato.");
-              }
-              if (!Array.isArray(arr)) throw new Error("El JSON debe ser un array de objetos.");
-              const arrWithMeta = arr.map((obj) => ({
-                ...obj,
-                conlang_code: langCode,
-                owner,
-            setImportResult(null);
-          }}
-        >
-          Import CSV
         </Button>
       </div>
       <span>{`The import function isn't working yet. Try the export function instead! <br/> A user manual about how to use it will be released soon!`}</span>
@@ -143,16 +136,15 @@ export default function WordImport({
       {mode === "import" && (
         <form onSubmit={handleImport}>
           <label className="block mb-2 font-medium">
-            Paste the CSV to import:
+             Pegue el array JSON para importar:
           </label>
           <textarea
             className="w-full h-48 p-2 border rounded text-xs"
-            value={csv}
-            onChange={(e) => setCsv(e.target.value)}
-            placeholder={
-                    setDataText("");
-              "\nlexical_item,definition,pos,notes,transliteration,..."
-            }
+            value={jsonImport}
+            onChange={(e) => setJsonImport(e.target.value)}
+            placeholder={`[
+  {"lexical_item": "word", "definition": "meaning", "pos": "noun", "notes": "", "transliteration": ""}
+]`}
             required
           />
           <Button type="submit" className="mt-2" disabled={loading}>
