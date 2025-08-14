@@ -82,7 +82,7 @@ export default function WordImport({
     setLoading(true);
     setImportResult(null);
     try {
-      const arr = csvToArray(csv).map((obj) => ({
+      const arr = (csvToArray(csv) as IWordData[]).map((obj) => ({
         ...obj,
         conlang_code: langCode,
         owner,
