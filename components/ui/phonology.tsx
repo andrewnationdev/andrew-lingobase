@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/database";
-import Return from "@/components/ui/return";
 import ReturnComponent from "@/components/ui/return";
 
 const ipaConsonantChart = [
@@ -323,7 +322,7 @@ function IPAChart({ phonemes, onToggle }) {
                         <div className="flex flex-row gap-1 items-center justify-center flex-wrap">
                           {cell.map((v, idx) => (
                             <button
-                              key={v}
+                              key={idx}
                               className={`rounded px-2 py-1 w-8 ${
                                 phonemes.includes(v)
                                   ? "bg-green-400 text-white"
