@@ -358,7 +358,9 @@ export default function PhonologyComponent({ loggedUser }) {
         setConlangAuthor(data.created_by);
       }
       setLoadingAuthor(false);
+	  console.log(error)
     }
+
     if (conlangId) fetchAuthor();
   }, [conlangId]);
 
@@ -378,6 +380,8 @@ export default function PhonologyComponent({ loggedUser }) {
       } else {
         setPhonologyExists(false);
       }
+
+	  console.log(error)
       setLoadingPhonology(false);
     }
     if (conlangId) fetchPhonology();
@@ -451,7 +455,7 @@ export default function PhonologyComponent({ loggedUser }) {
         <></>
       ) : !isEditable ? (
         <div className="mb-4 text-red-600 font-semibold">
-          You do not have permission to edit this conlang's phonology.
+          {`You do not have permission to edit this conlang's phonology.`}
         </div>
       ) : null}
       {!loadingPhonology && !phonologyExists && (
