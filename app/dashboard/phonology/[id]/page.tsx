@@ -60,9 +60,9 @@ function IPAChart({ phonemes, onToggle }) {
 										<td key={j} className="border px-2 py-1 text-center">
 											{pair && (pair[0] || pair[1]) ? (
 												<div className="flex flex-row gap-1 items-center justify-center">
-													{pair.map((c, idx) => c ? (
+													{pair.map((c, index) => c ? (
 														<button
-															key={c}
+															key={index}
 															className={`rounded px-1 py-1 w-8 ${phonemes.includes(c) ? "bg-green-400 text-white" : "bg-white"}`}
 															style={{ fontSize: '13px' }}
 															onClick={() => handleCellClick(c)}
@@ -139,7 +139,7 @@ export default function EditPhonologyPage() {
 	return (
 		<div className="p-6 max-w-3xl mx-auto">
 			<h1 className="text-2xl font-bold mb-4">Edit Phonology</h1>
-			<span className="my-8">This page is experimental and won't save yet!</span>
+			<span className="my-8">{`This page is experimental and won't save yet!`}</span>
 			<div className="mb-2 text-gray-600">Conlang ID: <span className="font-mono">{conlangId}</span></div>
 			<div className="mb-6">
 				<label className="block font-semibold mb-2">Phonotactics and details:</label>
