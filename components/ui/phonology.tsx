@@ -469,8 +469,8 @@ export default function PhonologyComponent({ loggedUser }) {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-x-4 mb-4">
-        <ReturnComponent id={conlangId} />
-        <h1 className="text-2xl font-bold flex-1 text-center">
+        <div className="flex-1 max-w-[200px]"><ReturnComponent id={conlangId}/></div>
+        <h1 className="text-2xl font-bold text-center">
           Edit Phonology
         </h1>
       </div>
@@ -490,7 +490,7 @@ export default function PhonologyComponent({ loggedUser }) {
         Conlang ID: <span className="font-mono">{conlangId}</span>
       </div>
       <div className="mb-6">
-        <h2 className="font-semibold mb-2">Phonemes:</h2>
+        <h2 className="font-semibold mb-2 text-3xl">Phonemes</h2>
         {isEditable && (
           <span>
             Click phonemes to add them. They should become green.
@@ -558,8 +558,8 @@ export default function PhonologyComponent({ loggedUser }) {
         </div>
       </div>
       <div className="mb-6">
-        <label className="block font-semibold mb-2">
-          Phonotactics and details:
+        <label className="block font-semibold mb-2 text-3xl">
+          Phonotactics and details
         </label>
         <textarea
           className="w-full h-80 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 resize-none"
