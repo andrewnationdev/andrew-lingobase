@@ -104,6 +104,12 @@ export default function ViewConlang({ id, loggedUser }) {
           link: `/dashboard/typology/${conlang.code}`,
           title: 'Typology'
         }} />
+      </div>
+       <div className="flex mt-2 w-full gap-2">
+        <GreenButton props={{
+          link: `/dashboard/phonology/${conlang.code}`,
+          title: 'Phonology'
+        }} />
         <GreenButton props={{
           link: `/dashboard/articles/${conlang.code}`,
           title: 'Articles and Literature'
