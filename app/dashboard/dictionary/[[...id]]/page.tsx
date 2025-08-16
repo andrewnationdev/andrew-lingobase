@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 export default async function DictionaryPage({ params }) {
     const langCode = await params.id[0];
 
-    //Validates owner
     const conlang = await supabase.from('conlang').select("*").eq('code', langCode);
 
     const c_owner = conlang?.data[0]?.created_by;

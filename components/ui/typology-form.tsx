@@ -68,6 +68,7 @@ export default function TypologyForm({ id }) {
             }
             console.log('Data saved successfully:', data);
             window.alert('Data saved successfully!');
+            window.location.reload();
         } catch (error) {
             console.error('Error saving data:', error);
             window.alert('An error occurred while saving data: ' + error);

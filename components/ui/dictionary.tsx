@@ -51,7 +51,7 @@ export default function Dictionary({ data }: {
         const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', data.langCode);
 
         setLexicon(lex?.data);
-        //router.refresh();
+        window.location.reload();
     }
 
     useEffect(() => {

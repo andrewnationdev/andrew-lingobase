@@ -73,7 +73,6 @@ export default function ArticleForm({
     try {
       let error;
       if (isEditing && currArticle && currArticle.id) {
-        // Editar artículo existente
         const { error: updateError } = await supabase
           .from("conlang-articles")
           .update({
@@ -85,7 +84,6 @@ export default function ArticleForm({
           .eq("id", currArticle.id);
         error = updateError;
       } else {
-        // Agregar nuevo artículo
         const { error: insertError } = await supabase.from("conlang-articles").insert([
           {
             ...article,
@@ -103,6 +101,7 @@ export default function ArticleForm({
       if (!isEditing) {
         setArticle({ title: "", content: "", written_by: loggedUser });
       }
+      window.location.reload();
     } catch (error) {
       setMessage({
         type: "error",
