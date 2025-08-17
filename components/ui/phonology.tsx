@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/database";
 import ReturnComponent from "@/components/ui/return";
+import { InfoIcon } from "lucide-react";
 
 const ipaConsonantChart = [
   {
@@ -25,18 +26,30 @@ const ipaConsonantChart = [
   {
     label: "Plosive",
     cells: [
-      ["p", "b"],
-      ["t", "d"],
-      ["ʈ", "ɖ"],
-      ["c", "ɟ"],
-      ["k", "g"],
-      ["q", "ɢ"],
-      ["ʡ", null],
-      ["ʔ", null],
-      [null, null],
-      [null, null],
-      [null, null],
-      [null, null],
+  // 0 Bilabial
+  ["p", "b"],
+  // 1 Labiodental (no standard plosives)
+  [null, null],
+  // 2 Dental (using diacritics)
+  ["t̪", "d̪"],
+  // 3 Alveolar
+  ["t", "d"],
+  // 4 Postalveolar (none)
+  [null, null],
+  // 5 Palato-alveolar (none for plosives)
+  [null, null],
+  // 6 Retroflex
+  ["ʈ", "ɖ"],
+  // 7 Palatal
+  ["c", "ɟ"],
+  // 8 Velar
+  ["k", "g"],
+  // 9 Uvular
+  ["q", "ɢ"],
+  // 10 Pharyngeal (none)
+  [null, null],
+  // 11 Glottal
+  ["ʔ", null],
     ],
   },
   {
@@ -236,18 +249,21 @@ function IPAChart({ phonemes, onToggle }) {
       <h3 className="font-bold mb-2 text-center">IPA Chart</h3>
       <div className="mb-4 w-full flex flex-col items-center">
         <span className="font-semibold text-center">Consonants:</span>
-        <div className="overflow-x-auto w-full max-w-full">
+        <div
+          className="overflow-x-auto my-3 md:my-4 w-full max-w-[100vw] overscroll-x-contain"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           <table
-            className="border mx-auto text-sm md:text-base"
-            style={{ fontSize: "16px", minWidth: "600px" }}
+            className="border mx-auto text-xs sm:text-sm md:text-base min-w-[380px] sm:min-w-[500px] md:min-w-[600px]"
+            style={{ fontSize: "16px" }}
           >
             <thead>
               <tr>
-                <th className="border px-1 py-1 whitespace-nowrap"></th>
+                <th className="border px-1 py-1 md:px-2 md:py-1 whitespace-nowrap"></th>
                 {ipaConsonantHeaders.map((h) => (
                   <th
                     key={h}
-                    className="border px-1 py-1 whitespace-nowrap text-center"
+                    className="border px-1 py-1 md:px-2 md:py-1 whitespace-nowrap text-center"
                   >
                     {h}
                   </th>
@@ -257,21 +273,24 @@ function IPAChart({ phonemes, onToggle }) {
             <tbody>
               {ipaConsonantChart.map((row, i) => (
                 <tr key={i}>
-                  <td className="border px-2 py-1 font-semibold text-center">
+                  <td className="border px-1 py-1 md:px-2 md:py-1 font-semibold text-center">
                     {row.label}
                   </td>
                   {row.cells.map((pair, j) => (
-                    <td key={j} className="border px-2 py-1 text-center">
+                    <td
+                      key={j}
+                      className="border px-1 py-1 md:px-2 md:py-1 text-center align-middle"
+                    >
                       {pair && (pair[0] || pair[1]) ? (
                         <div className="flex flex-row gap-1 items-center justify-center">
                           {pair.map((c, index) =>
                             c ? (
                               <button
                                 key={index}
-                                className={`rounded px-1 py-1 w-8 text-bold ${
+                                className={`rounded font-bold px-1 py-1 w-7 md:w-8 text-bold ${
                                   phonemes.includes(c)
                                     ? "bg-green-400 text-white"
-                                    : "bg-white"
+                                    : "bg-grey"
                                 }`}
                                 style={{ fontSize: "16px" }}
                                 onClick={() => handleCellClick(c)}
@@ -292,18 +311,21 @@ function IPAChart({ phonemes, onToggle }) {
       </div>
       <div className="w-full flex flex-col items-center">
         <span className="font-semibold text-center">Vowels:</span>
-        <div className="overflow-x-auto w-full max-w-full">
+        <div
+          className="overflow-x-auto my-3 md:my-4 w-full max-w-[100vw] overscroll-x-contain"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           <table
-            className="border mx-auto text-sm md:text-base"
-            style={{ fontSize: "16px", minWidth: "600px" }}
+            className="border mx-auto text-xs sm:text-sm md:text-base min-w-[380px] sm:min-w-[500px] md:min-w-[600px]"
+            style={{ fontSize: "16px" }}
           >
             <thead>
               <tr>
-                <th className="border px-1 py-1 whitespace-nowrap"></th>
+                <th className="border px-1 py-1 md:px-2 md:py-1 whitespace-nowrap"></th>
                 {ipaVowelHeaders.map((h) => (
                   <th
                     key={h}
-                    className="border px-1 py-1 whitespace-nowrap text-center"
+                    className="border px-1 py-1 md:px-2 md:py-1 whitespace-nowrap text-center"
                   >
                     {h}
                   </th>
@@ -313,22 +335,25 @@ function IPAChart({ phonemes, onToggle }) {
             <tbody>
               {ipaVowelChart.map((row, i) => (
                 <tr key={i}>
-                  <td className="border px-2 py-1 font-semibold text-center">
+                  <td className="border px-1 py-1 md:px-2 md:py-1 font-semibold text-center">
                     {row.label}
                   </td>
                   {row.cells.map((cell, j) => (
-                    <td key={j} className="border px-2 py-1 text-center">
+                    <td
+                      key={j}
+                      className="border px-1 py-1 md:px-2 md:py-1 text-center align-middle"
+                    >
                       {cell && cell.length > 0 ? (
                         <div className="flex flex-row gap-1 items-center justify-center flex-wrap">
                           {cell.map((v, idx) => (
                             <button
                               key={idx}
-                              className={`rounded px-2 py-1 w-8 ${
+                              className={`font-bold rounded px-1 md:px-2 py-1 w-7 md:w-8 ${
                                 phonemes.includes(v)
                                   ? "bg-green-400 text-white"
-                                  : "bg-white"
+                                  : "bg-grey"
                               }`}
-                              style={{ fontSize: "13px" }}
+                              style={{ fontSize: "16px" }}
                               onClick={() => handleCellClick(v)}
                             >
                               {v}
@@ -466,10 +491,12 @@ export default function PhonologyComponent({ loggedUser }) {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <div className="flex items-center gap-x-4 mb-4">
-        <div className="flex-1 max-w-[200px]"><ReturnComponent id={conlangId}/></div>
-        <h1 className="text-2xl font-bold text-center">
+    <div className="mx-auto px-4 py-4 md:py-8 my-2 md:my-0 flex flex-col gap-6 w-full max-w-full md:max-w-4xl overflow-x-hidden">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-2">
+        <div className="w-full md:w-auto">
+          <ReturnComponent id={conlangId} />
+        </div>
+        <h1 className="text-xl md:text-3xl font-bold text-center md:text-left w-full">
           Edit Phonology
         </h1>
       </div>
@@ -485,16 +512,17 @@ export default function PhonologyComponent({ loggedUser }) {
           No phonology has been created for this language yet.
         </div>
       )}
-      <div className="mb-2 text-gray-600">
-        Conlang ID: <span className="font-mono">{conlangId}</span>
+      <div className="mb-2 text-gray-600 text-center md:text-left">
+        Conlang ID: <span className="font-mono break-all">{conlangId}</span>
       </div>
       <div className="mb-6">
         <h2 className="font-semibold mb-2 text-3xl">Phonemes</h2>
         {isEditable && (
-          <span>
+          <div className="bg-accent text-sm p-3 px-5 rounded-md text-black flex gap-8 items-center">
+            <InfoIcon size="16" strokeWidth={2} />
             Click phonemes to add them. They should become green.
             <br /> Green phonemes mean that they are part of the phonology.
-          </span>
+          </div>
         )}
         <IPAChart
           phonemes={phonemes}
@@ -502,22 +530,25 @@ export default function PhonologyComponent({ loggedUser }) {
         />
       </div>
       <div className="mb-6">
-        <h2 className="font-semibold mb-2">Selected phonemes:</h2>
-        <ul>
+        <hr className="my-4" />
+        <h2 className="text-3xl font-semibold">Allophones</h2>
+        <ul className="my-4">
           {phonemes.map((p) => (
             <li key={p} className="mb-1">
-              <span className="font-mono">{p}</span>
               {allophones[p] && (
-                <span className="ml-2 text-sm text-gray-600">
-                  Allophones: {allophones[p].join(", ")}
-                </span>
+                <>
+                  <span className="font-mono">{p}</span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    Allophones: {allophones[p].join(", ")}
+                  </span>
+                </>
               )}
             </li>
           ))}
         </ul>
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex flex-col sm:flex-row gap-2">
           <select
-            className="border rounded px-2"
+            className="block w-full sm:w-[140px] rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
             value={newAllophone.phoneme}
             onChange={(e) =>
               setNewAllophone({ ...newAllophone, phoneme: e.target.value })
@@ -532,7 +563,7 @@ export default function PhonologyComponent({ loggedUser }) {
             ))}
           </select>
           <input
-            className="border rounded px-2"
+            className="block w-full sm:w-[200px] rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
             type="text"
             placeholder="Allophone (IPA)"
             value={newAllophone.value}
@@ -541,27 +572,23 @@ export default function PhonologyComponent({ loggedUser }) {
             }
             disabled={!isEditable}
           />
+        </div>
+        {isEditable && (
           <button
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            className="w-full sm:w-[180px] my-4 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             onClick={handleAddAllophone}
-            disabled={!isEditable}
           >
             Add allophone
           </button>
-        </div>
-        <div className="mt-6">
-          <h3 className="font-bold mb-2">Blends</h3>
-          <div className="border rounded p-2 bg-gray-50">
-            (Add blends functionality here)
-          </div>
-        </div>
+        )}
+        <hr className="my-4" />
       </div>
       <div className="mb-6">
-        <label className="block font-semibold mb-2 text-3xl">
+        <label className="block font-semibold mb-2 text-2xl md:text-3xl">
           Phonotactics and details
         </label>
         <textarea
-          className="w-full h-80 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 resize-none"
+          className="w-full h-48 md:h-80 p-3 md:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 resize-none"
           rows={4}
           value={phonotactics}
           onChange={(e) => setPhonotactics(e.target.value)}
@@ -571,7 +598,7 @@ export default function PhonologyComponent({ loggedUser }) {
       </div>
       {isEditable && (
         <button
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+          className="w-full sm:w-[220px] flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
           onClick={handleSave}
           disabled={saving}
         >
