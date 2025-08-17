@@ -9,6 +9,7 @@ export const partsOfSpeech = [
   { value: "conjunction", label: "Conjunction" },
   { value: "interjection", label: "Interjection" },
   { value: "determiner", label: "Determiner" },
+  { value: "morpheme", label: "Morpheme, Affix" },
   { value: "other", label: "Other" },
 ];
 
