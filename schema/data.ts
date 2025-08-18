@@ -33,6 +33,7 @@ export const TypologySchema = {
     "VOS",
     "OVS",
     "OSV",
+    "German/Dutch-like V2",
     "No Default Word Order",
     "Pragmatic Word Order",
   ],
@@ -77,10 +78,10 @@ export const TypologySchema = {
     "Yes (Only the Object)",
   ],
   formality_system: [
+    "No Formality Distinctions",
     "T-V Distinction",
     "Honorifics",
-    "Mixed",
-    "No Formality Distinctions",
+    "Mixed"
   ],
   vowel_inventory: [
     "No Length and Nasality",
@@ -89,6 +90,6 @@ export const TypologySchema = {
     "Long, Short and Nasal Vowels",
     "Complex",
   ],
-  tonal: ["Tonal", "Non-Tonal", "Pitch Accent"],
+  tonal: ["Non-Tonal", "Tonal", "Pitch Accent"],
   syllable_structure: ["CV", "CVC", "CCV", "CCVC", "Complex"],
 };
