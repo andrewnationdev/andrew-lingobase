@@ -51,7 +51,7 @@ export default function UserPageComponent({ user }) {
               key={c.id}
               props={{
                 title: c.english_name,
-                link: `/dashboard/conlang/${c.id}`,
+                link: `/dashboard/conlang/${c.conlang_code}`,
               }}
             />
           ))}
