@@ -92,6 +92,8 @@ export default function Dictionary({ data }: {
             .eq('conlang_code', data.langCode);
 
         setLexicon(lex?.data || []);
+
+        window.location.reload();
     }
 
     return <div>

@@ -61,6 +61,8 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
                         owner: word.owner,
                     })
                 );
+
+                window.location.reload();
             } else {
                 ({ error } = await supabase
                     .from('conlang-dictionary')

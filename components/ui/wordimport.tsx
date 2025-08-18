@@ -88,7 +88,10 @@ export default function WordImport({
         .from("conlang-dictionary")
         .insert(filtered);
       if (error) setImportResult("Error importing: " + error.message);
-      else setImportResult("Import completed successfully!");
+      else {
+        setImportResult("Import completed successfully!");
+        window.location.reload();
+      }
     } catch (err) {
       setImportResult("Error importing: " + err);
     }
