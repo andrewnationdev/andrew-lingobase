@@ -23,14 +23,10 @@ export default function UserPageComponent({ user }) {
     };
 
     fetchUserLangs();
-  }, [userName]);
+  }, [userName, user]);
 
   useEffect(() => {
-    //if (user?.email) {
-      //const uname = user.email?.split("@")[0];
-
       setUserName(user);
-    //}
   }, [user]);
 
   return (
