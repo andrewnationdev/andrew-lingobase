@@ -1,105 +1,400 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Lingobase
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+  <strong>Construct Your Language. Build Your World.</strong>
+</p>
+
+<p align="center">
+  A platform for creating, documenting, and sharing constructed languages (conlangs) with a community of fellow world-builders.
 </p>
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
+  <a href="#installation"><strong>Installation</strong></a> ·
+  <a href="#supabase-setup"><strong>Supabase Setup</strong></a> ·
+  <a href="#contributing"><strong>Contributing</strong></a> ·
+  <a href="#development"><strong>Development</strong></a>
 </p>
-<br/>
+
+---
+
+## What is Lingobase?
+
+Lingobase is a comprehensive platform for constructed language (conlang) creators to:
+
+- **Create and document languages** with detailed typological information
+- **Build comprehensive dictionaries** with etymologies and grammatical notes
+- **Design phonological systems** with custom sound inventories
+- **Share your languages** with the community
+- **Collaborate** on language development projects
+
+Perfect for fantasy world-builders, game developers, writers, linguists, and language enthusiasts.
 
 ## Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+### Language Creation Tools
+- **Typological documentation** - Define word order, morphology, alignment systems
+- **Dictionary management** - Create entries with definitions, parts of speech, and notes
+- **Phonology tools** - Document your language's sound system
+- **Grammar articles** - Write detailed grammatical descriptions
 
-## Demo
+### Technical Features
+- Built with [Next.js 15](https://nextjs.org) App Router
+- [Supabase](https://supabase.com) backend with real-time updates
+- User authentication and authorization
+- Beautiful UI with [shadcn/ui](https://ui.shadcn.com/) and [Tailwind CSS](https://tailwindcss.com)
+- Responsive design for desktop and mobile
+- Dark/light theme support
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+## Installation
 
-## Deploy to Vercel
+### Prerequisites
 
-Vercel deployment will guide you through creating a Supabase account and project.
+- Node.js 18+ and npm/yarn/pnpm
+- A [Supabase](https://supabase.com) account
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+### 1. Clone the repository
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+```bash
+git clone https://github.com/andrewnationdev/andrew-lingobase.git
+cd andrew-lingobase
+```
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+### 2. Install dependencies
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
 
-## Clone and run locally
+### 3. Environment setup
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+Create a `.env.local` file in the root directory:
 
-2. Create a Next.js app using the Supabase Starter template npx command
+```bash
+cp .env.example .env.local  # if .env.example exists
+# or create .env.local manually
+```
 
+Add your Supabase credentials to `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+You can find these values in your [Supabase project's API settings](https://supabase.com/dashboard/project/_/settings/api).
+
+### 4. Run the development server
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+## Supabase Setup
+
+### 1. Create a new Supabase project
+
+1. Go to [database.new](https://database.new)
+2. Create a new project
+3. Wait for the database to be provisioned
+
+### 2. Set up authentication
+
+Supabase Auth is already configured in this project. Users can sign up and sign in using email/password.
+
+### 3. Create the database tables
+
+Run the following SQL in your Supabase SQL Editor ([Dashboard > SQL Editor](https://supabase.com/dashboard/project/_/sql/new)):
+
+```sql
+-- Create conlang table for language metadata
+CREATE TABLE public.conlang (
+  id bigserial PRIMARY KEY,
+  code text UNIQUE NOT NULL,
+  english_name text NOT NULL,
+  native_name text,
+  summary text,
+  created_by text NOT NULL,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable Row Level Security
+ALTER TABLE public.conlang ENABLE ROW LEVEL SECURITY;
+
+-- Create conlang-dictionary table for word entries
+CREATE TABLE public."conlang-dictionary" (
+  id bigserial PRIMARY KEY,
+  lexical_item text NOT NULL,
+  definition text NOT NULL,
+  pos text, -- part of speech
+  notes text,
+  transliteration text,
+  conlang_code text NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
+  owner text NOT NULL,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable Row Level Security
+ALTER TABLE public."conlang-dictionary" ENABLE ROW LEVEL SECURITY;
+
+-- Create conlang-typology table for linguistic typology
+CREATE TABLE public."conlang-typology" (
+  id bigserial PRIMARY KEY,
+  conlang_code text UNIQUE NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
+  word_order text,
+  morphosyntactic_alignment text,
+  language_family text,
+  verbal_tenses text,
+  type_morphology text,
+  pro_drop text,
+  formality_system text,
+  vowel_inventory text,
+  tonal text,
+  syllable_structure text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable Row Level Security
+ALTER TABLE public."conlang-typology" ENABLE ROW LEVEL SECURITY;
+
+-- Create conlang-phonology table for sound systems
+CREATE TABLE public."conlang-phonology" (
+  id bigserial PRIMARY KEY,
+  conlang_code text UNIQUE NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
+  consonants jsonb,
+  vowels jsonb,
+  phonotactics text,
+  stress_pattern text,
+  notes text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable Row Level Security
+ALTER TABLE public."conlang-phonology" ENABLE ROW LEVEL SECURITY;
+
+-- Create conlang-articles table for grammar documentation
+CREATE TABLE public."conlang-articles" (
+  id bigserial PRIMARY KEY,
+  conlang_code text NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
+  title text NOT NULL,
+  content text NOT NULL,
+  author text NOT NULL,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable Row Level Security
+ALTER TABLE public."conlang-articles" ENABLE ROW LEVEL SECURITY;
+
+-- Create indexes for better performance
+CREATE INDEX idx_conlang_dictionary_conlang_code ON public."conlang-dictionary"(conlang_code);
+CREATE INDEX idx_conlang_dictionary_owner ON public."conlang-dictionary"(owner);
+CREATE INDEX idx_conlang_articles_conlang_code ON public."conlang-articles"(conlang_code);
+CREATE INDEX idx_conlang_created_by ON public.conlang(created_by);
+
+-- Set up Row Level Security policies
+-- Users can read all public conlangs
+CREATE POLICY "Allow public read access" ON public.conlang
+  FOR SELECT USING (true);
+
+-- Users can insert/update/delete their own conlangs
+CREATE POLICY "Allow users to manage their own conlangs" ON public.conlang
+  FOR ALL USING (auth.jwt() ->> 'email' = created_by);
+
+-- Similar policies for related tables
+CREATE POLICY "Allow public read access to dictionary" ON public."conlang-dictionary"
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow users to manage their own dictionary entries" ON public."conlang-dictionary"
+  FOR ALL USING (auth.jwt() ->> 'email' = owner);
+
+-- Policies for other tables (adjust based on your needs)
+CREATE POLICY "Allow public read access to typology" ON public."conlang-typology"
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow public read access to phonology" ON public."conlang-phonology"
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow public read access to articles" ON public."conlang-articles"
+  FOR SELECT USING (true);
+```
+
+### 4. Optional: Insert sample data
+
+```sql
+-- Insert a sample conlang
+INSERT INTO public.conlang (code, english_name, native_name, summary, created_by)
+VALUES ('EX', 'Example Language', 'Esempal', 'A demonstration constructed language', 'your-email@example.com');
+
+-- Insert sample dictionary entries
+INSERT INTO public."conlang-dictionary" (lexical_item, definition, pos, conlang_code, owner)
+VALUES 
+  ('salu', 'hello, greeting', 'interjection', 'EX', 'your-email@example.com'),
+  ('domis', 'house, home', 'noun', 'EX', 'your-email@example.com'),
+  ('amu', 'to love', 'verb', 'EX', 'your-email@example.com');
+```
+
+## Contributing
+
+We welcome contributions from the community! Whether you're fixing bugs, adding features, improving documentation, or sharing ideas, your contributions help make Lingobase better for everyone.
+
+### Ways to Contribute
+
+- **Report bugs** by opening an issue
+- **Suggest features** or improvements
+- **Submit pull requests** with bug fixes or new features
+- **Improve documentation** 
+- **Share your constructed languages** created with Lingobase
+
+### Development Workflow
+
+1. **Fork the repository** on GitHub
+2. **Clone your fork** locally:
    ```bash
-   npx create-next-app --example with-supabase with-supabase-app
+   git clone https://github.com/your-username/andrew-lingobase.git
    ```
 
+3. **Create a new branch** for your feature/fix:
    ```bash
-   yarn create next-app --example with-supabase with-supabase-app
+   git checkout -b feature/your-feature-name
    ```
 
+4. **Set up the development environment** (see [Installation](#installation))
+
+5. **Make your changes** and test them locally
+
+6. **Run the linter** to ensure code quality:
    ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
+   npm run lint
    ```
 
-3. Use `cd` to change into the app's directory
-
+7. **Build the project** to check for errors:
    ```bash
-   cd with-supabase-app
+   npm run build
    ```
 
-4. Rename `.env.example` to `.env.local` and update the following:
-
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
-
-5. You can now run the Next.js local development server:
-
+8. **Commit your changes** with a descriptive message:
    ```bash
-   npm run dev
+   git commit -m "Add feature: description of what you added"
    ```
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+9. **Push to your fork**:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+10. **Open a Pull Request** on GitHub with a clear description
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+### Code Guidelines
 
-## Feedback and issues
+- Follow the existing code style and conventions
+- Use TypeScript for type safety
+- Write clear, descriptive commit messages
+- Add comments for complex logic
+- Ensure responsive design for UI changes
+- Test your changes across different browsers
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+### Project Structure
 
-## More Supabase examples
+```
+├── app/                    # Next.js App Router pages
+│   ├── dashboard/         # Protected dashboard pages  
+│   ├── auth/              # Authentication pages
+│   └── page.tsx           # Landing page
+├── components/            # Reusable React components
+│   ├── ui/                # shadcn/ui components
+│   └── tutorial/          # Tutorial/help components
+├── lib/                   # Utility functions and configs
+│   ├── supabase/          # Supabase client configuration
+│   └── utils.ts           # General utilities
+├── schema/                # Data schemas and constants
+└── public/                # Static assets
+```
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+
+### Environment Variables
+
+Required environment variables:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### Key Technologies
+
+- **Framework**: Next.js 15 with App Router
+- **Database**: Supabase (PostgreSQL with real-time subscriptions)
+- **Authentication**: Supabase Auth
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Icons**: Lucide React, FontAwesome
+- **Language**: TypeScript
+
+### Troubleshooting
+
+#### Build fails with font loading error
+If you encounter Google Fonts loading errors during build, this is likely due to network restrictions in the build environment. The app will still work fine in development and production.
+
+#### Environment variables not loading
+- Ensure `.env.local` exists in the root directory
+- Check that variable names match exactly: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Restart the development server after adding environment variables
+
+#### Database connection issues
+- Verify your Supabase URL and key are correct
+- Check that your Supabase project is active
+- Ensure Row Level Security policies are set up correctly
+
+#### Authentication not working
+- Confirm Supabase Auth is enabled in your project settings
+- Check that the site URL is configured in Supabase Auth settings for production deployments
+
+## Deployment
+
+### Deploy to Vercel
+
+The easiest way to deploy Lingobase is using Vercel:
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add your environment variables in Vercel's dashboard
+4. Deploy!
+
+Vercel will automatically handle builds and deployments on every push to your main branch.
+
+### Other Platforms
+
+Lingobase can be deployed to any platform that supports Next.js applications:
+
+- Netlify
+- Railway
+- DigitalOcean App Platform
+- AWS Amplify
+- Self-hosted with Docker
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
