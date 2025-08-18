@@ -2,7 +2,9 @@ import UserPageComponent from "@/components/ui/user-ui";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function UserPage(){
+export default async function UserPage({params}){
+      const userName = params.id[0];
+
       const supabase = await createClient();
     
       const { data, error } = await supabase.auth.getClaims();
@@ -10,5 +12,5 @@ export default async function UserPage(){
         redirect("/auth/login");
       }
     
-    return <><UserPageComponent user={data?.claims}/></>
+    return <><UserPageComponent user={userName}/></>
 }
