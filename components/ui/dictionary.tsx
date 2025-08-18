@@ -51,7 +51,8 @@ export default function Dictionary({ data }: {
         const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', data.langCode);
 
         setLexicon(lex?.data);
-        window.location.reload();
+
+        window.scrollTo({top: 0, behavior: 'smooth'})
     }
 
     useEffect(() => {
@@ -63,7 +64,7 @@ export default function Dictionary({ data }: {
 
 
         fetchDictionary();
-    }, [])
+    }, [editing, word, data])
 
     const handleEditWordMode = (word: IWord) => {
         setEditing(true);

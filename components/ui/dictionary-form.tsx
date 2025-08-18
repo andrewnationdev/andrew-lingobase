@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase/database';
 import { partsOfSpeech } from '@/schema/data';
 import { useEffect, useState } from 'react';
 import { IWord } from './dictionary';
+import { useRouter } from 'next/navigation'; // <-- add
 
 export default function DictionaryForm({ conlang_code, owner, word, editing, onFinishEditing }: {
     conlang_code: string,
@@ -12,6 +13,7 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
     editing?: boolean,
     onFinishEditing?: () => void
 }) {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         lexical_item: '',
         definition: '',
@@ -61,8 +63,6 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
                         owner: word.owner,
                     })
                 );
-
-                window.location.reload();
             } else {
                 ({ error } = await supabase
                     .from('conlang-dictionary')
@@ -101,6 +101,8 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
             if(editing){
                 onFinishEditing();
             }
+
+            router.refresh()
         }
     };
 
