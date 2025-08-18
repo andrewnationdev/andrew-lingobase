@@ -55,7 +55,7 @@ export default function TypologyForm({ id, loggedUser }) {
     const fetchOwnership = async () => {
       if (loggedUser && conlangCode) {
         try {
-            const { data, error } = await supabase
+            const { data } = await supabase
           .from("conlang")
           .select("*")
           .eq("code", conlangCode)
