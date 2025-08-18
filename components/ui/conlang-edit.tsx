@@ -69,7 +69,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
     };
 
     try {
-      let error: any = null;
+      let error = null;
 
       if (isEditing) {
         const { error: updateError } = await supabase
