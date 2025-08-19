@@ -25,6 +25,7 @@ export default function Dictionary({ data }: {
     }
 }) {
     const [lexicon, setLexicon] = useState<IWord[]>([]);
+    const [search, setSearch] = useState("");
     const [editing, setEditing] = useState<boolean>(false);
     const [word, setWord] = useState<IWord>({
         lexical_item: '',
@@ -57,14 +58,15 @@ export default function Dictionary({ data }: {
 
     useEffect(() => {
         const fetchDictionary = async () => {
-            const lex = await supabase.from('conlang-dictionary').select('*').eq('conlang_code', data.langCode);
-
+            const lex = await supabase
+                .from('conlang-dictionary')
+                .select('*')
+                .eq('conlang_code', data.langCode)
+                .order('created_at', { ascending: false });
             setLexicon(lex?.data);
-        }
-
-
+        };
         fetchDictionary();
-    }, [editing, word, data])
+    }, [editing, word, data]);
 
     const handleEditWordMode = (word: IWord) => {
         setEditing(true);
@@ -97,9 +99,27 @@ export default function Dictionary({ data }: {
         window.location.reload();
     }
 
+    const filteredLexicon = lexicon
+        .filter(
+            (item) =>
+                item.lexical_item.toLowerCase().includes(search.toLowerCase()) ||
+                item.definition.toLowerCase().includes(search.toLowerCase()) ||
+                item.transliteration?.toLowerCase().includes(search.toLowerCase())
+        )
+        .slice(0, 8);
+
     return <div>
         <h1 className="text-3xl font-bold">Your Lexicon:</h1>
-        <div className="mt-4 flex gap-4 w-full flex-wrap">
+        <div className="mt-4 mb-2 w-full">
+            <input
+                type="text"
+                className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
+                placeholder="Search words, definitions, or transliteration..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+            />
+        </div>
+        <div className="mt-2 flex gap-4 w-full flex-wrap">
             {lexicon.length == 0 && <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
                 <InfoIcon size="16" strokeWidth={2} />
                 The vocabulary of this conlang is empty.
@@ -107,7 +127,7 @@ export default function Dictionary({ data }: {
                     Remember that languages need words to describe the world.
                 </span>}
             </div>}
-            {!editing && lexicon.map((item, index) => (
+            {!editing && filteredLexicon.map((item, index) => (
                 <div
                     key={index}
                     className="p-6 bg-white dark:bg-gray-800 rounded-xl my-2 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-200 w-full sm:w-[calc(50%-0.5rem)]"

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import GreenButton from "./green-button";
+import ReactMarkdown from "react-markdown";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -87,16 +88,16 @@ export default function ViewConlang({ id, loggedUser }) {
         <div className="flex w-full flex-col gap-2 mt-8">
           <span className="text-2xl">
             <strong>
-              {conlang?.english_name ? conlang?.english_name : "Unnamed"}
+              {conlang?.english_name ? `${conlang?.english_name} [${conlang?.code}]` : "Unnamed"}
             </strong>
           </span>
           <span className="text-m">({conlang?.native_name})</span>
           <span className="text-sm">
             This language has been created by{" "}
-            <Link href={`/dashboard/user/${conlang?.created_by}`}>
+            <Link className="text-teal-600 font-bold" href={`/dashboard/user/${conlang?.created_by}`}>
               {conlang?.created_by}
             </Link>{" "}
-            on {conlang?.created_at}
+             {conlang?.created_at ? new Date(conlang.created_at).toLocaleString() : ""}
           </span>
         </div>
         {conlang?.created_by === loggedUser && (
@@ -116,7 +117,33 @@ export default function ViewConlang({ id, loggedUser }) {
           </div>
         )}
         <hr className="my-4" />
-        <p className="mt-8">{conlang?.summary}</p>
+        <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
+        {(conlang.custom_links.link1.title != "" ||
+          conlang.custom_links.link2.title != "") && (
+          <h3 className="text-xl mt-4">Useful Links:</h3>
+        )}
+        <div className="flex my-4 w-full gap-2">
+          {conlang.custom_links.link1 &&
+            conlang.custom_links.link1.title != "" && (
+              <GreenButton
+                props={{
+                  link: conlang.custom_links.link1.url,
+                  title: conlang.custom_links.link1.title,
+                  isCustom: true,
+                }}
+              />
+            )}
+          {conlang.custom_links.link2 &&
+            conlang.custom_links.link2.title != "" && (
+              <GreenButton
+                props={{
+                  link: conlang.custom_links.link2.url,
+                  title: conlang.custom_links.link2.title,
+                  isCustom: true,
+                }}
+              />
+            )}
+        </div>
         <hr className="my-8" />
         <span className="text-xl">Stats</span>
         <div className="flex flex-col mt-2 w-full gap-4">
@@ -154,28 +181,6 @@ export default function ViewConlang({ id, loggedUser }) {
               title: "Articles and Literature",
             }}
           />
-        </div>
-        <div className="flex mt-2 w-full gap-2">
-          {conlang.custom_links.link1 &&
-            conlang.custom_links.link1.title != "" && (
-              <GreenButton
-                props={{
-                  link: conlang.custom_links.link1.url,
-                  title: conlang.custom_links.link1.title,
-                  isCustom: true
-                }}
-              />
-            )}
-          {conlang.custom_links.link2 &&
-            conlang.custom_links.link2.title != "" && (
-              <GreenButton
-                props={{
-                  link: conlang.custom_links.link2.url,
-                  title: conlang.custom_links.link2.title,
-                  isCustom: true
-                }}
-              />
-            )}
         </div>
         {/*<div className="flex w-full mt-2 flex-col gap-2">
           <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
