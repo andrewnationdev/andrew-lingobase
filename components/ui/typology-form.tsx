@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase/database";
 import { TypologyFieldTitles, TypologySchema } from "../../schema/data";
 import { useState, useEffect } from "react";
 import ReturnComponent from "./return";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 export default function TypologyForm({ id, loggedUser }) {
   const conlangCode = id;
@@ -67,7 +68,7 @@ export default function TypologyForm({ id, loggedUser }) {
             setIsEditable(false);
           }
         } catch(err){
-            window.alert(err)
+            showErrorToast(err ? JSON.stringify(err) : "Error during saving")
         }
       }
     };
@@ -93,11 +94,11 @@ export default function TypologyForm({ id, loggedUser }) {
         throw error;
       }
       console.log("Data saved successfully:", data);
-      window.alert("Data saved successfully!");
+      showSuccessToast("Data saved successfully!");
       window.location.reload();
     } catch (error) {
       console.error("Error saving data:", error);
-      window.alert("An error occurred while saving data: " + error);
+      showErrorToast("An error occurred while saving data: " + error);
     }
   };
 

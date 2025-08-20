@@ -5,6 +5,7 @@ import { partsOfSpeech } from '@/schema/data';
 import { useEffect, useState } from 'react';
 import { IWord } from './dictionary';
 import { useRouter } from 'next/navigation'; // <-- add
+import { showSuccessToast } from '@/lib/toast';
 
 export default function DictionaryForm({ conlang_code, owner, word, editing, onFinishEditing }: {
     conlang_code: string,
@@ -83,6 +84,8 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
             if (error) {
                 throw error;
             }
+
+            showSuccessToast("New word added successfully!")
 
             setFormData({
                 lexical_item: '',

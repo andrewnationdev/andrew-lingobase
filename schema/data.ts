@@ -24,6 +24,8 @@ export const TypologyFieldTitles = {
   vowel_inventory: "Vowel Inventory",
   tonal: "Tonal",
   syllable_structure: "Syllable Structure",
+  morphological_number: "Morphological Number",
+  inclusivity: "Does it feature inclusivity in 1.PL?"
 };
 
 export const TypologySchema = {
@@ -93,4 +95,6 @@ export const TypologySchema = {
   ],
   tonal: ["Non-Tonal", "Tonal", "Pitch Accent"],
   syllable_structure: ["CV", "CVC", "CCV", "CCVC", "Complex"],
+  inclusivity: ["No", "Inclusive and Exclusive WE"],
+  morphological_number: ["No distinction", "Singular and Plural", "Singular, Dual, and Plural", "Other System"]
 };

@@ -6,6 +6,8 @@ import Link from "next/link";
 import SidebarNav from "@/components/ui/navsidebar";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
 
 export default async function ProtectedLayout({
   children,
@@ -27,6 +29,7 @@ export default async function ProtectedLayout({
 
   return (
     <main className="min-h-screen flex flex-col items-center bg-gray-100 dark:bg-gray-900">
+      <ToastContainer/>
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
         <nav className="w-full sticky top-0 z-10 flex justify-center border-b border-b-foreground/10 h-16 bg-white dark:bg-gray-900 shadow-md">
           <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">

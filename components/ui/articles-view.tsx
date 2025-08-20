@@ -1,5 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase/database";
+import { showErrorToast } from "@/lib/toast";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
@@ -84,7 +85,7 @@ export default function ArticleView({
       .eq("id", articleId);
 
     if (articlesResponse.error) {
-      window.alert("Error deleting article");
+      showErrorToast("Error deleting article");
       return;
     }
 
