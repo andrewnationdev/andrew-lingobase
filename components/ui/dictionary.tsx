@@ -102,7 +102,7 @@ export default function Dictionary({
 
     setLexicon(lex?.data || []);
 
-    showSuccessToast("Word deleted successfully!")
+    showSuccessToast("Word deleted successfully!");
 
     window.location.reload();
   };
@@ -150,7 +150,11 @@ export default function Dictionary({
                 <div className="flex-1">
                   <h3
                     className={`font-bold text-gray-900 dark:text-white ${
-                      item.conlang_code == "AR" ? "semlek text-2xl" : "text-xl"
+                      item.conlang_code == "AR"
+                        ? "semlek text-3xl"
+                        : item.conlang_code == "ER-HU"
+                        ? "adric text-3xl"
+                        : "text-xl"
                     }`}
                   >
                     {item.lexical_item}

@@ -77,6 +77,19 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Adric';
+    src: url('/fonts/Adric_alt.ttf') format('truetype');
+
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 .semlek {
   font-family: 'Buwagat';
+}
+
+.adric {
+  font-family: 'Adric';
 }

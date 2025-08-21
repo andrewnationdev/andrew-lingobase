@@ -148,8 +148,7 @@ export default function ViewConlang({ id, loggedUser }) {
         <span className="text-xl">Stats</span>
         <div className="flex flex-col mt-2 w-full gap-4">
           <span>
-            This language has {lexiconSize} words in its lexicon, 0 vowels, 0
-            consonants and 0 phrases.
+            This language has {lexiconSize} words in its lexicon, 0 phonemes, and 0 articles.
           </span>
         </div>
         <hr className="my-8" />
