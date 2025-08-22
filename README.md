@@ -37,6 +37,7 @@ Perfect for fantasy world-builders, game developers, writers, linguists, and lan
 - **Dictionary management** - Create entries with definitions, parts of speech, and notes
 - **Phonology tools** - Document your language's sound system
 - **Grammar articles** - Write detailed grammatical descriptions
+- **User profiles** - Create personalized profiles with editable descriptions
 
 ### Technical Features
 - Built with [Next.js 15](https://nextjs.org) App Router
@@ -200,6 +201,18 @@ CREATE TABLE public."conlang-articles" (
 -- Enable Row Level Security
 ALTER TABLE public."conlang-articles" ENABLE ROW LEVEL SECURITY;
 
+-- Create user_profiles table for user descriptions
+CREATE TABLE public.user_profiles (
+  id bigserial PRIMARY KEY,
+  username text UNIQUE NOT NULL,
+  description text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable Row Level Security
+ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
+
 -- Create indexes for better performance
 CREATE INDEX idx_conlang_dictionary_conlang_code ON public."conlang-dictionary"(conlang_code);
 CREATE INDEX idx_conlang_dictionary_owner ON public."conlang-dictionary"(owner);
@@ -231,6 +244,13 @@ CREATE POLICY "Allow public read access to phonology" ON public."conlang-phonolo
 
 CREATE POLICY "Allow public read access to articles" ON public."conlang-articles"
   FOR SELECT USING (true);
+
+-- Policies for user profiles
+CREATE POLICY "Allow public read access to user profiles" ON public.user_profiles
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow users to manage their own profile" ON public.user_profiles
+  FOR ALL USING (split_part(auth.jwt() ->> 'email', '@', 1) = username);
 ```
 
 ### 4. Optional: Insert sample data
