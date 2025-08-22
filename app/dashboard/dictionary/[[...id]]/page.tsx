@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export default async function DictionaryPage({ params }) {
-  const langCode = await params.id[0];
+  const langCode = await params.id ? params.id[0] : "SHOW_ALL";
 
   const conlang = await supabase
     .from("conlang")
@@ -47,10 +47,10 @@ export default async function DictionaryPage({ params }) {
         ]}
       />
       <div className="flex gap-4 items-center">
-        <div className="max-w-sm">
+        {langCode !== "SHOW_ALL" && <div className="max-w-sm">
           <ReturnComponent id={langCode} />
-        </div>
-        <h1 className="mt-4 text-3xl font-bold">{`Dictionary for ${conlang?.data[0]?.english_name} (${langCode})`}</h1>
+        </div>}
+        <h1 className="mt-4 text-3xl font-bold">{langCode !== "SHOW_ALL" ? `Dictionary for ${conlang?.data[0]?.english_name} (${langCode})` : `Recently Added Words`}</h1>
       </div>
       <Dictionary
         data={{

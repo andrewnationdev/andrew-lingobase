@@ -64,12 +64,18 @@ export default function Dictionary({
 
   useEffect(() => {
     const fetchDictionary = async () => {
-      const lex = await supabase
+      if(data.langCode !== "SHOW_ALL"){const lex = await supabase
         .from("conlang-dictionary")
         .select("*")
         .eq("conlang_code", data.langCode)
         .order("created_at", { ascending: false });
-      setLexicon(lex?.data);
+      setLexicon(lex?.data);} else {
+        const lex = await supabase
+        .from("conlang-dictionary")
+        .select("*")
+        .order("created_at", { ascending: false });
+        setLexicon(lex?.data);
+      }
     };
     fetchDictionary();
   }, [editing, word, data]);
@@ -118,7 +124,9 @@ export default function Dictionary({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">Your Lexicon:</h1>
+      <h1 className="text-3xl font-bold">
+        {data.langCode === "SHOW_ALL" ? "Lingobase Dictionary" : "Your Lexicon"}
+      </h1>
       <div className="mt-4 mb-2 w-full">
         <input
           type="text"
