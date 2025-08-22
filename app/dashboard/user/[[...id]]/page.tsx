@@ -11,6 +11,12 @@ export default async function UserPage({params}){
       if (error || !data?.claims) {
         redirect("/auth/login");
       }
+
+      // Extract logged user name from email (same logic as dashboard layout)
+      let loggedUser = "";
+      if (data?.claims?.email) {
+        loggedUser = data?.claims?.email?.split("@")[0];
+      }
     
-    return <><UserPageComponent user={userName}/></>
+    return <><UserPageComponent user={userName} loggedUser={loggedUser}/></>
 }
