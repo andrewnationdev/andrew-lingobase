@@ -37,6 +37,7 @@ Perfect for fantasy world-builders, game developers, writers, linguists, and lan
 - **Dictionary management** - Create entries with definitions, parts of speech, and notes
 - **Phonology tools** - Document your language's sound system
 - **Grammar articles** - Write detailed grammatical descriptions
+- **User profiles** - Create personalized profiles with editable descriptions
 
 ### Technical Features
 - Built with [Next.js 15](https://nextjs.org) App Router
