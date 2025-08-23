@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/database";
 import ReturnComponent from "@/components/ui/return";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, XIcon } from "lucide-react";
 
 const ipaConsonantChart = [
   {
@@ -446,6 +446,21 @@ export default function PhonologyComponent({ loggedUser }) {
     }
   };
 
+  const handleDeleteAllophone = (phoneme: string, allophone: string) => {
+    if (!isEditable) return;
+    const updatedAllophones = { ...allophones };
+    if (updatedAllophones[phoneme]) {
+      updatedAllophones[phoneme] = updatedAllophones[phoneme].filter(
+        (a) => a !== allophone
+      );
+      // If no allophones left for this phoneme, remove the phoneme key
+      if (updatedAllophones[phoneme].length === 0) {
+        delete updatedAllophones[phoneme];
+      }
+    }
+    setAllophones(updatedAllophones);
+  };
+
   const handleSave = async () => {
     if (!isEditable || saving) return;
     setSaving(true);
@@ -491,7 +506,7 @@ export default function PhonologyComponent({ loggedUser }) {
   };
 
   return (
-    <div className="mx-auto px-4 py-4 md:py-8 my-2 md:my-0 flex flex-col gap-6 w-full max-w-full md:max-w-4xl overflow-x-hidden">
+    <div className="mx-auto px-6 py-6 md:py-8 my-4 md:my-0 flex flex-col gap-6 w-full max-w-full md:max-w-4xl overflow-x-hidden">
       <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-2">
         <div className="w-full md:w-auto">
           <ReturnComponent id={conlangId} />
@@ -518,7 +533,7 @@ export default function PhonologyComponent({ loggedUser }) {
       <div className="mb-6">
         <h2 className="font-semibold mb-2 text-3xl">Phonemes</h2>
         {isEditable && (
-          <div className="bg-accent text-sm p-3 px-5 rounded-md text-black flex gap-8 items-center">
+          <div className="bg-green-100 border border-green-300 text-sm p-3 px-5 rounded-md text-green-800 flex gap-8 items-center">
             <InfoIcon size="16" strokeWidth={2} />
             Click phonemes to add them. They should become green.
             <br /> Green phonemes mean that they are part of the phonology.
@@ -534,14 +549,35 @@ export default function PhonologyComponent({ loggedUser }) {
         <h2 className="text-3xl font-semibold">Allophones</h2>
         <ul className="my-4">
           {phonemes.map((p) => (
-            <li key={p} className="mb-1">
+            <li key={p} className="mb-3">
               {allophones[p] && (
-                <>
-                  <span className="font-mono">{p}</span>
-                  <span className="ml-2 text-sm text-gray-600">
-                    Allophones: {allophones[p].join(", ")}
-                  </span>
-                </>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center">
+                    <span className="font-mono text-lg">{p}</span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      Allophones:
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 ml-4">
+                    {allophones[p].map((allophone, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md"
+                      >
+                        <span className="font-mono text-sm">{allophone}</span>
+                        {isEditable && (
+                          <button
+                            onClick={() => handleDeleteAllophone(p, allophone)}
+                            className="text-red-500 hover:text-red-700 ml-1"
+                            title="Delete allophone"
+                          >
+                            <XIcon size="14" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </li>
           ))}
