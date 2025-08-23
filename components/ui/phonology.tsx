@@ -289,7 +289,7 @@ function IPAChart({ phonemes, onToggle }) {
                                 key={index}
                                 className={`rounded font-bold px-1 py-1 w-7 md:w-8 text-bold ${
                                   phonemes.includes(c)
-                                    ? "bg-green-400 text-white"
+                                    ? "bg-teal-400 text-white"
                                     : "bg-grey"
                                 }`}
                                 style={{ fontSize: "16px" }}
@@ -350,7 +350,7 @@ function IPAChart({ phonemes, onToggle }) {
                               key={idx}
                               className={`font-bold rounded px-1 md:px-2 py-1 w-7 md:w-8 ${
                                 phonemes.includes(v)
-                                  ? "bg-green-400 text-white"
+                                  ? "bg-teal-400 text-white"
                                   : "bg-grey"
                               }`}
                               style={{ fontSize: "16px" }}
@@ -533,7 +533,7 @@ export default function PhonologyComponent({ loggedUser }) {
       <div className="mb-6">
         <h2 className="font-semibold mb-2 text-3xl">Phonemes</h2>
         {isEditable && (
-          <div className="bg-green-100 border border-green-300 text-sm p-3 px-5 rounded-md text-green-800 flex gap-8 items-center">
+          <div className="bg-teal-500 my-4 border border-green-400 text-sm p-3 px-5 rounded-md flex gap-8 items-center">
             <InfoIcon size="16" strokeWidth={2} />
             Click phonemes to add them. They should become green.
             <br /> Green phonemes mean that they are part of the phonology.
