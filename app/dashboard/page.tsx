@@ -41,6 +41,7 @@ export default async function DashboardPage() {
         <h2 className="font-bold text-2xl mb-4" id="conlangs-in-website">{`Everyone Else's Conlangs`}</h2>
         <ConlangsList />
       </div>
+      <hr className="my-8" />
       <div className="w-full" id="notepad">
         <Notepad/>
       </div>
