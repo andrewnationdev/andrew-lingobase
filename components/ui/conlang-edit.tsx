@@ -127,7 +127,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-8 items-center">
+        <div className="bg-teal-600 text-sm p-3 px-5 rounded-md text-foreground flex gap-8 items-center">
           <InfoIcon size="16" strokeWidth={2} />
           {isEditing
             ? "You are currently editing this conlang. Changes will be saved to your entry."

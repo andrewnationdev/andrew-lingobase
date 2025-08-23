@@ -25,7 +25,8 @@ export const TypologyFieldTitles = {
   tonal: "Tonal",
   syllable_structure: "Syllable Structure",
   morphological_number: "Morphological Number",
-  inclusivity: "Does it feature inclusivity in 1.PL?"
+  inclusivity: "Does it feature inclusivity in 1.PL?",
+  gender_system: "Gender System"
 };
 
 export const TypologySchema = {
@@ -96,5 +97,15 @@ export const TypologySchema = {
   tonal: ["Non-Tonal", "Tonal", "Pitch Accent"],
   syllable_structure: ["CV", "CVC", "CCV", "CCVC", "Complex"],
   inclusivity: ["No", "Inclusive and Exclusive WE"],
-  morphological_number: ["No distinction", "Singular and Plural", "Singular, Dual, and Plural", "Other System"]
+  morphological_number: ["No distinction", "Singular and Plural", "Singular, Dual, and Plural", "Other System"],
+  gender_system: [
+    "No Grammatical Gender",
+    "Masculine and Feminine",
+    "Masculine, Feminine, and Neuter",
+    "Common and Neuter",
+    "Animate and Inanimate",
+    "Virile and Non-Virile",
+    "Noun Classes (Bantu Type)",
+    "Other"
+  ]
 };

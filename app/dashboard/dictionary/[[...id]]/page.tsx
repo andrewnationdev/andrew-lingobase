@@ -30,7 +30,7 @@ export default async function DictionaryPage({ params }) {
 
   return (
     <>
-      <QuickNavigationComponent
+      {c_owner == uname && <QuickNavigationComponent
         data={[
           {
             href: "#lexicon",
@@ -45,7 +45,7 @@ export default async function DictionaryPage({ params }) {
             text: "Add Words",
           },
         ]}
-      />
+      />}
       <div className="flex gap-4 items-center">
         {langCode !== "SHOW_ALL" && <div className="max-w-sm">
           <ReturnComponent id={langCode} />

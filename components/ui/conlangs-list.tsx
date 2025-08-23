@@ -61,7 +61,7 @@ export default function ConlangsList({
           </div>
         ))}
       {conlangs.length == 0 && (
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
+        <div className="bg-teal-500 fg-white text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
           Once you create your first conlang, it will appear here!
         </div>

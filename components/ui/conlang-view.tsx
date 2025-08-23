@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import GreenButton from "./green-button";
 import ReactMarkdown from "react-markdown";
+import QuickNavigationComponent from "./quicknavigation";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -80,11 +81,25 @@ export default function ViewConlang({ id, loggedUser }) {
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-black flex gap-8 items-center">
+        <div className="bg-teal-500 text-sm p-3 px-5 rounded-md text-black flex gap-8 my-4 items-center">
           <InfoIcon size="16" strokeWidth={2} />
           Here you can find details about this language. Feel free to explore
           and create your own conlangs!
         </div>
+        <QuickNavigationComponent
+          data={[
+            {
+              href: "#intro",
+              text: "Introduction"
+            }, {
+              href: "#lang-stats",
+              text: "Stats"
+            }, {
+              href: "#lang-info",
+              text: "Information"
+            }
+          ]}
+        />
         <div className="flex w-full flex-col gap-2 mt-8">
           <span className="text-2xl">
             <strong>
@@ -117,7 +132,9 @@ export default function ViewConlang({ id, loggedUser }) {
           </div>
         )}
         <hr className="my-4" />
+        <div id="intro">
         <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
+        </div>
         {(conlang.custom_links.link1.title != "" ||
           conlang.custom_links.link2.title != "") && (
           <h3 className="text-xl mt-4">Useful Links:</h3>
@@ -146,14 +163,14 @@ export default function ViewConlang({ id, loggedUser }) {
         </div>
         <hr className="my-8" />
         <span className="text-xl">Stats</span>
-        <div className="flex flex-col mt-2 w-full gap-4">
+        <div className="flex flex-col mt-2 w-full gap-4" id="lang-stats">
           <span>
             This language has {lexiconSize} words in its lexicon, 0 phonemes, and 0 articles.
           </span>
         </div>
         <hr className="my-8" />
         <span className="text-xl">Access Information</span>
-        <div className="flex mt-2 w-full gap-2">
+        <div className="flex mt-2 w-full gap-2" id="lang-info">
           <GreenButton
             props={{
               link: `/dashboard/dictionary/${conlang.code}`,
