@@ -24,6 +24,8 @@ export default function ViewConlang({ id, loggedUser }) {
     },
   });
   const [lexiconSize, setLexiconSize] = useState<number>(0);
+  const [phonemesCount, setPhonemesCount] = useState<number>(0);
+  const [articlesCount, setArticlesCount] = useState<number>(0);
 
   const handleDeleteConlang = async () => {
     const _prompt = confirm(
@@ -63,16 +65,31 @@ export default function ViewConlang({ id, loggedUser }) {
 
   useEffect(() => {
     const countNumberOfWords = async () => {
-      const conlangs = await supabase
+      const lexicon = await supabase
         .from("conlang-dictionary")
         .select("*")
         .eq("conlang_code", id);
+        const phonemes = await supabase
+        .from("conlang-phonology")
+        .select("*")
+        .eq("conlang_id", id).single();
+        const articles = await supabase
+        .from("conlang-articles")
+        .select("*")
+        .eq("conlang_code", id);
 
-      const data = await conlangs?.data;
+      const data = await lexicon?.data;
 
       const len = data?.length;
 
       setLexiconSize(len ? len : 0);
+
+      const phonemes_data = await phonemes?.data?.phonemes!
+
+      setPhonemesCount(phonemes_data?.length ? phonemes_data.length : 0);
+
+      const articles_data = await articles?.data;
+      setArticlesCount(articles_data?.length ? articles_data.length : 0);
     };
 
     countNumberOfWords();
@@ -165,7 +182,7 @@ export default function ViewConlang({ id, loggedUser }) {
         <span className="text-xl">Stats</span>
         <div className="flex flex-col mt-2 w-full gap-4" id="lang-stats">
           <span>
-            This language has {lexiconSize} words in its lexicon, 0 phonemes, and 0 articles.
+            This language has {lexiconSize} words in its lexicon, {phonemesCount} phonemes, and {articlesCount} articles.
           </span>
         </div>
         <hr className="my-8" />

@@ -37,11 +37,11 @@ export default async function DashboardPage() {
         <h2 className="font-bold text-2xl mb-4">Your Conlangs:</h2>
         <ConlangsList authOnly user={uname} />
         <Link className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200" href="/dashboard/create_conlang">Create a New Conlang</Link>
-        <hr className="my-8" />
+        <hr className="my-8 border-t border-teal-600" />
         <h2 className="font-bold text-2xl mb-4" id="conlangs-in-website">{`Everyone Else's Conlangs`}</h2>
         <ConlangsList />
       </div>
-      <hr className="my-8" />
+      <hr className="mt-8 border-t border-teal-600" />
       <div className="w-full" id="notepad">
         <Notepad/>
       </div>
