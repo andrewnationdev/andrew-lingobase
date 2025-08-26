@@ -84,7 +84,7 @@ export default function ViewConlang({ id, loggedUser }) {
 
       setLexiconSize(len ? len : 0);
 
-      const phonemes_data = await phonemes?.data?.phonemes!
+      const phonemes_data = await phonemes?.data?.phonemes
 
       setPhonemesCount(phonemes_data?.length ? phonemes_data.length : 0);
 
