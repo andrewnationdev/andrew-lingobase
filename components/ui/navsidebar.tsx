@@ -31,7 +31,7 @@ const SidebarNav = ({ loggedUser }) => {
         >
           <FontAwesomeIcon
             icon={item.icon}
-            className="!text-sm transition-colors duration-200 text-teal-500 group-hover:text-blue-500"
+            className="!text-sm transition-colors duration-200 text-teal-800 group-hover:text-blue-500"
           />
         </Link>
       ))}
