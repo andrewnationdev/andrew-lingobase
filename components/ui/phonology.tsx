@@ -250,7 +250,7 @@ function IPAChart({ phonemes, onToggle }) {
       <div className="mb-4 w-full flex flex-col items-center">
         <span className="font-semibold text-center">Consonants:</span>
         <div
-          className="overflow-x-auto my-3 md:my-4 w-full max-w-[100vw] overscroll-x-contain"
+          className="overflow-x-auto my-3 md:my-4 w-full max-w-[80vw] overscroll-x-contain"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           <table
@@ -312,7 +312,7 @@ function IPAChart({ phonemes, onToggle }) {
       <div className="w-full flex flex-col items-center">
         <span className="font-semibold text-center">Vowels:</span>
         <div
-          className="overflow-x-auto my-3 md:my-4 w-full max-w-[100vw] overscroll-x-contain"
+          className="overflow-x-auto my-3 md:my-4 w-full max-w-[80vw] overscroll-x-contain"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           <table
@@ -506,7 +506,7 @@ export default function PhonologyComponent({ loggedUser }) {
   };
 
   return (
-    <div className="mx-auto px-6 py-6 md:py-8 my-4 md:my-0 flex flex-col gap-6 w-full max-w-full md:max-w-4xl overflow-x-hidden">
+    <div className="px-6 py-6 md:py-8 my-4 md:my-0 flex flex-col gap-6 w-full max-w-full md:max-w-4xl overflow-x-hidden">
       <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-2">
         <div className="w-full md:w-auto">
           <ReturnComponent id={conlangId} />
