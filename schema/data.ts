@@ -10,6 +10,7 @@ export const partsOfSpeech = [
   { value: "interjection", label: "Interjection" },
   { value: "determiner", label: "Determiner" },
   { value: "morpheme", label: "Morpheme, Affix" },
+  { value: "phrases", label: "Phrases, Slang, Expressions, etc." },
   { value: "other", label: "Other" },
 ];
 
