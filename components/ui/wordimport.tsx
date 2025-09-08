@@ -125,7 +125,7 @@ export default function WordImport({
         <div>
           <label className="block mb-2 font-medium">Copy the CSV below:</label>
           <textarea
-            className="w-full h-48 p-2 border rounded bg-gray-100 text-xs"
+            className="w-full h-48 p-2 border rounded text-xs"
             value={csv}
             readOnly
           />
