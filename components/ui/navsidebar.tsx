@@ -5,7 +5,8 @@ import {
   faAdd,
   faUser,
   faMessage,
-  faBook
+  faBook,
+  faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
@@ -16,6 +17,7 @@ const SidebarNav = ({ loggedUser }) => {
     { id: 3, icon: faUser, link: `/dashboard/user/${loggedUser}` },
     { id: 4, icon: faBook, link: `/dashboard/dictionary`},
     { id: 5, icon: faMessage, link: "https://discord.gg/6BEpySdDdv" },
+    { id: 6, icon: faQuestionCircle, link: "/dashboard/faq" }
   ];
 
   return (
