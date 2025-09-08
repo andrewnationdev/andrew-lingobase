@@ -21,7 +21,7 @@ const SidebarNav = ({ loggedUser }) => {
   ];
 
   return (
-    <nav className="fixed left-4 bottom-4 w-16 bg-white/30 backdrop-blur-md p-2 rounded-2xl shadow-lg flex flex-col items-center space-y-4 md:top-1/2 md:-translate-y-1/2 md:bottom-auto">
+    <nav className="fixed left-4 bottom-4 w-16 bg-white/30 dark:bg-zinc-900 backdrop-blur-md p-2 rounded-2xl shadow-lg flex flex-col items-center space-y-4 md:top-1/2 md:-translate-y-1/2 md:bottom-auto">
       {navItems.map((item) => (
         <Link
           key={item.id}
@@ -33,7 +33,7 @@ const SidebarNav = ({ loggedUser }) => {
         >
           <FontAwesomeIcon
             icon={item.icon}
-            className="!text-sm transition-colors duration-200 text-teal-800 group-hover:text-blue-500"
+            className="!text-sm transition-colors duration-200 text-teal-800 dark:text-sky-500 group-hover:text-blue-500"
           />
         </Link>
       ))}
