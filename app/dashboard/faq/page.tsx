@@ -25,7 +25,7 @@ export default function FAQPage() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-2">How do I edit phonology?</h2>
         <p>
-          Navigate to your conlang's dashboard and select <strong>Edit Phonology</strong>. Use the interactive IPA chart to select phonemes, add allophones, and describe phonotactics. Save your changes to update the database.
+          {`Navigate to your conlang's dashboard and select <strong>Edit Phonology</strong>. Use the interactive IPA chart to select phonemes, add allophones, and describe phonotactics. Save your changes to update the database.`}
         </p>
       </section>
       <section className="mb-8">
@@ -43,7 +43,7 @@ export default function FAQPage() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-2">How do I view or share my conlang?</h2>
         <p>
-          Each conlang has a public view page. Share the link with others to showcase your language's features, dictionary, and phonology.
+          {`Each conlang has a public view page. Share the link with others to showcase your language's features, dictionary, and phonology.`}
         </p>
       </section>
       <section className="mb-8">
