@@ -12,6 +12,7 @@ export default function ConlangsList({
   user?: string;
 }) {
   const [conlangs, setConlangs] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const retrieveConlangs = async () => {
@@ -23,32 +24,62 @@ export default function ConlangsList({
 
       if (authOnly && user && user !== "") {
         const filtered = data.filter((c) => c.created_by == user);
-
         setConlangs(filtered);
         return;
       }
 
       setConlangs(data);
-
-      console.log(data);
     };
 
     retrieveConlangs();
   }, []);
 
-  return (
+  // Filter conlangs if search bar is visible and search is not empty
+  const filteredConlangs =
+    !user && !authOnly && search
+      ? conlangs.filter(
+          (c) =>
+            (c.english_name || "")
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+            (c.native_name || "")
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+            (c.code || "")
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+            (c.id || "")
+              .toString()
+              .toLowerCase()
+              .includes(search.toLowerCase())
+        )
+      : conlangs;
+
+return (
     <div className="flex flex-col w-full space-y-4 font-sans">
-      {conlangs.length > 0 &&
-        conlangs.map((conlang) => (
+      {/* Show search bar only if not authOnly and no user */}
+      {!authOnly && !user && (
+        <div className="mb-2">
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            placeholder="Search by name, code, or ID..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      )}
+      {filteredConlangs.length > 0 &&
+        filteredConlangs.map((conlang) => (
           <div
             key={conlang.id}
-            className="flex items-center justify-between p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+            className="flex items-center justify-between p-4 border border-gray-200 rounded-lg shadow-sm light:bg-white"
           >
             <div className="flex-1">
-              <div className="font-bold text-gray-800">
+              <div className="font-bold light:text-gray-800">
                 {conlang.english_name}
               </div>
-              <div className="text-sm text-gray-500">{conlang.native_name}</div>
+              <div className="text-sm light:text-gray-500">{conlang.native_name}</div>
             </div>
             <div className="flex-none ml-4">
               <Link
@@ -60,7 +91,7 @@ export default function ConlangsList({
             </div>
           </div>
         ))}
-      {conlangs.length == 0 && (
+      {filteredConlangs.length == 0 && (
         <div className="bg-teal-500 fg-white text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
           Once you create your first conlang, it will appear here!
