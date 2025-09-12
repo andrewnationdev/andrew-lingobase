@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import ConlangsList from "@/components/ui/conlangs-list";
 import Notepad from "@/components/ui/texteditor";
 import QuickNavigationComponent from "@/components/ui/quicknavigation";
+import LingobaseStats from "@/components/ui/stats";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -21,6 +22,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-4">
+      <LingobaseStats/>
       <QuickNavigationComponent
         data={[
           {
