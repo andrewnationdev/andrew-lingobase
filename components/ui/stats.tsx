@@ -18,6 +18,7 @@ export default function LingobaseStats() {
 
         setConlangs(langs?.data?.length || 0);
       } catch (err) {
+        console.error(err);
         showErrorToast("Error fetching stats");
       }
     };
