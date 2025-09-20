@@ -125,7 +125,7 @@ export default function WordImport({
         <div>
           <label className="block mb-2 font-medium">Copy the CSV below:</label>
           <textarea
-            className="w-full h-48 p-2 border rounded text-xs"
+            className="w-full h-48 p-2 border rounded text-lg"
             value={csv}
             readOnly
           />
@@ -140,7 +140,7 @@ export default function WordImport({
             Paste a JSON array:
           </label>
           <textarea
-            className="w-full h-48 p-2 border rounded text-xs"
+            className="w-full h-48 p-2 border rounded text-lg"
             value={jsonImport}
             onChange={(e) => setJsonImport(e.target.value)}
             placeholder={`[
