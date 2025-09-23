@@ -6,9 +6,11 @@ import { useState } from "react";
 export default function Articles({
   id,
   loggedUser,
+  conlangOwner
 }: {
   id: string;
   loggedUser: string;
+  conlangOwner: string;
 }) {
   const [currArticle, setCurrArticle] = useState({
     title: "",
@@ -26,7 +28,7 @@ export default function Articles({
 
   return (
     <>
-      {loggedUser !== "" && loggedUser !== undefined && (
+      {loggedUser !== "" && loggedUser !== undefined && loggedUser == conlangOwner && (
         <div id="form">
           <ArticleForm
             loggedUser={loggedUser}

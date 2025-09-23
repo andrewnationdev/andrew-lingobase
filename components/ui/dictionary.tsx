@@ -138,15 +138,15 @@ export default function Dictionary({
       </div>
       <div className="mt-2 flex gap-4 w-full flex-wrap" id="lexicon">
         {lexicon.length == 0 && (
-          <div className="bg-accent text-sm p-3 px-5 rounded-md text-gray dark:text-gray! flex gap-3 items-center">
-            <InfoIcon size="16" strokeWidth={2} />
-            The vocabulary of this conlang is empty.
-            {data.loggedUser == data.owner && (
-              <span>
-                Remember that languages need words to describe the world.
-              </span>
-            )}
-          </div>
+          <div className="bg-accent-light text-gray-800 dark:bg-accent-dark dark:text-gray-300 text-sm p-3 px-5 rounded-md flex gap-3 items-center">
+  <InfoIcon size="16" strokeWidth={2} />
+  The vocabulary of this conlang is empty.
+  {data.loggedUser == data.owner && (
+    <span>
+      Remember that languages need words to describe the world.
+    </span>
+  )}
+</div>
         )}
         {!editing &&
           filteredLexicon.map((item, index) => (

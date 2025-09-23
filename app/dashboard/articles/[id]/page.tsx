@@ -8,39 +8,51 @@ export default async function ArticlePage({ params }) {
   const conlangCode = params.id;
   const supabase = await createClient();
 
+  const conlang = await supabase
+    .from("conlang")
+    .select("*")
+    .eq("code", conlangCode);
+
+  const c_owner = conlang?.data[0]?.created_by;
+
   const { data, error } = await supabase.auth.getClaims();
   if (error || !data?.claims) {
     redirect("/auth/login");
   }
 
-  let uname = '';
+  let uname = "";
 
   if (data?.claims?.email) {
-    uname = data?.claims?.email?.split('@')[0];
+    uname = data?.claims?.email?.split("@")[0];
   }
 
-  return <div className="flex-1 w-full flex flex-col gap-12">
-    <QuickNavigationComponent data={[{
-      href: "#form",
-      text: "Add New Article"
-    },
-    {
-      href: "#view",
-      text: "View All Articles"
-    }
-    ]}
-    />
-    <div className="flex gap-4 items-center">
-      <div className="max-w-sm">
-        <ReturnComponent id={conlangCode} />
+  return (
+    <div className="flex-1 w-full flex flex-col gap-12">
+      <QuickNavigationComponent
+        data={[
+          {
+            href: "#form",
+            text: "Add New Article",
+          },
+          {
+            href: "#view",
+            text: "View All Articles",
+          },
+        ]}
+      />
+      <div className="flex gap-4 items-center">
+        <div className="max-w-sm">
+          <ReturnComponent id={conlangCode} />
+        </div>
+        <h1 className="mt-4 text-3xl font-bold">{`Articles and Literature`}</h1>
       </div>
-      <h1 className="mt-4 text-3xl font-bold">{`Articles and Literature`}</h1>
+      <p>
+        In this page you can add articles about your conlang and showcase texts
+        and literature written in it. You can provide translations, glossing,
+        and anything you want. Also, remember that you can use Markdown Syntax
+        to format your articles.
+      </p>
+      <Articles id={conlangCode} loggedUser={uname ? uname : "anonymous"} conlangOwner={c_owner}/>
     </div>
-    <p>
-      In this page you can add articles about your conlang and showcase texts and literature written in it.
-      You can provide translations, glossing, and anything you want.
-      Also, remember that you can use Markdown Syntax to format your articles.
-    </p>
-    <Articles id={conlangCode} loggedUser={uname ? uname : 'anonymous'} />
-  </div >
+  );
 }
