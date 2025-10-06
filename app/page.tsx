@@ -99,15 +99,17 @@ export default async function Home() {
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl font-bold text-center mb-10 text-gray-800 dark:text-white">{`Explore Our Community's Creations`}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <Card title="Language A">
-                  A highly poetic and melodic language designed for a fantasy
-                  novel. Features a complex, gendered noun system and beautiful,
-                  flowing script.
+                <Card title="Funōsho">
+                  Japanese-inspired isolate language spoken in a North Pacific
+                  nation with mixed kana/kanji writing
                 </Card>
-                <Card title="Language B">
-                  An engineered language focused on computational efficiency.
-                  Its grammar is designed to be unambiguous and easy for a
-                  machine to parse.
+                <Card title="Platdaitch">
+                  The Low German language (known as Ieperisch or
+                  Portolobisch/Platdait(s)ch in Porto Lobos) is a widely spoken
+                  language in the Andrician Empire with millions of speakers and
+                  is studied in Arussia as a second language. It has a Germanic
+                  origin, probably from Frankish or Low German dialects in
+                  northern Germany.
                 </Card>
                 <Card title="Language C">
                   An auxiliary language created to be simple and easy for people

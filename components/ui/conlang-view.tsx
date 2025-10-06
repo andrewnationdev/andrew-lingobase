@@ -35,6 +35,14 @@ export default function ViewConlang({ id, loggedUser }) {
     if (_prompt) {
       try {
         const req = await supabase.from("conlang").delete().eq("code", id);
+        const deleteAllInfo = async () => {
+          await supabase.from("conlang-dictionary").delete().eq("conlang_code", id);
+          await supabase.from("conlang-phonology").delete().eq("conlang_id", id);
+          await supabase.from("conlang-typology").delete().eq("conlang_code", id);
+          await supabase.from("conlang-articles").delete().eq("conlang_code", id);
+        };
+
+        await deleteAllInfo();
 
         if (req?.status === 204) {
           router.push("/dashboard");
@@ -141,7 +149,6 @@ export default function ViewConlang({ id, loggedUser }) {
               Edit
             </Link>
             <button
-              disabled
               onClick={handleDeleteConlang}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
