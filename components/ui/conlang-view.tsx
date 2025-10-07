@@ -23,6 +23,7 @@ export default function ViewConlang({ id, loggedUser }) {
       link1: { title: "", url: "" },
       link2: { title: "", url: "" },
     },
+    ratings: { likes: [], dislikes: [], comments: [] },
   });
   const [lexiconSize, setLexiconSize] = useState<number>(0);
   const [phonemesCount, setPhonemesCount] = useState<number>(0);
@@ -120,6 +121,21 @@ export default function ViewConlang({ id, loggedUser }) {
     countNumberOfWords();
   }, [conlang]);
 
+  useEffect(() => {
+    const fetchRatings = async () => {
+      const ratings = await supabase
+        .from("conlang")
+        .select("*")
+        .eq("code", conlang.code).single();
+
+      const data = await ratings?.data;
+
+      console.log(data)
+    }
+
+    fetchRatings();
+  }, [conlang, numberOfDislikes, numberOfLikes]);
+
   const handleLikes = (arg: number) => {
     if (arg === 1) {
       setRatingChosen(true);
@@ -189,7 +205,7 @@ export default function ViewConlang({ id, loggedUser }) {
                 className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
                 <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
-                {`(${numberOfLikes})`}
+                {`(${conlang?.ratings?.likes?.length})`}
               </button>
 
               <button
@@ -200,12 +216,12 @@ export default function ViewConlang({ id, loggedUser }) {
                 className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
                 <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
-                {`(${numberOfDislikes})`}
+                {`(${conlang?.ratings?.dislikes?.length})`}
               </button>
 
               <button
                 onClick={() =>
-                  window.alert("You don't have permission to comment yet!")
+                  showErrorToast("You don't have permission to comment yet!")
                 }
                 className="flex-1 flex justify-center py-2 px-4 border rounded-r-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
