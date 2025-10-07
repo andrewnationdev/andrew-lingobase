@@ -26,6 +26,9 @@ export default function ViewConlang({ id, loggedUser }) {
   const [lexiconSize, setLexiconSize] = useState<number>(0);
   const [phonemesCount, setPhonemesCount] = useState<number>(0);
   const [articlesCount, setArticlesCount] = useState<number>(0);
+  const [numberOfLikes, setNumberOfLikes] = useState<number>(0);
+  const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(0);
+  const [ratingChosen, setRatingChosen] = useState<number>(0);
 
   const handleDeleteConlang = async () => {
     const _prompt = confirm(
@@ -103,6 +106,18 @@ export default function ViewConlang({ id, loggedUser }) {
     countNumberOfWords();
   }, [conlang]);
 
+  const handleLikes = (arg:number) => {
+    if(arg === 1){
+      setRatingChosen(true);
+      setNumberOfLikes(numberOfLikes + 1)
+    }
+
+    if(arg === -1){
+      setRatingChosen(true);
+      setNumberOfDisLikes(numberOfDislikes + 1)
+    }
+  }
+
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
@@ -140,6 +155,32 @@ export default function ViewConlang({ id, loggedUser }) {
              {conlang?.created_at ? new Date(conlang.created_at).toLocaleString() : ""}
           </span>
         </div>
+        {conlang?.created_by !== loggedUser && (
+          <div className="flex w-full gap-8 my-4">
+            <Button
+            onClick={handleLikes(1)}
+            disabled={!ratingChosen}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+              href={`/dashboard/create_conlang/${conlang?.code}`}
+            >
+              Like ({numberOfLikes})
+            </Button>
+            <button
+              onClick={handleLikes(-1)}
+              disabled={!ratingChosen}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            >
+              Dislike ({numberOfDislikes})
+            </button>
+            <button
+              onClick={() => window.alert("You don't have permission to comment yet!")}
+              disabled={!ratingChosen}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-gray-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            >
+              Comment
+            </button>
+          </div>
+        )}
         {conlang?.created_by === loggedUser && (
           <div className="flex w-full gap-8 my-4">
             <Link
