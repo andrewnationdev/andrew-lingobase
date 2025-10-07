@@ -28,7 +28,7 @@ export default function ViewConlang({ id, loggedUser }) {
   const [articlesCount, setArticlesCount] = useState<number>(0);
   const [numberOfLikes, setNumberOfLikes] = useState<number>(0);
   const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(0);
-  const [ratingChosen, setRatingChosen] = useState<number>(0);
+  const [ratingChosen, setRatingChosen] = useState<boolean>(false);
 
   const handleDeleteConlang = async () => {
     const _prompt = confirm(
