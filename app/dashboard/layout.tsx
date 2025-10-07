@@ -35,7 +35,7 @@ export default async function ProtectedLayout({
           <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
             <div className="flex gap-5 items-center font-semibold">
               <img src="/img/LINGOBASE_4.webp" width="32px" height="32px" />
-              <Link href={"/dashboard"}>Andrew Lingobase (Early Access)</Link>
+              <Link href={"/dashboard"}>Andrew Lingobase (Beta)</Link>
             </div>
             {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
           </div>

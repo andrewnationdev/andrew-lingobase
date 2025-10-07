@@ -111,10 +111,10 @@ export default async function Home() {
                   origin, probably from Frankish or Low German dialects in
                   northern Germany.
                 </Card>
-                <Card title="Language C">
-                  An auxiliary language created to be simple and easy for people
-                  from various linguistic backgrounds to learn and use for basic
-                  communication.
+                <Card title="Arusian">
+                  Arusian is a personal language used in art, poetry, and
+                  encryption. It is used to escape your environment and find
+                  inner peace within yourself.
                 </Card>
               </div>
             </div>

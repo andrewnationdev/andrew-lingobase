@@ -1,12 +1,13 @@
 "use client";
 import { supabase } from "@/lib/supabase/database";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, MessageSquareIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import GreenButton from "./green-button";
 import ReactMarkdown from "react-markdown";
 import QuickNavigationComponent from "./quicknavigation";
+import { showErrorToast } from "@/lib/toast";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -26,8 +27,8 @@ export default function ViewConlang({ id, loggedUser }) {
   const [lexiconSize, setLexiconSize] = useState<number>(0);
   const [phonemesCount, setPhonemesCount] = useState<number>(0);
   const [articlesCount, setArticlesCount] = useState<number>(0);
-  const [numberOfLikes, setNumberOfLikes] = useState<number>(0);
-  const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(0);
+  const [numberOfLikes, setNumberOfLikes] = useState<number>(103);
+  const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(13);
   const [ratingChosen, setRatingChosen] = useState<boolean>(false);
 
   const handleDeleteConlang = async () => {
@@ -39,10 +40,22 @@ export default function ViewConlang({ id, loggedUser }) {
       try {
         const req = await supabase.from("conlang").delete().eq("code", id);
         const deleteAllInfo = async () => {
-          await supabase.from("conlang-dictionary").delete().eq("conlang_code", id);
-          await supabase.from("conlang-phonology").delete().eq("conlang_id", id);
-          await supabase.from("conlang-typology").delete().eq("conlang_code", id);
-          await supabase.from("conlang-articles").delete().eq("conlang_code", id);
+          await supabase
+            .from("conlang-dictionary")
+            .delete()
+            .eq("conlang_code", id);
+          await supabase
+            .from("conlang-phonology")
+            .delete()
+            .eq("conlang_id", id);
+          await supabase
+            .from("conlang-typology")
+            .delete()
+            .eq("conlang_code", id);
+          await supabase
+            .from("conlang-articles")
+            .delete()
+            .eq("conlang_code", id);
         };
 
         await deleteAllInfo();
@@ -80,11 +93,12 @@ export default function ViewConlang({ id, loggedUser }) {
         .from("conlang-dictionary")
         .select("*")
         .eq("conlang_code", id);
-        const phonemes = await supabase
+      const phonemes = await supabase
         .from("conlang-phonology")
         .select("*")
-        .eq("conlang_id", id).single();
-        const articles = await supabase
+        .eq("conlang_id", id)
+        .single();
+      const articles = await supabase
         .from("conlang-articles")
         .select("*")
         .eq("conlang_code", id);
@@ -95,7 +109,7 @@ export default function ViewConlang({ id, loggedUser }) {
 
       setLexiconSize(len ? len : 0);
 
-      const phonemes_data = await phonemes?.data?.phonemes
+      const phonemes_data = await phonemes?.data?.phonemes;
 
       setPhonemesCount(phonemes_data?.length ? phonemes_data.length : 0);
 
@@ -106,17 +120,17 @@ export default function ViewConlang({ id, loggedUser }) {
     countNumberOfWords();
   }, [conlang]);
 
-  const handleLikes = (arg:number) => {
-    if(arg === 1){
+  const handleLikes = (arg: number) => {
+    if (arg === 1) {
       setRatingChosen(true);
-      setNumberOfLikes(numberOfLikes + 1)
+      setNumberOfLikes(numberOfLikes + 1);
     }
 
-    if(arg === -1){
+    if (arg === -1) {
       setRatingChosen(true);
-      setNumberOfDisLikes(numberOfDislikes + 1)
+      setNumberOfDisLikes(numberOfDislikes + 1);
     }
-  }
+  };
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
@@ -130,54 +144,75 @@ export default function ViewConlang({ id, loggedUser }) {
           data={[
             {
               href: "#intro",
-              text: "Introduction"
-            }, {
+              text: "Introduction",
+            },
+            {
               href: "#lang-stats",
-              text: "Stats"
-            }, {
+              text: "Stats",
+            },
+            {
               href: "#lang-info",
-              text: "Information"
-            }
+              text: "Information",
+            },
           ]}
         />
         <div className="flex w-full flex-col gap-2 mt-8">
           <span className="text-2xl">
             <strong>
-              {conlang?.english_name ? `${conlang?.english_name} [${conlang?.code}]` : "Unnamed"}
+              {conlang?.english_name
+                ? `${conlang?.english_name} [${conlang?.code}]`
+                : "Unnamed"}
             </strong>
           </span>
           <span className="text-m">({conlang?.native_name})</span>
           <span className="text-sm">
             This language has been created by{" "}
-            <Link className="text-teal-600 font-bold" href={`/dashboard/user/${conlang?.created_by}`}>
+            <Link
+              className="text-teal-600 font-bold"
+              href={`/dashboard/user/${conlang?.created_by}`}
+            >
               {conlang?.created_by}
             </Link>{" "}
-             {conlang?.created_at ? new Date(conlang.created_at).toLocaleString() : ""}
+            {conlang?.created_at
+              ? new Date(conlang.created_at).toLocaleString()
+              : ""}
           </span>
         </div>
         {conlang?.created_by !== loggedUser && (
-          <div className="flex w-full gap-8 my-4">
-            <button
-            onClick={() => {handleLikes(1)}}
-            disabled={ratingChosen}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              {`Like (${numberOfLikes})`}
-            </button>
-            <button
-              onClick={() => {handleLikes(-1)}}
-              disabled={ratingChosen}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              {`Dislike (${numberOfDislikes})`}
+          <div className="flex gap-8 my-4">
+            <div className="flex w-[280px] mt-8">
+              <button
+                onClick={() => {
+                  handleLikes(1);
+                }}
+                disabled={ratingChosen}
+                className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+              >
+                <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
+                {`(${numberOfLikes})`}
+              </button>
 
-            </button>
-            <button
-              onClick={() => window.alert("You don't have permission to comment yet!")}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-gray-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              Comment
-            </button>
+              <button
+                onClick={() => {
+                  handleLikes(-1);
+                }}
+                disabled={ratingChosen}
+                className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+              >
+                <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
+                {`(${numberOfDislikes})`}
+              </button>
+
+              <button
+                onClick={() =>
+                  window.alert("You don't have permission to comment yet!")
+                }
+                className="flex-1 flex justify-center py-2 px-4 border rounded-r-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+              >
+                <MessageSquareIcon className="mr-2" size={16} strokeWidth={2} />
+                Comment
+              </button>
+            </div>
           </div>
         )}
         {conlang?.created_by === loggedUser && (
@@ -198,7 +233,7 @@ export default function ViewConlang({ id, loggedUser }) {
         )}
         <hr className="my-4" />
         <div id="intro">
-        <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
+          <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
         </div>
         {(conlang.custom_links.link1.title != "" ||
           conlang.custom_links.link2.title != "") && (
@@ -230,7 +265,8 @@ export default function ViewConlang({ id, loggedUser }) {
         <span className="text-xl">Stats</span>
         <div className="flex flex-col mt-2 w-full gap-4" id="lang-stats">
           <span>
-            This language has {lexiconSize} words in its lexicon, {phonemesCount} phonemes, and {articlesCount} articles.
+            This language has {lexiconSize} words in its lexicon,{" "}
+            {phonemesCount} phonemes, and {articlesCount} articles.
           </span>
         </div>
         <hr className="my-8" />
