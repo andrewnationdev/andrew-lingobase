@@ -159,14 +159,14 @@ export default function ViewConlang({ id, loggedUser }) {
           <div className="flex w-full gap-8 my-4">
             <button
             onClick={() => {handleLikes(1)}}
-            disabled={!ratingChosen}
+            disabled={ratingChosen}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
               {`Like (${numberOfLikes})`}
             </button>
             <button
               onClick={() => {handleLikes(-1)}}
-              disabled={!ratingChosen}
+              disabled={ratingChosen}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
               {`Dislike (${numberOfDislikes})`}
@@ -174,7 +174,6 @@ export default function ViewConlang({ id, loggedUser }) {
             </button>
             <button
               onClick={() => window.alert("You don't have permission to comment yet!")}
-              disabled={!ratingChosen}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-gray-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
               Comment
