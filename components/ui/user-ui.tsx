@@ -125,6 +125,12 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
               Edit Description
             </button>
           )}
+          <button
+              disabled
+              className="py-2 px-4 rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            >
+              Change Username (SOON)
+            </button>
         </div>
 
         {isEditing ? (

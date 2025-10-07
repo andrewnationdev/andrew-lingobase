@@ -6,7 +6,8 @@ import {
   faUser,
   faMessage,
   faBook,
-  faQuestionCircle
+  faQuestionCircle,
+  faFeather
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
@@ -16,8 +17,9 @@ const SidebarNav = ({ loggedUser }) => {
     { id: 2, icon: faAdd, link: "/dashboard/create_conlang" },
     { id: 3, icon: faUser, link: `/dashboard/user/${loggedUser}` },
     { id: 4, icon: faBook, link: `/dashboard/dictionary`},
-    { id: 5, icon: faMessage, link: "https://discord.gg/6BEpySdDdv" },
-    { id: 6, icon: faQuestionCircle, link: "/dashboard/faq" }
+    { id: 5, icon: faFeather, link: `/dashboard/literature`},
+    { id: 6, icon: faMessage, link: "https://discord.gg/6BEpySdDdv" },
+    { id: 7, icon: faQuestionCircle, link: "/dashboard/faq" }
   ];
 
 
