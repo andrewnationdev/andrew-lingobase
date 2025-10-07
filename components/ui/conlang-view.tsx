@@ -166,7 +166,7 @@ export default function ViewConlang({ id, loggedUser }) {
               Like ({numberOfLikes})
             </button>
             <button
-              onClick=() => {handleLikes(-1)}
+              onClick={() => {handleLikes(-1)}
               disabled={!ratingChosen}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
