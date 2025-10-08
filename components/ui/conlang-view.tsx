@@ -130,21 +130,43 @@ export default function ViewConlang({ id, loggedUser }) {
 
       const data = await ratings?.data;
 
+      if(data.likes.includes(loggedUser) || data.dislikes.includes(loggedUser)){
+        setRatingChosen(true);
+      }
+
       console.log(data)
     }
 
     fetchRatings();
   }, [conlang, numberOfDislikes, numberOfLikes]);
 
-  const handleLikes = (arg: number) => {
+  const handleLikes = async (arg: number) => {
     if (arg === 1) {
-      setRatingChosen(true);
-      setNumberOfLikes(numberOfLikes + 1);
+      const data = [...conlang.ratings.likes, loggedUser];
+
+      const res = await supabase
+        .from("conlang")
+        .update({ ratings: { ...conlang.ratings, likes: data } })
+        .eq("code", conlang.code);
+
+      if (res.error) {
+        showErrorToast("There was an error processing your like. Try again.");
+        return;
+      }
     }
 
     if (arg === -1) {
-      setRatingChosen(true);
-      setNumberOfDisLikes(numberOfDislikes + 1);
+      const data = [...conlang.ratings.dislikes, loggedUser];
+
+      const res = await supabase
+        .from("conlang")
+        .update({ ratings: { ...conlang.ratings, dislikes: data } })
+        .eq("code", conlang.code);
+
+      if (res.error) {
+        showErrorToast("There was an error processing your dislike. Try again.");
+        return;
+      }
     }
   };
 
@@ -198,8 +220,8 @@ export default function ViewConlang({ id, loggedUser }) {
           <div className="flex gap-8 my-4">
             <div className="flex w-[280px] mt-8">
               <button
-                onClick={() => {
-                  handleLikes(1);
+                onClick={async () => {
+                  await handleLikes(1);
                 }}
                 disabled={ratingChosen}
                 className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
@@ -209,8 +231,8 @@ export default function ViewConlang({ id, loggedUser }) {
               </button>
 
               <button
-                onClick={() => {
-                  handleLikes(-1);
+                onClick={async () => {
+                  await handleLikes(-1);
                 }}
                 disabled={ratingChosen}
                 className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
