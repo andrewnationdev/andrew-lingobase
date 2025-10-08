@@ -133,7 +133,7 @@ export default function ViewConlang({ id, loggedUser }) {
       setNumberOfLikes(data?.ratings.likes.length);
       setNumberOfDisLikes(data?.ratings.dislikes.length);
 
-      if(data.likes.includes(loggedUser) || data.dislikes.includes(loggedUser)){
+      if(data?.ratings?.likes.includes(loggedUser) || data?.ratings?.dislikes.includes(loggedUser)){
         setRatingChosen(true);
       }
 
@@ -219,14 +219,13 @@ export default function ViewConlang({ id, loggedUser }) {
               : ""}
           </span>
         </div>
-        {conlang?.created_by !== loggedUser && (
           <div className="flex gap-8 my-4">
             <div className="flex w-[280px] mt-8">
               <button
                 onClick={async () => {
                   await handleLikes(1);
                 }}
-                disabled={ratingChosen}
+                disabled={ratingChosen || Boolean(conlang?.created_by === loggedUser)}
                 className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
                 <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
@@ -237,7 +236,7 @@ export default function ViewConlang({ id, loggedUser }) {
                 onClick={async () => {
                   await handleLikes(-1);
                 }}
-                disabled={ratingChosen}
+                disabled={ratingChosen || Boolean(conlang?.created_by === loggedUser)}
                 className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
                 <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
@@ -255,7 +254,6 @@ export default function ViewConlang({ id, loggedUser }) {
               </button>
             </div>
           </div>
-        )}
         {conlang?.created_by === loggedUser && (
           <div className="flex w-full gap-8 my-4">
             <Link
