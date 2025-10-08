@@ -130,6 +130,9 @@ export default function ViewConlang({ id, loggedUser }) {
 
       const data = await ratings?.data;
 
+      setNumberOfLikes(data?.ratings.likes.length);
+      setNumberOfDisLikes(data?.ratings.dislikes.length);
+
       if(data.likes.includes(loggedUser) || data.dislikes.includes(loggedUser)){
         setRatingChosen(true);
       }
@@ -138,7 +141,7 @@ export default function ViewConlang({ id, loggedUser }) {
     }
 
     fetchRatings();
-  }, [conlang, numberOfDislikes, numberOfLikes]);
+  }, [conlang, numberOfDislikes, numberOfLikes, ratingChosen]);
 
   const handleLikes = async (arg: number) => {
     if (arg === 1) {
