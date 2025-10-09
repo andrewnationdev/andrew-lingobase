@@ -121,8 +121,7 @@ export default function ViewConlang({ id, loggedUser }) {
     countNumberOfWords();
   }, [conlang]);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
+  const fetchRatings = async () => {
       const ratings = await supabase
         .from("conlang")
         .select("*")
@@ -136,12 +135,15 @@ export default function ViewConlang({ id, loggedUser }) {
       if(data?.ratings?.likes.includes(loggedUser) || data?.ratings?.dislikes.includes(loggedUser)){
         setRatingChosen(true);
       }
-
-      console.log(data)
     }
 
-    fetchRatings();
-  }, [conlang, numberOfDislikes, numberOfLikes, ratingChosen]);
+  useEffect(() => {
+    const fetchAllRatings = async () => {
+      await fetchRatings()
+    }
+
+    fetchAllRatings();
+  }, [conlang, ratingChosen]);
 
   const handleLikes = async (arg: number) => {
     if (arg === 1) {
@@ -171,6 +173,8 @@ export default function ViewConlang({ id, loggedUser }) {
         return;
       }
     }
+
+    await fetchRatings()
   };
 
   return (
@@ -229,7 +233,7 @@ export default function ViewConlang({ id, loggedUser }) {
                 className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
                 <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
-                {`(${conlang?.ratings?.likes?.length})`}
+                {`(${numberOfLikes})`}
               </button>
 
               <button
@@ -240,7 +244,7 @@ export default function ViewConlang({ id, loggedUser }) {
                 className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               >
                 <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
-                {`(${conlang?.ratings?.dislikes?.length})`}
+                {`(${numberOfDislikes})`}
               </button>
 
               <button
