@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import BuyMeACoffeeWidget from "@/components/ui/donate";
 
 export default async function ProtectedLayout({
   children,
@@ -43,6 +44,7 @@ export default async function ProtectedLayout({
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           {children}
         </div>
+        <BuyMeACoffeeWidget/>
         <SidebarNav loggedUser={uname} />
 
         <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
