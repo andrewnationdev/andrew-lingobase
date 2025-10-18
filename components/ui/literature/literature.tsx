@@ -1,127 +1,102 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InfoIcon } from "lucide-react";
-
-const conlangs = ["Esperanto", "Quenya", "Klingon"];
+import { supabase } from "@/lib/supabase/database";
 const genres = ["Fantasy", "Science Fiction", "Romance"];
 
-const initialStories = [
-  {
-    id: 1,
-    title: "The Lost City",
-    author: "Alice",
-    conlang: "Esperanto",
-    genre: "Fantasy",
-    synopsis: "A mysterious city hidden in the jungle awaits discovery.",
-    content: "In the heart of the jungle, legends spoke of a city lost to time...",
-    date: "2025-10-14 10:00",
-  },
-  {
-    id: 2,
-    title: "Stars Beyond",
-    author: "Bob",
-    conlang: "Klingon",
-    genre: "Science Fiction",
-    synopsis: "A crew journeys into the unknown, searching the stars.",
-    content: "The crew gazed at the endless stars, wondering what lay beyond.",
-    date: "2025-10-14 11:00",
-  },
-  {
-    id: 3,
-    title: "Whispering Winds",
-    author: "Carol",
-    conlang: "Quenya",
-    genre: "Romance",
-    synopsis: "Secrets and love travel on the wind through the valley.",
-    content: "The wind carried their secrets across the valley.",
-    date: "2025-10-14 12:00",
-  },
-  {
-    id: 4,
-    title: "Echoes of Tomorrow",
-    author: "Dave",
-    conlang: "Esperanto",
-    genre: "Science Fiction",
-    synopsis: "Machines hum with the dreams of a forgotten era.",
-    content: "Machines hummed, echoing the dreams of a forgotten era.",
-    date: "2025-10-14 13:00",
-  },
-  {
-    id: 5,
-    title: "Moonlit Path",
-    author: "Eve",
-    conlang: "Quenya",
-    genre: "Fantasy",
-    synopsis: "A wanderer finds their way under the moon's gentle light.",
-    content: "Under the moonlight, the path revealed itself to the wanderer.",
-    date: "2025-10-14 14:00",
-  },
-  {
-    id: 6,
-    title: "Silent Promise",
-    author: "Frank",
-    conlang: "Klingon",
-    genre: "Romance",
-    synopsis: "A silent vow binds two souls stronger than words.",
-    content: "A promise made in silence, stronger than any spoken word.",
-    date: "2025-10-14 15:00",
-  },
-  {
-    id: 7,
-    title: "Fire and Ice",
-    author: "Grace",
-    conlang: "Esperanto",
-    genre: "Fantasy",
-    synopsis: "Elements clash, shaping the destiny of a magical realm.",
-    content: "The clash of fire and ice shaped the destiny of the realm.",
-    date: "2025-10-14 16:00",
-  },
-  {
-    id: 8,
-    title: "Journey's End",
-    author: "Henry",
-    conlang: "Quenya",
-    genre: "Science Fiction",
-    synopsis: "At the universe's edge, a journey finds its conclusion.",
-    content: "At the edge of the universe, their journey finally ended.",
-    date: "2025-10-14 17:00",
-  },
-  {
-    id: 9,
-    title: "Hidden Truths",
-    author: "Ivy",
-    conlang: "Klingon",
-    genre: "Fantasy",
-    synopsis: "Myths and legends conceal the truth beneath their layers.",
-    content: "Truths hidden beneath layers of myth and legend.",
-    date: "2025-10-14 18:00",
-  },
-  {
-    id: 10,
-    title: "Dawn of Hope",
-    author: "Jack",
-    conlang: "Esperanto",
-    genre: "Romance",
-    synopsis: "A new beginning rises with the dawn, bringing hope.",
-    content: "With the dawn came hope, and a new beginning.",
-    date: "2025-10-14 19:00",
-  },
-];
-
-export default function LiteratureSection() {
-  const [stories, setStories] = useState(initialStories);
-  const [selectedStory, setSelectedStory] = useState(null);
+export default function LiteratureSection({ loggedUser }: { loggedUser: string }) {
+  const [stories, setStories] = useState<any[]>([]);
+  const [selectedStory, setSelectedStory] = useState<any | null>(null);
   const [search, setSearch] = useState("");
   const [filterConlang, setFilterConlang] = useState("");
+  const [allConlangs, setAllConlangs] = useState<any[]>([]);
+  const [userConlangs, setUserConlangs] = useState<string[]>([]);
   const [filterGenre, setFilterGenre] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
-    author: "Current User", // Replace with logged-in user
-    conlang: conlangs[0],
+    author: loggedUser || "None",
+    conlang: "",
     genre: genres[0],
     synopsis: "",
     content: "",
   });
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let query = supabase.from("literature").select("*").order("created_at", { ascending: false });
+
+        if (filterConlang) {
+          query = query.eq("conlang", filterConlang);
+        }
+        if (filterGenre) {
+          query = query.eq("genre", filterGenre);
+        }
+
+        const { data, error: fetchError } = await query;
+        if (fetchError) throw fetchError;
+
+
+        const mapped = (data || []).map((row: any) => ({
+          id: row.id,
+          title: row.title,
+          author: row.author,
+          conlang: row.conlang,
+          genre: row.genre,
+          synopsis: row.synopsis,
+          content: row.content,
+          date: row.created_at || row.date,
+        }));
+
+        setStories(mapped);
+      } catch (err: any) {
+        console.error("Error fetching stories:", err);
+        setError(err.message || "Erro ao buscar histórias");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
+  }, [filterConlang, filterGenre]);
+
+  // load real conlang names for selects
+  useEffect(() => {
+    const loadConlangs = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("conlang")
+          .select("english_name")
+          .order("english_name", { ascending: true });
+        if (error) throw error;
+
+        const rows = data || [];
+        setAllConlangs(rows);
+
+        const names = rows.map((c: any) => c.english_name).filter(Boolean);
+
+        // only conlangs created by loggedUser for the add-story form
+        const userNames = rows
+          .filter((c: any) => !!loggedUser && c.created_by === loggedUser)
+          .map((c: any) => c.english_name)
+          .filter(Boolean);
+
+        setUserConlangs(userNames);
+
+        // set default conlang in form: prefer user's first conlang, else first overall
+        const defaultConlang = (userNames[0] as string) || (names[0] as string) || "";
+        setForm((f) => ({ ...f, conlang: f.conlang || defaultConlang }));
+      } catch (err) {
+        console.debug("Error loading conlangs", err);
+      }
+    };
+
+    loadConlangs();
+  }, []);
 
   const filteredStories = stories.filter(
     (story) =>
@@ -136,24 +111,69 @@ export default function LiteratureSection() {
     setForm({ ...form, [name]: value });
   }
 
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStories([
-      ...stories,
-      {
-        ...form,
-        id: stories.length + 1,
-        date: new Date().toLocaleString(),
-      },
-    ]);
-    setForm({
-      title: "",
-      author: "Current User",
-      conlang: conlangs[0],
-      genre: genres[0],
-      synopsis: "",
-      content: "",
-    });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload = {
+        title: form.title,
+        author: form.author,
+        conlang: form.conlang,
+        genre: form.genre,
+        synopsis: form.synopsis,
+        content: form.content,
+      };
+
+      const { data, error: insertError } = await supabase.from("literature").insert([payload]).select();
+      if (insertError) throw insertError;
+
+      setForm({
+        title: "",
+        author: "Current User",
+        conlang: userConlangs[0] || (allConlangs[0]?.english_name ?? ""),
+        genre: genres[0],
+        synopsis: "",
+        content: "",
+      });
+
+      // If insert returned the created row(s), prepend to stories
+      if (data && data.length > 0) {
+        const newRow = data[0];
+        setStories((prev) => [
+          {
+            id: newRow.id,
+            title: newRow.title,
+            author: newRow.author,
+            conlang: newRow.conlang,
+            genre: newRow.genre,
+            synopsis: newRow.synopsis,
+            content: newRow.content,
+            date: newRow.created_at || newRow.date,
+          },
+          ...prev,
+        ]);
+      } else {
+        // fallback: refetch
+        const { data: refetchData } = await supabase.from("literature").select("*").order("created_at", { ascending: false });
+        setStories((refetchData || []).map((row: any) => ({
+          id: row.id,
+          title: row.title,
+          author: row.author,
+          conlang: row.conlang,
+          genre: row.genre,
+          synopsis: row.synopsis,
+          content: row.content,
+          date: row.created_at || row.date,
+        })));
+      }
+    } catch (err: any) {
+      console.error("Error inserting story:", err);
+      setError(err.message || "Erro ao submeter história");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -179,9 +199,9 @@ export default function LiteratureSection() {
           className="block rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
         >
           <option value="">All conlangs</option>
-          {conlangs.map((c) => (
-            <option key={c} value={c}>
-              {c}
+          {allConlangs.map((c: any) => (
+            <option key={c.english_name} value={c.english_name}>
+              {c.english_name}
             </option>
           ))}
         </select>
@@ -220,8 +240,11 @@ export default function LiteratureSection() {
         ) : (
           <div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Stories</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredStories.map((story) => (
+            {loading ? (
+              <div className="text-center text-gray-500">Loading stories...</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {filteredStories.map((story) => (
                 <div
                   key={story.id}
                   className="p-6 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg flex flex-col justify-between"
@@ -242,13 +265,13 @@ export default function LiteratureSection() {
                     READ
                   </button>
                 </div>
-              ))}
-              {filteredStories.length === 0 && (
-                <div className="col-span-full text-gray-500 text-center">
-                  No stories found.
-                </div>
-              )}
-            </div>
+                ))}
+                {filteredStories.length === 0 && (
+                  <div className="col-span-full text-gray-500 text-center">No stories found.</div>
+                )}
+              </div>
+            )}
+            {error && <div className="text-red-500 mt-3">{error}</div>}
           </div>
         )}
       </div>
@@ -299,11 +322,20 @@ export default function LiteratureSection() {
               onChange={handleFormChange}
               className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
             >
-              {conlangs.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
+              {userConlangs.length > 0 ? (
+                userConlangs.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))
+              ) : (
+                // fallback to all conlangs if user has none
+                allConlangs.map((c: any) => (
+                  <option key={c.english_name} value={c.english_name}>
+                    {c.english_name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
           <div>
@@ -358,9 +390,12 @@ export default function LiteratureSection() {
           </div>
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200"
+            disabled={loading}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-700"
+            } transition-colors duration-200`}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>

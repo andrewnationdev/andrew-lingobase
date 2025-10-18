@@ -139,6 +139,19 @@ export default function WordImport({
           <label className="block mb-2 font-medium">
             Paste a JSON array:
           </label>
+          <div className="flex gap-2 flex-col">
+          <a 
+          className="text-teal-600 font-bold underline mb-2 block"
+          href="https://github.com/andrewnationdev/andrew-lingobase/blob/main/schema/dictionary_template.json">
+            You can grab a JSON template for your dictionary here
+          </a>
+          <a
+            className="text-teal-600 font-bold text-bold underline mb-2 block"
+            href="https://github.com/andrewnationdev/andrew-lingobase/blob/main/schema/data.ts"
+          >
+            And here you can find the values for parts of speech
+          </a>
+          </div>
           <textarea
             className="w-full h-48 p-2 border rounded text-lg"
             value={jsonImport}

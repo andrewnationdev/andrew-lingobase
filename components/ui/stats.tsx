@@ -10,13 +10,17 @@ export default function LingobaseStats() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const lex = await supabase.from("conlang-dictionary").select("*");
+        const { count: wordsCount } = await supabase
+          .from("conlang-dictionary")
+          .select("*", { count: "exact", head: true });
 
-        setWords(lex?.data?.length || 0);
+        setWords(wordsCount || 0);
 
-        const langs = await supabase.from("conlang").select("*");
+        const { count: conlangsCount } = await supabase
+          .from("conlang")
+          .select("*", { count: "exact", head: true });
 
-        setConlangs(langs?.data?.length || 0);
+        setConlangs(conlangsCount || 0);
       } catch (err) {
         console.error(err);
         showErrorToast("Error fetching stats");
