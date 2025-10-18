@@ -1,10 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { InfoIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase/database";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 const genres = ["Fantasy", "Science Fiction", "Romance"];
+import { InfoIcon, BookOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
 
-export default function LiteratureSection({ loggedUser }: { loggedUser: string }) {
+export default function LiteratureSection({
+  loggedUser,
+}: {
+  loggedUser: string;
+}) {
   type StoryRow = {
     id: number;
     title: string;
@@ -31,7 +36,6 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
   const [userConlangs, setUserConlangs] = useState<string[]>([]);
   const [filterGenre, setFilterGenre] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState({
@@ -46,9 +50,11 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
   useEffect(() => {
     const fetchStories = async () => {
       setLoading(true);
-      setError(null);
       try {
-        let query = supabase.from("literature").select("*").order("created_at", { ascending: false });
+        let query = supabase
+          .from("literature")
+          .select("*")
+          .order("created_at", { ascending: false });
 
         if (filterConlang) {
           query = query.eq("conlang", filterConlang);
@@ -77,7 +83,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
       } catch (err: unknown) {
         console.error("Error fetching stories:", err);
         const message = err instanceof Error ? err.message : String(err);
-        setError(message || "Erro ao buscar histórias");
+        showErrorToast(message || "Error fetching stories");
       } finally {
         setLoading(false);
       }
@@ -98,7 +104,9 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         const rows = (data || []) as ConlangRow[];
         setAllConlangs(rows);
 
-        const names = rows.map((c) => c.english_name).filter(Boolean) as string[];
+        const names = rows
+          .map((c) => c.english_name)
+          .filter(Boolean) as string[];
 
         // only conlangs created by loggedUser for the add-story form
         const userNames = rows
@@ -113,20 +121,30 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         setForm((f) => ({ ...f, conlang: f.conlang || defaultConlang }));
       } catch (err) {
         console.debug("Error loading conlangs", err);
+        const message = err instanceof Error ? err.message : String(err);
+        showErrorToast(message || "Error loading conlangs");
       }
     };
 
     loadConlangs();
   }, [loggedUser]);
 
-  const filteredStories = stories.filter((story) =>
-    story.title.toLowerCase().includes(search.toLowerCase()) &&
-    (filterConlang ? story.conlang === filterConlang : true) &&
-    (filterGenre ? story.genre === filterGenre : true)
+  const filteredStories = stories.filter(
+    (story) =>
+      story.title.toLowerCase().includes(search.toLowerCase()) &&
+      (filterConlang ? story.conlang === filterConlang : true) &&
+      (filterGenre ? story.genre === filterGenre : true)
   );
 
-  function handleFormChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    const { name, value } = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+  function handleFormChange(
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) {
+    const { name, value } = e.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement;
     if (name === "synopsis" && value.length > 180) return;
     setForm({ ...form, [name]: value });
   }
@@ -134,7 +152,6 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
   async function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const payload = {
@@ -157,14 +174,20 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         // update local stories
         if (data && data.length > 0) {
           const updated = data[0] as StoryRow;
-          setStories((prev) => prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s)));
+          setStories((prev) =>
+            prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s))
+          );
+          showSuccessToast(`Story "${updated.title}" updated`);
         }
 
         // reset editing state
         setIsEditing(false);
         setEditingId(null);
       } else {
-        const { data, error: insertError } = await supabase.from("literature").insert([payload]).select();
+        const { data, error: insertError } = await supabase
+          .from("literature")
+          .insert([payload])
+          .select();
         if (insertError) throw insertError;
 
         // If insert returned the created row(s), prepend to stories
@@ -183,22 +206,44 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
             },
             ...prev,
           ]);
+          showSuccessToast(`Story "${newRow.title}" created`);
         }
       }
 
       setForm({
         title: "",
-        author: "Current User",
+        author: loggedUser || "None",
         conlang: userConlangs[0] || (allConlangs[0]?.english_name ?? ""),
         genre: genres[0],
         synopsis: "",
         content: "",
       });
-      
     } catch (err: unknown) {
       console.error("Error inserting story:", err);
       const message = err instanceof Error ? err.message : String(err);
-      setError(message || "Erro ao submeter história");
+      showErrorToast(message || "Error submitting story");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDelete(id: number, title: string) {
+    const confirmed = confirm(
+      `Delete "${title}"? This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("literature").delete().eq("id", id);
+      if (error) throw error;
+
+      setStories((prev) => prev.filter((s) => s.id !== id));
+        showSuccessToast("Story deleted");
+    } catch (err: unknown) {
+      console.error("Error deleting story:", err);
+      const message = err instanceof Error ? err.message : String(err);
+      showErrorToast(message || "Unable to delete story");
     } finally {
       setLoading(false);
     }
@@ -251,13 +296,20 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
       <div className="w-full">
         {selectedStory ? (
           <div className="max-w-3xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{selectedStory.title}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              {selectedStory.title}
+            </h2>
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-              <b>Author:</b> {selectedStory.author} | <b>Conlang:</b> {selectedStory.conlang} | <b>Genre:</b> {selectedStory.genre}
+              <b>Author:</b> {selectedStory.author} | <b>Conlang:</b>{" "}
+              {selectedStory.conlang} | <b>Genre:</b> {selectedStory.genre}
             </p>
             <p className="text-xs text-gray-500 mb-2">{selectedStory.date}</p>
-            <div className="mb-2 text-gray-800 dark:text-gray-200"><b>Synopsis:</b> {selectedStory.synopsis}</div>
-            <div className="mb-4 text-gray-800 dark:text-gray-200">{selectedStory.content}</div>
+            <div className="mb-2 text-gray-800 dark:text-gray-200">
+              <b>Synopsis:</b> {selectedStory.synopsis}
+            </div>
+            <div className="mb-4 text-gray-800 dark:text-gray-200">
+              {selectedStory.content}
+            </div>
             <button
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200"
               onClick={() => setSelectedStory(null)}
@@ -267,64 +319,86 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
           </div>
         ) : (
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Stories</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              Stories
+            </h2>
             {loading ? (
-              <div className="text-center text-gray-500">Loading stories...</div>
+              <div className="text-center text-gray-500">
+                Loading stories...
+              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredStories.map((story) => (
-                <div
-                  key={story.id}
-                  className="p-6 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg flex flex-col justify-between"
-                >
-                  <div>
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white">{story.title}</h3>
-                    <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">
-                      <b>Author:</b> {story.author} | <b>Conlang:</b> {story.conlang} | <b>Genre:</b> {story.genre}
-                    </p>
-                    <p className="text-sm text-gray-800 dark:text-gray-200 mb-2">
-                      <b>Synopsis:</b> {story.synopsis}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200"
-                      onClick={() => setSelectedStory(story)}
-                    >
-                      READ
-                    </button>
-                    {story.author === loggedUser && (
+                  <div
+                    key={story.id}
+                    className="p-6 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg flex flex-col justify-between"
+                  >
+                    <div>
+                      <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                        {story.title}
+                      </h3>
+                      <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">
+                        <b>Author:</b> {story.author} | <b>Conlang:</b>{" "}
+                        {story.conlang} | <b>Genre:</b> {story.genre}
+                      </p>
+                      <p className="text-sm text-gray-800 dark:text-gray-200 mb-2">
+                        <b>Synopsis:</b> {story.synopsis}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
                       <button
-                        type="button"
-                        className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-yellow-600 hover:bg-yellow-700 transition-colors duration-200"
-                        onClick={() => {
-                          // populate form for editing
-                          setForm({
-                            title: story.title,
-                            author: story.author || loggedUser,
-                            conlang: story.conlang || "",
-                            genre: story.genre || genres[0],
-                            synopsis: story.synopsis || "",
-                            content: story.content || "",
-                          });
-                          setIsEditing(true);
-                          setEditingId(story.id);
-                          // scroll to form
-                          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-                        }}
+                        className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200"
+                        onClick={() => setSelectedStory(story)}
                       >
-                        EDIT
+                        <BookOpenIcon />
                       </button>
-                    )}
+                      {story.author === loggedUser && (
+                        <button
+                          type="button"
+                          className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-yellow-600 hover:bg-yellow-700 transition-colors duration-200"
+                          onClick={() => {
+                            // populate form for editing
+                            setForm({
+                              title: story.title,
+                              author: story.author || loggedUser,
+                              conlang: story.conlang || "",
+                              genre: story.genre || genres[0],
+                              synopsis: story.synopsis || "",
+                              content: story.content || "",
+                            });
+                            setIsEditing(true);
+                            setEditingId(story.id);
+                            // scroll to form
+                            window.scrollTo({
+                              top: document.body.scrollHeight,
+                              behavior: "smooth",
+                            });
+                          }}
+                        >
+                          <PencilIcon />
+                        </button>
+                      )}
+
+                      {story.author === loggedUser && (
+                        <button
+                          type="button"
+                          className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
+                          onClick={() => handleDelete(story.id, story.title)}
+                        >
+                          <TrashIcon />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
                 ))}
                 {filteredStories.length === 0 && (
-                  <div className="col-span-full text-gray-500 text-center">No stories found.</div>
+                  <div className="col-span-full text-gray-500 text-center">
+                    No stories found.
+                  </div>
                 )}
               </div>
             )}
-            {error && <div className="text-red-500 mt-3">{error}</div>}
+            {/* errors are shown via toasts */}
           </div>
         )}
       </div>
@@ -335,9 +409,14 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
           onSubmit={handleFormSubmit}
           className="p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg flex flex-col gap-6"
         >
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Submit a new story</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            Submit a new story
+          </h2>
           <div>
-            <label htmlFor="title" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="title"
+              className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
               Title
             </label>
             <input
@@ -352,7 +431,10 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
             />
           </div>
           <div>
-            <label htmlFor="author" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="author"
+              className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
               Author
             </label>
             <input
@@ -365,7 +447,10 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
             />
           </div>
           <div>
-            <label htmlFor="conlang" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="conlang"
+              className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
               Conlang
             </label>
             <select
@@ -375,24 +460,25 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
               onChange={handleFormChange}
               className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
             >
-              {userConlangs.length > 0 ? (
-                userConlangs.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))
-              ) : (
-                // fallback to all conlangs if user has none
-                allConlangs.map((c: ConlangRow) => (
-                  <option key={c.english_name} value={c.english_name}>
-                    {c.english_name}
-                  </option>
-                ))
-              )}
+              {userConlangs.length > 0
+                ? userConlangs.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))
+                : // fallback to all conlangs if user has none
+                  allConlangs.map((c: ConlangRow) => (
+                    <option key={c.english_name} value={c.english_name}>
+                      {c.english_name}
+                    </option>
+                  ))}
             </select>
           </div>
           <div>
-            <label htmlFor="genre" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="genre"
+              className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
               Genre
             </label>
             <select
@@ -410,8 +496,14 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
             </select>
           </div>
           <div>
-            <label htmlFor="synopsis" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-              Synopsis <span className="text-xs text-gray-500">(max 180 characters)</span>
+            <label
+              htmlFor="synopsis"
+              className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Synopsis{" "}
+              <span className="text-xs text-gray-500">
+                (max 180 characters)
+              </span>
             </label>
             <textarea
               name="synopsis"
@@ -424,10 +516,15 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
               rows={2}
               className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
             />
-            <div className="text-xs text-gray-500 text-right">{form.synopsis.length}/180</div>
+            <div className="text-xs text-gray-500 text-right">
+              {form.synopsis.length}/180
+            </div>
           </div>
           <div>
-            <label htmlFor="content" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="content"
+              className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
               Story content
             </label>
             <textarea
@@ -445,7 +542,9 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
             type="submit"
             disabled={loading}
             className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-700"
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-teal-600 hover:bg-teal-700"
             } transition-colors duration-200`}
           >
             {loading ? "Submitting..." : isEditing ? "Update" : "Submit"}
@@ -460,7 +559,8 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
                 setForm({
                   title: "",
                   author: loggedUser || "None",
-                  conlang: userConlangs[0] || (allConlangs[0]?.english_name ?? ""),
+                  conlang:
+                    userConlangs[0] || (allConlangs[0]?.english_name ?? ""),
                   genre: genres[0],
                   synopsis: "",
                   content: "",
