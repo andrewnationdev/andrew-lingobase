@@ -27,7 +27,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
   const [selectedStory, setSelectedStory] = useState<StoryRow | null>(null);
   const [search, setSearch] = useState("");
   const [filterConlang, setFilterConlang] = useState("");
-  const [allConlangs, setAllConlangs] = useState<any[]>([]);
+  const [allConlangs, setAllConlangs] = useState<ConlangRow[]>([]);
   const [userConlangs, setUserConlangs] = useState<string[]>([]);
   const [filterGenre, setFilterGenre] = useState("");
   const [loading, setLoading] = useState(true);
@@ -189,7 +189,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
           }))
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error inserting story:", err);
       const message = err instanceof Error ? err.message : String(err);
       setError(message || "Erro ao submeter história");
@@ -221,7 +221,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
           className="block rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
         >
           <option value="">All conlangs</option>
-          {allConlangs.map((c: any) => (
+          {allConlangs.map((c: ConlangRow) => (
             <option key={c.english_name} value={c.english_name}>
               {c.english_name}
             </option>
@@ -352,7 +352,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
                 ))
               ) : (
                 // fallback to all conlangs if user has none
-                allConlangs.map((c: any) => (
+                allConlangs.map((c: ConlangRow) => (
                   <option key={c.english_name} value={c.english_name}>
                     {c.english_name}
                   </option>
