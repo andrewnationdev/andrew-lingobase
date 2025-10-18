@@ -5,8 +5,26 @@ import { supabase } from "@/lib/supabase/database";
 const genres = ["Fantasy", "Science Fiction", "Romance"];
 
 export default function LiteratureSection({ loggedUser }: { loggedUser: string }) {
-  const [stories, setStories] = useState<any[]>([]);
-  const [selectedStory, setSelectedStory] = useState<any | null>(null);
+  type StoryRow = {
+    id: number;
+    title: string;
+    author: string | null;
+    conlang: string | null;
+    genre: string | null;
+    synopsis: string | null;
+    content: string | null;
+    created_at?: string | null;
+    date?: string | null;
+  };
+
+  type ConlangRow = {
+    english_name?: string | null;
+    code?: string | null;
+    created_by?: string | null;
+  };
+
+  const [stories, setStories] = useState<StoryRow[]>([]);
+  const [selectedStory, setSelectedStory] = useState<StoryRow | null>(null);
   const [search, setSearch] = useState("");
   const [filterConlang, setFilterConlang] = useState("");
   const [allConlangs, setAllConlangs] = useState<any[]>([]);
@@ -40,22 +58,24 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         const { data, error: fetchError } = await query;
         if (fetchError) throw fetchError;
 
+        const rows = (data || []) as StoryRow[];
 
-        const mapped = (data || []).map((row: any) => ({
+        const mapped = rows.map((row) => ({
           id: row.id,
           title: row.title,
-          author: row.author,
-          conlang: row.conlang,
-          genre: row.genre,
-          synopsis: row.synopsis,
-          content: row.content,
-          date: row.created_at || row.date,
+          author: row.author || "",
+          conlang: row.conlang || "",
+          genre: row.genre || "",
+          synopsis: row.synopsis || "",
+          content: row.content || "",
+          date: row.created_at || row.date || "",
         }));
 
         setStories(mapped);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error fetching stories:", err);
-        setError(err.message || "Erro ao buscar histórias");
+        const message = err instanceof Error ? err.message : String(err);
+        setError(message || "Erro ao buscar histórias");
       } finally {
         setLoading(false);
       }
@@ -70,25 +90,24 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
       try {
         const { data, error } = await supabase
           .from("conlang")
-          .select("english_name")
+          .select("english_name, code, created_by")
           .order("english_name", { ascending: true });
         if (error) throw error;
-
-        const rows = data || [];
+        const rows = (data || []) as ConlangRow[];
         setAllConlangs(rows);
 
-        const names = rows.map((c: any) => c.english_name).filter(Boolean);
+        const names = rows.map((c) => c.english_name).filter(Boolean) as string[];
 
         // only conlangs created by loggedUser for the add-story form
         const userNames = rows
-          .filter((c: any) => !!loggedUser && c.created_by === loggedUser)
-          .map((c: any) => c.english_name)
-          .filter(Boolean);
+          .filter((c) => !!loggedUser && c.created_by === loggedUser)
+          .map((c) => c.english_name)
+          .filter(Boolean) as string[];
 
         setUserConlangs(userNames);
 
         // set default conlang in form: prefer user's first conlang, else first overall
-        const defaultConlang = (userNames[0] as string) || (names[0] as string) || "";
+        const defaultConlang = userNames[0] || names[0] || "";
         setForm((f) => ({ ...f, conlang: f.conlang || defaultConlang }));
       } catch (err) {
         console.debug("Error loading conlangs", err);
@@ -96,17 +115,16 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
     };
 
     loadConlangs();
-  }, []);
+  }, [loggedUser]);
 
-  const filteredStories = stories.filter(
-    (story) =>
-      story.title.toLowerCase().includes(search.toLowerCase()) &&
-      (filterConlang ? story.conlang === filterConlang : true) &&
-      (filterGenre ? story.genre === filterGenre : true)
+  const filteredStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(search.toLowerCase()) &&
+    (filterConlang ? story.conlang === filterConlang : true) &&
+    (filterGenre ? story.genre === filterGenre : true)
   );
 
-  function handleFormChange(e) {
-    const { name, value } = e.target;
+  function handleFormChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value } = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
     if (name === "synopsis" && value.length > 180) return;
     setForm({ ...form, [name]: value });
   }
@@ -126,7 +144,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         content: form.content,
       };
 
-      const { data, error: insertError } = await supabase.from("literature").insert([payload]).select();
+  const { data, error: insertError } = await supabase.from("literature").insert([payload]).select();
       if (insertError) throw insertError;
 
       setForm({
@@ -140,7 +158,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
 
       // If insert returned the created row(s), prepend to stories
       if (data && data.length > 0) {
-        const newRow = data[0];
+        const newRow = data[0] as StoryRow;
         setStories((prev) => [
           {
             id: newRow.id,
@@ -157,20 +175,24 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
       } else {
         // fallback: refetch
         const { data: refetchData } = await supabase.from("literature").select("*").order("created_at", { ascending: false });
-        setStories((refetchData || []).map((row: any) => ({
-          id: row.id,
-          title: row.title,
-          author: row.author,
-          conlang: row.conlang,
-          genre: row.genre,
-          synopsis: row.synopsis,
-          content: row.content,
-          date: row.created_at || row.date,
-        })));
+        const refRows = (refetchData || []) as StoryRow[];
+        setStories(
+          refRows.map((row) => ({
+            id: row.id,
+            title: row.title,
+            author: row.author || "",
+            conlang: row.conlang || "",
+            genre: row.genre || "",
+            synopsis: row.synopsis || "",
+            content: row.content || "",
+            date: row.created_at || row.date || "",
+          }))
+        );
       }
     } catch (err: any) {
       console.error("Error inserting story:", err);
-      setError(err.message || "Erro ao submeter história");
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Erro ao submeter história");
     } finally {
       setLoading(false);
     }
