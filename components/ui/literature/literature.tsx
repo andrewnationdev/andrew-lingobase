@@ -32,6 +32,8 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
   const [filterGenre, setFilterGenre] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState({
     title: "",
     author: loggedUser || "None",
@@ -144,8 +146,45 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         content: form.content,
       };
 
-  const { data, error: insertError } = await supabase.from("literature").insert([payload]).select();
-      if (insertError) throw insertError;
+      if (isEditing && editingId) {
+        const { data, error: updateError } = await supabase
+          .from("literature")
+          .update(payload)
+          .eq("id", editingId)
+          .select();
+        if (updateError) throw updateError;
+
+        // update local stories
+        if (data && data.length > 0) {
+          const updated = data[0] as StoryRow;
+          setStories((prev) => prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s)));
+        }
+
+        // reset editing state
+        setIsEditing(false);
+        setEditingId(null);
+      } else {
+        const { data, error: insertError } = await supabase.from("literature").insert([payload]).select();
+        if (insertError) throw insertError;
+
+        // If insert returned the created row(s), prepend to stories
+        if (data && data.length > 0) {
+          const newRow = data[0] as StoryRow;
+          setStories((prev) => [
+            {
+              id: newRow.id,
+              title: newRow.title,
+              author: newRow.author,
+              conlang: newRow.conlang,
+              genre: newRow.genre,
+              synopsis: newRow.synopsis,
+              content: newRow.content,
+              date: newRow.created_at || newRow.date,
+            },
+            ...prev,
+          ]);
+        }
+      }
 
       setForm({
         title: "",
@@ -155,40 +194,7 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
         synopsis: "",
         content: "",
       });
-
-      // If insert returned the created row(s), prepend to stories
-      if (data && data.length > 0) {
-        const newRow = data[0] as StoryRow;
-        setStories((prev) => [
-          {
-            id: newRow.id,
-            title: newRow.title,
-            author: newRow.author,
-            conlang: newRow.conlang,
-            genre: newRow.genre,
-            synopsis: newRow.synopsis,
-            content: newRow.content,
-            date: newRow.created_at || newRow.date,
-          },
-          ...prev,
-        ]);
-      } else {
-        // fallback: refetch
-        const { data: refetchData } = await supabase.from("literature").select("*").order("created_at", { ascending: false });
-        const refRows = (refetchData || []) as StoryRow[];
-        setStories(
-          refRows.map((row) => ({
-            id: row.id,
-            title: row.title,
-            author: row.author || "",
-            conlang: row.conlang || "",
-            genre: row.genre || "",
-            synopsis: row.synopsis || "",
-            content: row.content || "",
-            date: row.created_at || row.date || "",
-          }))
-        );
-      }
+      
     } catch (err: unknown) {
       console.error("Error inserting story:", err);
       const message = err instanceof Error ? err.message : String(err);
@@ -280,12 +286,37 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
                       <b>Synopsis:</b> {story.synopsis}
                     </p>
                   </div>
-                  <button
-                    className="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200"
-                    onClick={() => setSelectedStory(story)}
-                  >
-                    READ
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200"
+                      onClick={() => setSelectedStory(story)}
+                    >
+                      READ
+                    </button>
+                    {story.author === loggedUser && (
+                      <button
+                        type="button"
+                        className="mt-2 flex-1 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-yellow-600 hover:bg-yellow-700 transition-colors duration-200"
+                        onClick={() => {
+                          // populate form for editing
+                          setForm({
+                            title: story.title,
+                            author: story.author || loggedUser,
+                            conlang: story.conlang || "",
+                            genre: story.genre || genres[0],
+                            synopsis: story.synopsis || "",
+                            content: story.content || "",
+                          });
+                          setIsEditing(true);
+                          setEditingId(story.id);
+                          // scroll to form
+                          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                        }}
+                      >
+                        EDIT
+                      </button>
+                    )}
+                  </div>
                 </div>
                 ))}
                 {filteredStories.length === 0 && (
@@ -417,8 +448,29 @@ export default function LiteratureSection({ loggedUser }: { loggedUser: string }
               loading ? "bg-gray-400 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-700"
             } transition-colors duration-200`}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Submitting..." : isEditing ? "Update" : "Submit"}
           </button>
+          {isEditing && (
+            <button
+              type="button"
+              onClick={() => {
+                // cancel editing
+                setIsEditing(false);
+                setEditingId(null);
+                setForm({
+                  title: "",
+                  author: loggedUser || "None",
+                  conlang: userConlangs[0] || (allConlangs[0]?.english_name ?? ""),
+                  genre: genres[0],
+                  synopsis: "",
+                  content: "",
+                });
+              }}
+              className="w-full mt-2 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 transition-colors duration-200"
+            >
+              Cancel
+            </button>
+          )}
         </form>
       </div>
     </div>
