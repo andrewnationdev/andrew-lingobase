@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/database";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
-const genres = ["Fantasy", "Science Fiction", "Romance"];
 import { InfoIcon, BookOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 export default function LiteratureSection({
@@ -27,6 +26,8 @@ export default function LiteratureSection({
     code?: string | null;
     created_by?: string | null;
   };
+
+  const genres = LiteratureGenres;
 
   const [stories, setStories] = useState<StoryRow[]>([]);
   const [selectedStory, setSelectedStory] = useState<StoryRow | null>(null);
@@ -258,7 +259,7 @@ export default function LiteratureSection({
       </div>
 
       {/* Searchbar and filters */}
-      <div className="flex flex-wrap gap-3 items-center mb-4">
+      <div className="flex flex-wrap gap-3 items-center mb-4 w-full">
         <input
           type="text"
           placeholder="Search by title..."

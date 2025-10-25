@@ -110,3 +110,21 @@ export const TypologySchema = {
     "Other"
   ]
 };
+
+export const LiteratureGenres = [
+  "Fantasy",
+  "Science Fiction",
+  "Romance",
+  "Horror",
+  "Mystery",
+  "Non-Fiction",
+  "Historical Fiction",
+  "Thriller",
+  "Young Adult",
+  "Dystopian",
+  "Adventure",
+  "Drama",
+  "Comedy",
+  "Poetry",
+  "Other"
+]

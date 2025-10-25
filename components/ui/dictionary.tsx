@@ -181,7 +181,7 @@ export default function Dictionary({
                     {item.notes}
                   </p>
                   {data.loggedUser != data.owner && (
-                    <p className="mt-1 text-sm text-gray-900 dark:Text-gray-400 font-bold">
+                    <p className="mt-1 text-sm text-gray-900 dark:text-gray-400 font-bold">
                       {item.conlang_code}
                     </p>
                   )}
