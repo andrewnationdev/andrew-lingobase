@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/database";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { InfoIcon, BookOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { LiteratureGenres } from "@/schema/data";
 
 export default function LiteratureSection({
   loggedUser,
