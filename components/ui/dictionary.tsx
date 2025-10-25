@@ -64,16 +64,18 @@ export default function Dictionary({
 
   useEffect(() => {
     const fetchDictionary = async () => {
-      if(data.langCode !== "SHOW_ALL"){const lex = await supabase
-        .from("conlang-dictionary")
-        .select("*")
-        .eq("conlang_code", data.langCode)
-        .order("created_at", { ascending: false });
-      setLexicon(lex?.data);} else {
+      if (data.langCode !== "SHOW_ALL") {
         const lex = await supabase
-        .from("conlang-dictionary")
-        .select("*")
-        .order("created_at", { ascending: false });
+          .from("conlang-dictionary")
+          .select("*")
+          .eq("conlang_code", data.langCode)
+          .order("created_at", { ascending: false });
+        setLexicon(lex?.data);
+      } else {
+        const lex = await supabase
+          .from("conlang-dictionary")
+          .select("*")
+          .order("created_at", { ascending: false });
         setLexicon(lex?.data);
       }
     };
@@ -139,14 +141,14 @@ export default function Dictionary({
       <div className="mt-2 flex gap-4 w-full flex-wrap" id="lexicon">
         {lexicon.length == 0 && (
           <div className="bg-accent-light text-gray-800 dark:bg-accent-dark dark:text-gray-300 text-sm p-3 px-5 rounded-md flex gap-3 items-center">
-  <InfoIcon size="16" strokeWidth={2} />
-  The vocabulary of this conlang is empty.
-  {data.loggedUser == data.owner && (
-    <span>
-      Remember that languages need words to describe the world.
-    </span>
-  )}
-</div>
+            <InfoIcon size="16" strokeWidth={2} />
+            The vocabulary of this conlang is empty.
+            {data.loggedUser == data.owner && (
+              <span>
+                Remember that languages need words to describe the world.
+              </span>
+            )}
+          </div>
         )}
         {!editing &&
           filteredLexicon.map((item, index) => (
@@ -175,6 +177,14 @@ export default function Dictionary({
                   <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                     {item.definition} - ({item.pos})
                   </p>
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    {item.notes}
+                  </p>
+                  {data.loggedUser != data.owner && (
+                    <p className="mt-1 text-sm text-gray-900 dark:Text-gray-400 font-bold">
+                      {item.conlang_code}
+                    </p>
+                  )}
                 </div>
 
                 {data.loggedUser == data.owner && (
