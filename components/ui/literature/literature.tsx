@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase/database";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { InfoIcon, BookOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { LiteratureGenres } from "@/schema/data";
+import QuickNavigationComponent from "../quicknavigation";
 
 export default function LiteratureSection({
   loggedUser,
@@ -259,6 +260,11 @@ export default function LiteratureSection({
         Here you can read, search, and submit stories written in conlangs!
       </div>
 
+      <QuickNavigationComponent data={[
+        { text: "Stories", href: "#stories" },
+        { text: "Submit a Story", href: "#submit-a-story"}
+      ]}/>
+
       {/* Searchbar and filters */}
       <div className="flex flex-wrap gap-3 items-center mb-4 w-full">
         <input
@@ -295,7 +301,7 @@ export default function LiteratureSection({
       </div>
 
       {/* Stories area */}
-      <div className="w-full">
+      <div className="w-full" id="stories">
         {selectedStory ? (
           <div className="max-w-3xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -406,7 +412,7 @@ export default function LiteratureSection({
       </div>
 
       {/* Submission form */}
-      <div className="max-w-3xl mx-auto w-full">
+      <div className="max-w-3xl mx-auto w-full" id="submit-a-story">
         <form
           onSubmit={handleFormSubmit}
           className="p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg flex flex-col gap-6"
