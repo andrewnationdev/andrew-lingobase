@@ -30,9 +30,8 @@ const CommentAreaComponent: React.FC = () => {
   };
 
   const handleReport = (id: string) => {
-    // placeholder para ação de report — pode abrir modal ou enviar para backend
     console.log("Report comment id:", id);
-    alert("Comment reported."); // opcional, remove se preferir sem alerta
+    alert("Comment reported."); 
   };
 
   return (
