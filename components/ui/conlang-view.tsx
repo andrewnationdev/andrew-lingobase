@@ -8,6 +8,7 @@ import GreenButton from "./green-button";
 import ReactMarkdown from "react-markdown";
 import QuickNavigationComponent from "./quicknavigation";
 import { showErrorToast } from "@/lib/toast";
+import CommentAreaComponent from "./comment-area";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -354,6 +355,8 @@ export default function ViewConlang({ id, loggedUser }) {
           </button>
         </div>*/}
       </div>
+      <hr className="my-8" />
+      <CommentAreaComponent />
     </div>
   );
 }
