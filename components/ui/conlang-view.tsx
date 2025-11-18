@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import GreenButton from "./green-button";
 import ReactMarkdown from "react-markdown";
 import QuickNavigationComponent from "./quicknavigation";
-import { showErrorToast } from "@/lib/toast";
-import CommentAreaComponent from "./comment-area";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import CommentAreaComponent, { Comment } from "./comment-area";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -32,6 +32,42 @@ export default function ViewConlang({ id, loggedUser }) {
   const [numberOfLikes, setNumberOfLikes] = useState<number>(103);
   const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(13);
   const [ratingChosen, setRatingChosen] = useState<boolean>(false);
+
+  const handleSendComment = async (comment: Comment) => {
+    if (!conlang?.code) {
+      showErrorToast("Unable to identify this conlang.");
+      return;
+    }
+
+    try {
+      const existing = Array.isArray(conlang.ratings?.comments)
+        ? conlang.ratings.comments
+        : [];
+
+      const updatedComments = [...existing, comment];
+
+      const { data, error } = await supabase
+        .from("conlang")
+        .update({ ratings: { ...conlang.ratings, comments: updatedComments } })
+        .eq("code", conlang.code)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setConlang((prev) => ({ ...prev, ratings: data.ratings }));
+      } else {
+        setConlang((prev) => ({ ...prev, ratings: { ...prev.ratings, comments: updatedComments } }));
+      }
+
+      showSuccessToast("Comment posted successfully");
+    } catch (err: unknown) {
+      console.error("Error saving comment:", err);
+      const message = err instanceof Error ? err.message : String(err);
+      showErrorToast(message || "Unable to post comment");
+    }
+  };
 
   const handleDeleteConlang = async () => {
     const _prompt = confirm(
@@ -356,7 +392,7 @@ export default function ViewConlang({ id, loggedUser }) {
         </div>*/}
       </div>
       <hr className="my-8" />
-      <CommentAreaComponent />
+      <CommentAreaComponent comments={conlang?.ratings?.comments || []} handleSendComment={handleSendComment}/>
     </div>
   );
 }

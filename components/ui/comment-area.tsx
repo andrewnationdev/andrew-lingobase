@@ -1,16 +1,20 @@
 import { MessageCircleIcon } from "lucide-react";
 import React, { useState } from "react";
 
-type Comment = {
+export type Comment = {
   id: string;
   text: string;
   author: string;
   createdAt: string;
 };
 
-const CommentAreaComponent: React.FC = () => {
+export type ICommentArea = {
+  handleSendComment: (comment: Comment) => void;
+  comments: Comment[] | [];
+}
+
+const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comments }) => {
   const [text, setText] = useState("");
-  const [comments, setComments] = useState<Comment[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +27,9 @@ const CommentAreaComponent: React.FC = () => {
       author: "Anonymous", // placeholder para o nome do usuário
       createdAt: new Date().toISOString(),
     };
-
-    setComments((prev) => [...prev, newComment]);
+    // delegate saving to parent via prop
     console.log("Sending comment:", newComment);
+    handleSendComment(newComment);
     setText("");
   };
 
