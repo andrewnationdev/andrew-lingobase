@@ -1,6 +1,11 @@
 "use client";
 import { supabase } from "@/lib/supabase/database";
-import { InfoIcon, MessageSquareIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+import {
+  InfoIcon,
+  MessageSquareIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -58,7 +63,10 @@ export default function ViewConlang({ id, loggedUser }) {
       if (data) {
         setConlang((prev) => ({ ...prev, ratings: data.ratings }));
       } else {
-        setConlang((prev) => ({ ...prev, ratings: { ...prev.ratings, comments: updatedComments } }));
+        setConlang((prev) => ({
+          ...prev,
+          ratings: { ...prev.ratings, comments: updatedComments },
+        }));
       }
 
       showSuccessToast("Comment posted successfully");
@@ -159,25 +167,29 @@ export default function ViewConlang({ id, loggedUser }) {
   }, [conlang]);
 
   const fetchRatings = async () => {
-      const ratings = await supabase
-        .from("conlang")
-        .select("*")
-        .eq("code", conlang.code).single();
+    const ratings = await supabase
+      .from("conlang")
+      .select("*")
+      .eq("code", conlang.code)
+      .single();
 
-      const data = await ratings?.data;
+    const data = await ratings?.data;
 
-      setNumberOfLikes(data?.ratings.likes.length);
-      setNumberOfDisLikes(data?.ratings.dislikes.length);
+    setNumberOfLikes(data?.ratings.likes.length);
+    setNumberOfDisLikes(data?.ratings.dislikes.length);
 
-      if(data?.ratings?.likes.includes(loggedUser) || data?.ratings?.dislikes.includes(loggedUser)){
-        setRatingChosen(true);
-      }
+    if (
+      data?.ratings?.likes.includes(loggedUser) ||
+      data?.ratings?.dislikes.includes(loggedUser)
+    ) {
+      setRatingChosen(true);
     }
+  };
 
   useEffect(() => {
     const fetchAllRatings = async () => {
-      await fetchRatings()
-    }
+      await fetchRatings();
+    };
 
     fetchAllRatings();
   }, [conlang, ratingChosen]);
@@ -206,12 +218,14 @@ export default function ViewConlang({ id, loggedUser }) {
         .eq("code", conlang.code);
 
       if (res.error) {
-        showErrorToast("There was an error processing your dislike. Try again.");
+        showErrorToast(
+          "There was an error processing your dislike. Try again."
+        );
         return;
       }
     }
 
-    await fetchRatings()
+    await fetchRatings();
   };
 
   return (
@@ -260,41 +274,56 @@ export default function ViewConlang({ id, loggedUser }) {
               : ""}
           </span>
         </div>
-          <div className="flex gap-8 my-4">
-            <div className="flex w-[280px] mt-8">
-              <button
-                onClick={async () => {
-                  await handleLikes(1);
-                }}
-                disabled={ratingChosen || Boolean(conlang?.created_by === loggedUser)}
-                className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-              >
-                <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
-                {`(${numberOfLikes})`}
-              </button>
+        <div className="flex gap-8 my-4">
+          <div className="flex w-[280px] mt-8">
+            <button
+              onClick={async () => {
+                await handleLikes(1);
+              }}
+              disabled={
+                ratingChosen || Boolean(conlang?.created_by === loggedUser)
+              }
+              className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            >
+              <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
+              {`(${numberOfLikes})`}
+            </button>
 
-              <button
-                onClick={async () => {
-                  await handleLikes(-1);
-                }}
-                disabled={ratingChosen || Boolean(conlang?.created_by === loggedUser)}
-                className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-              >
-                <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
-                {`(${numberOfDislikes})`}
-              </button>
+            <button
+              onClick={async () => {
+                await handleLikes(-1);
+              }}
+              disabled={
+                ratingChosen || Boolean(conlang?.created_by === loggedUser)
+              }
+              className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            >
+              <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
+              {`(${numberOfDislikes})`}
+            </button>
 
-              <button
-                onClick={() =>
-                  showErrorToast("You don't have permission to comment yet!")
+            <button
+              onClick={() => {
+                const canComment = Boolean(loggedUser) && !(loggedUser === conlang.created_by);
+                if (!canComment) {
+                  showErrorToast("You don't have permission to comment yet!");
+                  return;
                 }
-                className="flex-1 flex justify-center py-2 px-4 border rounded-r-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-              >
-                <MessageSquareIcon className="mr-2" size={16} strokeWidth={2} />
-                Comment
-              </button>
-            </div>
+                const el = document.getElementById("comments-section");
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  // optionally focus the textarea inside the comment area
+                  const textarea = el.querySelector("textarea");
+                  if (textarea) (textarea as HTMLTextAreaElement).focus();
+                }
+              }}
+              className="flex-1 flex justify-center py-2 px-4 border rounded-r-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+            >
+              <MessageSquareIcon className="mr-2" size={16} strokeWidth={2} />
+              Comment
+            </button>
           </div>
+        </div>
         {conlang?.created_by === loggedUser && (
           <div className="flex w-full gap-8 my-4">
             <Link
@@ -392,7 +421,12 @@ export default function ViewConlang({ id, loggedUser }) {
         </div>*/}
       </div>
       <hr className="my-8" />
-      <CommentAreaComponent comments={conlang?.ratings?.comments || []} handleSendComment={handleSendComment} loggedUser={loggedUser} allowedToComment={loggedUser === conlang.created_by}/>
+      <CommentAreaComponent
+        comments={conlang?.ratings?.comments || []}
+        handleSendComment={handleSendComment}
+        loggedUser={loggedUser}
+        allowedToComment={!(loggedUser === conlang.created_by)}
+      />
     </div>
   );
 }

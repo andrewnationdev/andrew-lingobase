@@ -41,7 +41,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
   };
 
   return (
-    <div className="max-w-3xl mx-auto w-full">
+    <div id="comments-section" className="max-w-3xl mx-auto w-full">
       <div className="p-6 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
@@ -50,7 +50,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
             </div>
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Write a comment</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Comments</h3>
           </div>
         </div>
 
