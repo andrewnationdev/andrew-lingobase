@@ -11,9 +11,11 @@ export type Comment = {
 export type ICommentArea = {
   handleSendComment: (comment: Comment) => void;
   comments: Comment[] | [];
+  loggedUser: string;
+  allowedToComment: boolean;
 }
 
-const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comments }) => {
+const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comments, loggedUser, allowedToComment }) => {
   const [text, setText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,10 +26,9 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
     const newComment: Comment = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       text: trimmed,
-      author: "Anonymous", // placeholder para o nome do usuário
+      author: loggedUser,
       createdAt: new Date().toISOString(),
     };
-    // delegate saving to parent via prop
     console.log("Sending comment:", newComment);
     handleSendComment(newComment);
     setText("");

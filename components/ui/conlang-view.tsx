@@ -392,7 +392,7 @@ export default function ViewConlang({ id, loggedUser }) {
         </div>*/}
       </div>
       <hr className="my-8" />
-      <CommentAreaComponent comments={conlang?.ratings?.comments || []} handleSendComment={handleSendComment}/>
+      <CommentAreaComponent comments={conlang?.ratings?.comments || []} handleSendComment={handleSendComment} loggedUser={loggedUser} allowedToComment={loggedUser === conlang.created_by}/>
     </div>
   );
 }
