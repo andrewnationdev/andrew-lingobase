@@ -128,3 +128,5 @@ export const LiteratureGenres = [
   "Poetry",
   "Other"
 ]
+
+export const MOD_EMAIL = "mailto:andrewnationdev@gmail.com"

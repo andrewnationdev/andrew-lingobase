@@ -1,3 +1,4 @@
+import { MOD_EMAIL } from "@/schema/data";
 import { MessageCircleIcon } from "lucide-react";
 import React, { useState } from "react";
 
@@ -36,7 +37,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
 
   const handleReport = (id: string) => {
     console.log("Report comment id:", id);
-    alert("Comment reported."); 
+    window.open(MOD_EMAIL);
   };
 
   return (
@@ -92,7 +93,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
 
           <hr className="my-4 border-t border-gray-200 dark:border-gray-700" />
 
-          <form onSubmit={handleSubmit} className="mt-2">
+          {allowedToComment && <form onSubmit={handleSubmit} className="mt-2">
             <label htmlFor="comment" className="sr-only">
               Comment
             </label>
@@ -118,7 +119,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
                 Send
               </button>
             </div>
-          </form>
+          </form>}
         </div>
       </div>
     </div>
