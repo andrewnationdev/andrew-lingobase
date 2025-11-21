@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import QuickNavigationComponent from "./quicknavigation";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import CommentAreaComponent, { Comment } from "./comment-area";
+import { moderate } from "@/lib/mod";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -43,6 +44,9 @@ export default function ViewConlang({ id, loggedUser }) {
       showErrorToast("Unable to identify this conlang.");
       return;
     }
+
+    if(moderate(comment.text) == false)
+      return;
 
     try {
       const existing = Array.isArray(conlang.ratings?.comments)

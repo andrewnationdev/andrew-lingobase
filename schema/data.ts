@@ -130,3 +130,5 @@ export const LiteratureGenres = [
 ]
 
 export const MOD_EMAIL = "mailto:andrewnationdev@gmail.com"
+
+export const BANNED_WORDS = ["banned"]
