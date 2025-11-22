@@ -12,8 +12,9 @@ interface IResult {
 }
 
 export function moderate(comment:string):boolean {
-    let text = comment
-    let result: IResult = acceptOrReject(text, banned_words)
+    bannedCount = 0
+    const text = comment
+    const result: IResult = acceptOrReject(text, banned_words)
 
     if(result.accepted){
         return true;
@@ -24,9 +25,9 @@ export function moderate(comment:string):boolean {
 }
 
 function acceptOrReject(text:string, banned:string[]):IResult {
-    let lowerText = text.toLowerCase();
+    const lowerText = text.toLowerCase();
     for (let i = 0; i < banned.length; i++) {
-        let word = banned[i].toLowerCase();
+        const word = banned[i].toLowerCase();
         if (lowerText.includes(word)) {
             bannedCount++;
         }
