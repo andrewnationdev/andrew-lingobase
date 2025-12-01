@@ -22,7 +22,9 @@ export default function PatreonFloatingCard() {
     setIsVisible(false);
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, '1');
-    } catch (e) { /* ignore */ }
+    } catch (e) { 
+        console.log(e)
+     }
   };
 
   const handleLater = () => {
