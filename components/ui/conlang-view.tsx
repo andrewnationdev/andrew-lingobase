@@ -308,11 +308,11 @@ export default function ViewConlang({ id, loggedUser }) {
 
             <button
               onClick={() => {
-                const canComment = Boolean(loggedUser) && !(loggedUser === conlang.created_by);
+                /*const canComment = Boolean(loggedUser) && !(loggedUser === conlang.created_by);
                 if (!canComment) {
                   showErrorToast("You don't have permission to comment yet!");
                   return;
-                }
+                }*/
                 const el = document.getElementById("comments-section");
                 if (el) {
                   el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -408,7 +408,7 @@ export default function ViewConlang({ id, loggedUser }) {
           <GreenButton
             props={{
               link: `/dashboard/articles/${conlang.code}`,
-              title: "Articles and Literature",
+              title: "Articles and Stuff",
             }}
           />
         </div>

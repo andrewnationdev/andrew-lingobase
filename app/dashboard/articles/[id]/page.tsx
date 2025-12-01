@@ -44,11 +44,11 @@ export default async function ArticlePage({ params }) {
         <div className="max-w-sm">
           <ReturnComponent id={conlangCode} />
         </div>
-        <h1 className="mt-4 text-3xl font-bold">{`Articles and Literature`}</h1>
+        <h1 className="mt-4 text-3xl font-bold">{`Articles`}</h1>
       </div>
       <p>
-        In this page you can add articles about your conlang and showcase texts
-        and literature written in it. You can provide translations, glossing,
+        In this page you can add articles about your conlang. You can provide translations, 
+        glossing, grammar rules,
         and anything you want. Also, remember that you can use Markdown Syntax
         to format your articles.
       </p>
