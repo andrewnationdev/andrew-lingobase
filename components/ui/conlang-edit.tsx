@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase/database";
 import { InfoIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { showErrorToast } from "@/lib/toast";
 
 type CustomLinks = {
   link1: { title: string; url: string };
@@ -78,6 +79,12 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
           .eq("code", conlangCode);
         error = updateError;
       } else {
+        const data = await supabase.from("conlang").select("code").eq("code", conlang_with_user.code).single();
+        if (data.data.code) {
+          showErrorToast(`A conlang with the code "${conlang_with_user.code}" already exists. Please choose a different code.`);
+          throw("This code already exists! Choose another")
+        }
+
         const { error: insertError } = await supabase.from("conlang").insert([conlang_with_user]);
         error = insertError;
       }

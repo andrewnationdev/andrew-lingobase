@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 import GreenButton from "./green-button";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
-export default function UserPageComponent({ user, loggedUser }: { user: string; loggedUser?: string }) {
+export default function UserPageComponent({
+  user,
+  loggedUser,
+}: {
+  user: string;
+  loggedUser?: string;
+}) {
   const [userName, setUserName] = useState("");
   const [userLangs, setUserLangs] = useState([]);
   const [conlangCount, setConlangCount] = useState(0);
@@ -13,6 +19,7 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
   const [isEditing, setIsEditing] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userAlias, setUserAlias] = useState("");
 
   useEffect(() => {
     const fetchUserLangs = async () => {
@@ -29,7 +36,7 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
 
     const fetchUserProfile = async () => {
       if (!userName) return;
-      
+
       const { data, error } = await supabase
         .from("user-profiles")
         .select("description")
@@ -50,7 +57,7 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
   }, [userName, user]);
 
   useEffect(() => {
-      setUserName(user);
+    setUserName(user);
   }, [user]);
 
   const handleEditClick = () => {
@@ -58,7 +65,7 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
     setIsEditing(true);
   };
 
-  const handleSaveDescription = async () => {
+  const handleSaveData = async () => {
     if (!userName) return;
     setIsLoading(true);
     try {
@@ -76,6 +83,12 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
 
       let error;
       if (data && data.username) {
+        if(userAlias.length < 8 || userAlias.length > 16 || !/^[A-Za-z0-9_]+$/.test(userAlias)) {
+          showErrorToast("FATAL ERROR: Username must be 8-16 characters and can only contain letters, numbers, and underscores.");
+          setIsLoading(false);
+          return;
+        }
+
         ({ error } = await supabase
           .from("user-profiles")
           .update({ description: editDescription })
@@ -116,25 +129,35 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
       {/* User Description Section */}
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-md max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">About {userName}</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            About {userName}
+          </h2>
           {canEdit && !isEditing && (
             <button
               onClick={handleEditClick}
               className="py-2 px-4 rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
-              Edit Description
+              Edit
             </button>
           )}
-          <button
-              disabled
-              className="py-2 px-4 rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              Change Username (SOON)
-            </button>
         </div>
 
         {isEditing ? (
           <div className="space-y-4">
+            <div className="flex flex-col gap-4">
+              Username (Change it Here):
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition-colors duration-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                placeholder="Change your username"
+                value={userAlias}
+                onChange={(e) => setUserAlias(e.target.value)}
+              ></input>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                - Usernames can only contain letters, numbers and underscores.
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">- They must have between 8 and 16 letters</p>
+            </div>
             <textarea
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
@@ -144,7 +167,7 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
             />
             <div className="flex gap-2">
               <button
-                onClick={handleSaveDescription}
+                onClick={handleSaveData}
                 disabled={isLoading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200 disabled:opacity-50"
               >
@@ -158,6 +181,7 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
                 Cancel
               </button>
             </div>
+            <hr />
           </div>
         ) : (
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -168,7 +192,10 @@ export default function UserPageComponent({ user, loggedUser }: { user: string; 
 
       <hr className="my-4" />
       <h2 className="text-2xl font-semibold text-center mb-2">{`This user's conlangs`}</h2>
-      <span className="text-center mb-2">This user has <span className="font-bold">{conlangCount}</span> conlangs on the website!</span>
+      <span className="text-center mb-2">
+        This user has <span className="font-bold">{conlangCount}</span> conlangs
+        on the website!
+      </span>
       <ol className="flex flex-col gap-2 max-w-xs text-center mx-auto">
         {userLangs.length > 0 &&
           userLangs.map((c) => (
