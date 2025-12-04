@@ -85,6 +85,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
           .eq("code", conlang_with_user.code)
           .single();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- legacy fetchError shape, narrow later if needed
         if (fetchError && (fetchError as any).code !== "PGRST116") {
           console.error("Error checking conlang code existence:", fetchError);
           showErrorToast("Failed to check conlang code existence");
