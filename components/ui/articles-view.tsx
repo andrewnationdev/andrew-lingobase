@@ -1,6 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase/database";
 import { showErrorToast } from "@/lib/toast";
+import { fetchUserProfileDisplay } from "@/lib/user-utils";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
@@ -26,6 +27,7 @@ export default function ArticleView({
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [conlangName, setConlangName] = useState("Unnamed");
+  const [authorDisplayMap, setAuthorDisplayMap] = useState<Record<string,string>>({});
   const [expandedArticleId, setExpandedArticleId] = useState<number | null>(
     null
   );
@@ -58,7 +60,23 @@ export default function ArticleView({
       if (articlesResponse.error) {
         console.error("Error fetching articles:", articlesResponse.error);
       } else if (articlesResponse.data) {
-        setArticles(articlesResponse.data as Article[]);
+        const rows = articlesResponse.data as Article[];
+        setArticles(rows);
+
+        // fetch display names for authors
+        try {
+          const unique = Array.from(new Set(rows.map((r) => r.written_by).filter(Boolean)));
+          const fetches = unique.map(async (u) => {
+            const r = await fetchUserProfileDisplay(u);
+            return { username: u, display: r.displayName };
+          });
+          const results = await Promise.all(fetches);
+          const map: Record<string,string> = {};
+          results.forEach((r) => (map[r.username] = r.display || r.username));
+          setAuthorDisplayMap(map);
+        } catch (err) {
+          console.debug("Error fetching article author displays", err);
+        }
       }
 
       setLoading(false);
@@ -120,7 +138,7 @@ export default function ArticleView({
               {expandedArticleId === article.id && (
                 <div className="mt-4 space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Written by: {article.written_by}, Last updated:{" "}
+                    Written by: {authorDisplayMap[article.written_by] ?? article.written_by}, Last updated:{" "}
                     {new Date(article.updated_at).toLocaleDateString()}
                   </p>
                   {loggedUser == article.written_by && (

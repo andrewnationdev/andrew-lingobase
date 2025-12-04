@@ -15,6 +15,7 @@ import QuickNavigationComponent from "./quicknavigation";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import CommentAreaComponent, { Comment } from "./comment-area";
 import { moderate } from "@/lib/mod";
+import { fetchUserProfileDisplay } from "@/lib/user-utils";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -38,6 +39,8 @@ export default function ViewConlang({ id, loggedUser }) {
   const [numberOfLikes, setNumberOfLikes] = useState<number>(103);
   const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(13);
   const [ratingChosen, setRatingChosen] = useState<boolean>(false);
+  const [ownerDisplayName, setOwnerDisplayName] = useState<string>("");
+  const [commentAuthorDisplayMap, setCommentAuthorDisplayMap] = useState<Record<string,string>>({});
 
   const handleSendComment = async (comment: Comment) => {
     if (!conlang?.code) {
@@ -128,9 +131,37 @@ export default function ViewConlang({ id, loggedUser }) {
 
       const data = await conlangs?.data;
 
-      if (data?.length > 0) {
+        if (data?.length > 0) {
         console.log(data![0]);
-        setConlang(data![0]);
+        const row = data![0];
+        setConlang(row);
+
+        // fetch owner's display name (alias) if any
+        try {
+          const owner = row.created_by;
+          if (owner) {
+            const res = await fetchUserProfileDisplay(owner);
+            setOwnerDisplayName(res.displayName || owner);
+          }
+        } catch (err) {
+          console.debug("Error fetching owner display name", err);
+        }
+
+        // build display map for comment authors
+        try {
+          const comments = Array.isArray(row?.ratings?.comments) ? row.ratings.comments : [];
+          const unique = Array.from(new Set(comments.map((c) => c.author).filter(Boolean)));
+          const fetches = unique.map(async (u) => {
+            const r = await fetchUserProfileDisplay(u);
+            return { username: u, display: r.displayName };
+          });
+          const results = await Promise.all(fetches);
+          const cmap: Record<string,string> = {};
+          results.forEach((r) => (cmap[r.username] = r.display || r.username));
+          setCommentAuthorDisplayMap(cmap);
+        } catch (err) {
+          console.debug("Error fetching comment author displays", err);
+        }
       }
     };
 
@@ -271,7 +302,7 @@ export default function ViewConlang({ id, loggedUser }) {
               className="text-teal-600 font-bold"
               href={`/dashboard/user/${conlang?.created_by}`}
             >
-              {conlang?.created_by}
+              {ownerDisplayName || conlang?.created_by}
             </Link>{" "}
             {conlang?.created_at
               ? new Date(conlang.created_at).toLocaleString()
@@ -426,7 +457,10 @@ export default function ViewConlang({ id, loggedUser }) {
       </div>
       <hr className="my-8" />
       <CommentAreaComponent
-        comments={conlang?.ratings?.comments || []}
+        comments={(conlang?.ratings?.comments || []).map((c) => ({
+          ...c,
+          author: commentAuthorDisplayMap[c.author] ?? c.author,
+        }))}
         handleSendComment={handleSendComment}
         loggedUser={loggedUser}
         allowedToComment={!(loggedUser === conlang.created_by)}

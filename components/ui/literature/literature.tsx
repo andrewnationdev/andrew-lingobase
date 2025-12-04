@@ -5,6 +5,7 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { InfoIcon, BookOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { LiteratureGenres } from "@/schema/data";
 import QuickNavigationComponent from "../quicknavigation";
+import { fetchUserProfileDisplay } from "@/lib/user-utils";
 
 export default function LiteratureSection({
   loggedUser,
@@ -41,6 +42,7 @@ export default function LiteratureSection({
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [authorDisplayMap, setAuthorDisplayMap] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     title: "",
     author: loggedUser || "None",
@@ -83,6 +85,23 @@ export default function LiteratureSection({
         }));
 
         setStories(mapped);
+
+        // fetch display names (aliases) for authors shown, cache in a map
+        try {
+          const uniqueAuthors = Array.from(new Set(mapped.map((r) => r.author).filter(Boolean)));
+          const fetches = uniqueAuthors.map(async (a) => {
+            const res = await fetchUserProfileDisplay(a);
+            return { username: a, display: res.displayName };
+          });
+          const results = await Promise.all(fetches);
+          const map: Record<string, string> = {};
+          results.forEach((r) => {
+            map[r.username] = r.display || r.username;
+          });
+          setAuthorDisplayMap((prev) => ({ ...prev, ...map }));
+        } catch (err) {
+          console.debug("Error fetching author display names", err);
+        }
       } catch (err: unknown) {
         console.error("Error fetching stories:", err);
         const message = err instanceof Error ? err.message : String(err);
@@ -307,8 +326,8 @@ export default function LiteratureSection({
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               {selectedStory.title}
             </h2>
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-              <b>Author:</b> {selectedStory.author} | <b>Conlang:</b>{" "}
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+              <b>Author:</b> {authorDisplayMap[selectedStory.author] ?? selectedStory.author} | <b>Conlang:</b>{" "}
               {selectedStory.conlang} | <b>Genre:</b> {selectedStory.genre}
             </p>
             <p className="text-xs text-gray-500 mb-2">{selectedStory.date}</p>
@@ -346,7 +365,7 @@ export default function LiteratureSection({
                         {story.title}
                       </h3>
                       <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">
-                        <b>Author:</b> {story.author} | <b>Conlang:</b>{" "}
+                        <b>Author:</b> {authorDisplayMap[story.author] ?? story.author} | <b>Conlang:</b>{" "}
                         {story.conlang} | <b>Genre:</b> {story.genre}
                       </p>
                       <p className="text-sm text-gray-800 dark:text-gray-200 mb-2">
