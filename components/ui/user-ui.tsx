@@ -39,7 +39,7 @@ export default function UserPageComponent({
 
       const { data, error } = await supabase
         .from("user-profiles")
-        .select("description")
+        .select("*")
         .eq("username", userName)
         .single();
 
