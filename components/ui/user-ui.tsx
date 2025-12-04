@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase/database";
 import { useEffect, useState } from "react";
 import GreenButton from "./green-button";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { fetchUserProfileDisplay } from "@/lib/user-utils";
 
 export default function UserPageComponent({
   user,
@@ -20,6 +21,7 @@ export default function UserPageComponent({
   const [editDescription, setEditDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [userAlias, setUserAlias] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
     const fetchUserLangs = async () => {
@@ -37,18 +39,31 @@ export default function UserPageComponent({
     const fetchUserProfile = async () => {
       if (!userName) return;
 
-      const { data, error } = await supabase
-        .from("user-profiles")
-        .select("*")
-        .eq("username", userName)
-        .single();
+      try {
+        const profile = await fetchUserProfileDisplay(userName);
+        setUserAlias(profile.user_alias || "");
+        setDisplayName(profile.displayName || userName);
+      } catch (err) {
+        console.error("Error fetching profile display:", err);
+        setUserAlias("");
+        setDisplayName(userName);
+      }
 
-      if (!error && data) {
-        setUserDescription(data.description || "");
-        setUserAlias(data["user_alias"] || "");
-      } else {
+      try {
+        const { data, error } = await supabase
+          .from("user-profiles")
+          .select("description")
+          .eq("username", userName)
+          .single();
+
+        if (!error && data) {
+          setUserDescription(data.description || "");
+        } else {
+          setUserDescription("");
+        }
+      } catch (err) {
+        console.error("Error fetching user description:", err);
         setUserDescription("");
-        setUserAlias("")
       }
     };
 
@@ -126,13 +141,13 @@ export default function UserPageComponent({
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
-      <h1 className="text-3xl font-bold text-center mb-2">{`${userName}'s Profile`}</h1>
+      <h1 className="text-3xl font-bold text-center mb-2">{`${displayName}'s Profile`}</h1>
 
       {/* User Description Section */}
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-md max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-            About {userName}
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            About {displayName}
           </h2>
           {canEdit && !isEditing && (
             <button
