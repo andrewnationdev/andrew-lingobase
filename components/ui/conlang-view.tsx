@@ -154,7 +154,7 @@ export default function ViewConlang({ id, loggedUser }) {
             new Set(
               comments
                 .map((c) => {
-                  const a = (c as any)?.author;
+                  const a = (c as unknown as { author?: unknown })?.author;
                   return typeof a === "string" ? a.trim() : String(a ?? "").trim();
                 })
                 .filter((s) => s.length > 0)
