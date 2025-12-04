@@ -45,8 +45,10 @@ export default function UserPageComponent({
 
       if (!error && data) {
         setUserDescription(data.description || "");
+        setUserAlias(data["user_alias"] || "");
       } else {
         setUserDescription("");
+        setUserAlias("")
       }
     };
 
@@ -83,7 +85,7 @@ export default function UserPageComponent({
 
       let error;
       if (data && data.username) {
-        if(userAlias.length < 8 || userAlias.length > 16 || !/^[A-Za-z0-9_]+$/.test(userAlias)) {
+        if(userAlias.length != 0 && (userAlias.length < 8 || userAlias.length > 16 || !/^[A-Za-z0-9_]+$/.test(userAlias))) {
           showErrorToast("FATAL ERROR: Username must be 8-16 characters and can only contain letters, numbers, and underscores.");
           setIsLoading(false);
           return;
@@ -91,7 +93,7 @@ export default function UserPageComponent({
 
         ({ error } = await supabase
           .from("user-profiles")
-          .update({ description: editDescription })
+          .update({ description: editDescription, "user_alias": userAlias })
           .eq("username", userName));
       } else {
         ({ error } = await supabase
