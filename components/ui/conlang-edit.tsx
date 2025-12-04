@@ -79,10 +79,21 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
           .eq("code", conlangCode);
         error = updateError;
       } else {
-        const data = await supabase.from("conlang").select("code").eq("code", conlang_with_user.code).single();
-        if (data.data.code) {
+        const { data: existing, error: fetchError } = await supabase
+          .from("conlang")
+          .select("code")
+          .eq("code", conlang_with_user.code)
+          .single();
+
+        if (fetchError && (fetchError as any).code !== "PGRST116") {
+          console.error("Error checking conlang code existence:", fetchError);
+          showErrorToast("Failed to check conlang code existence");
+          throw fetchError;
+        }
+
+        if (existing && existing.code) {
           showErrorToast(`A conlang with the code "${conlang_with_user.code}" already exists. Please choose a different code.`);
-          throw("This code already exists! Choose another")
+          throw new Error("This code already exists! Choose another");
         }
 
         const { error: insertError } = await supabase.from("conlang").insert([conlang_with_user]);
