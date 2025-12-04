@@ -147,11 +147,20 @@ export default function ViewConlang({ id, loggedUser }) {
           console.debug("Error fetching owner display name", err);
         }
 
-        // build display map for comment authors
         try {
           const comments = Array.isArray(row?.ratings?.comments) ? row.ratings.comments : [];
-          const unique = Array.from(new Set(comments.map((c) => c.author).filter(Boolean)));
-          const fetches = unique.map(async (u) => {
+
+          const unique = Array.from(
+            new Set(
+              comments
+                .map((c) => {
+                  const a = (c as any)?.author;
+                  return typeof a === "string" ? a.trim() : String(a ?? "").trim();
+                })
+                .filter((s) => s.length > 0)
+            )
+          ) as string[];
+          const fetches = unique.map(async (u: string) => {
             const r = await fetchUserProfileDisplay(u);
             return { username: u, display: r.displayName };
           });
