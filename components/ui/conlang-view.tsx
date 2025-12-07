@@ -176,7 +176,7 @@ export default function ViewConlang({ id, loggedUser }) {
     };
 
     getConlangFromId();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const countNumberOfWords = async () => {
@@ -209,7 +209,7 @@ export default function ViewConlang({ id, loggedUser }) {
     };
 
     countNumberOfWords();
-  }, [conlang]);
+  }, [conlang, id]);
 
   const fetchRatings = async () => {
     const ratings = await supabase
