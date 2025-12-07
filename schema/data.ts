@@ -10,6 +10,13 @@ export const partsOfSpeech = [
   { value: "interjection", label: "Interjection" },
   { value: "determiner", label: "Determiner" },
   { value: "morpheme", label: "Morpheme, Affix" },
+  { value: "particle", label: "Particle" },
+  { value: "adposition", label: "Adposition" },
+  { value: "postposition", label: "Postposition" },
+  { value: "prefix", label: "Prefix" },
+  { value: "suffix", label: "Suffix" },
+  { value: "infix", label: "Infix" },
+  { value: "circumfix", label: "Circumfix" },
   { value: "phrases", label: "Phrases, Slang, Expressions, etc." },
   { value: "other", label: "Other" },
 ];
