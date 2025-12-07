@@ -304,6 +304,23 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
             <hr className="my-4" />
 
             <div>
+                <label htmlFor="" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                  YouTube Video URL (optional, coming soon!)
+                </label>
+                <input
+                  type="url"
+                  id=""
+                  name=""
+                  disabled
+                  value={""}
+                  placeholder="https://example.com"
+                  className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
+                />
+              </div>
+
+            <hr className="my-4" />
+
+            <div>
               <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
