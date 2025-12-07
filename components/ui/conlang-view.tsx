@@ -31,6 +31,7 @@ export default function ViewConlang({ id, loggedUser }) {
       link1: { title: "", url: "" },
       link2: { title: "", url: "" },
     },
+    youtube_url: "",
     ratings: { likes: [], dislikes: [], comments: [] },
   });
   const [lexiconSize, setLexiconSize] = useState<number>(0);
