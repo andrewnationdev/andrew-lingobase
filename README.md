@@ -118,42 +118,53 @@ Supabase Auth is already configured in this project. Users can sign up and sign 
 Run the following SQL in your Supabase SQL Editor ([Dashboard > SQL Editor](https://supabase.com/dashboard/project/_/sql/new)):
 
 ```sql
--- Create conlang table for language metadata
 CREATE TABLE public.conlang (
-  id bigserial PRIMARY KEY,
-  code text UNIQUE NOT NULL,
-  english_name text NOT NULL,
-  native_name text,
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  english_name character varying,
+  native_name character varying,
   summary text,
-  created_by text NOT NULL,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  code text NOT NULL UNIQUE,
+  created_by text,
+  custom_links jsonb,
+  ratings jsonb DEFAULT '{"likes": [], "comments": [], "dislikes": []}'::jsonb,
+  CONSTRAINT conlang_pkey PRIMARY KEY (id)
 );
-
--- Enable Row Level Security
-ALTER TABLE public.conlang ENABLE ROW LEVEL SECURITY;
-
--- Create conlang-dictionary table for word entries
-CREATE TABLE public."conlang-dictionary" (
-  id bigserial PRIMARY KEY,
+CREATE TABLE public.conlang-articles (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  written_by text NOT NULL,
+  conlang_code text NOT NULL,
+  updated_at timestamp with time zone NOT NULL,
+  title text NOT NULL,
+  content text NOT NULL,
+  CONSTRAINT conlang-articles_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.conlang-dictionary (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  conlang_code text NOT NULL,
   lexical_item text NOT NULL,
-  definition text NOT NULL,
-  pos text, -- part of speech
-  notes text,
-  transliteration text,
-  conlang_code text NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
   owner text NOT NULL,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  definition text NOT NULL,
+  notes character varying,
+  transliteration text,
+  pos text,
+  CONSTRAINT conlang-dictionary_pkey PRIMARY KEY (id)
 );
-
--- Enable Row Level Security
-ALTER TABLE public."conlang-dictionary" ENABLE ROW LEVEL SECURITY;
-
--- Create conlang-typology table for linguistic typology
-CREATE TABLE public."conlang-typology" (
-  id bigserial PRIMARY KEY,
-  conlang_code text UNIQUE NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
+CREATE TABLE public.conlang-phonology (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  phonemes ARRAY,
+  allophones jsonb,
+  phonotactics text,
+  conlang_id text NOT NULL UNIQUE,
+  CONSTRAINT conlang-phonology_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.conlang-typology (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  conlang_code text NOT NULL,
   word_order text,
   morphosyntactic_alignment text,
   language_family text,
@@ -164,93 +175,47 @@ CREATE TABLE public."conlang-typology" (
   vowel_inventory text,
   tonal text,
   syllable_structure text,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  morphological_number text,
+  inclusivity text,
+  gender_system text,
+  CONSTRAINT conlang-typology_pkey PRIMARY KEY (id)
 );
-
--- Enable Row Level Security
-ALTER TABLE public."conlang-typology" ENABLE ROW LEVEL SECURITY;
-
--- Create conlang-phonology table for sound systems
-CREATE TABLE public."conlang-phonology" (
-  id bigserial PRIMARY KEY,
-  conlang_code text UNIQUE NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
-  consonants jsonb,
-  vowels jsonb,
-  phonotactics text,
-  stress_pattern text,
-  notes text,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+CREATE TABLE public.literature (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  title text,
+  author text,
+  conlang text,
+  genre text,
+  synopsis text,
+  content text,
+  CONSTRAINT literature_pkey PRIMARY KEY (id)
 );
-
--- Enable Row Level Security
-ALTER TABLE public."conlang-phonology" ENABLE ROW LEVEL SECURITY;
-
--- Create conlang-articles table for grammar documentation
-CREATE TABLE public."conlang-articles" (
-  id bigserial PRIMARY KEY,
-  conlang_code text NOT NULL REFERENCES public.conlang(code) ON DELETE CASCADE,
-  title text NOT NULL,
-  content text NOT NULL,
-  author text NOT NULL,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+CREATE TABLE public.pt-aru-dict (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  arusian character varying DEFAULT ''::character varying,
+  semlek character varying DEFAULT ''::character varying,
+  pt character varying DEFAULT ''::character varying,
+  xsampa_aru character varying DEFAULT ''::character varying,
+  xsampa_pt character varying DEFAULT ''::character varying,
+  wordclass character varying DEFAULT ''::character varying,
+  CONSTRAINT pt-aru-dict_pkey PRIMARY KEY (id)
 );
-
--- Enable Row Level Security
-ALTER TABLE public."conlang-articles" ENABLE ROW LEVEL SECURITY;
-
--- Create user_profiles table for user descriptions
-CREATE TABLE public.user_profiles (
-  id bigserial PRIMARY KEY,
-  username text UNIQUE NOT NULL,
+CREATE TABLE public.user-profiles (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
   description text,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  username text NOT NULL UNIQUE,
+  user_alias text UNIQUE CHECK (length(user_alias) <= 12),
+  CONSTRAINT user-profiles_pkey PRIMARY KEY (id, username)
 );
-
--- Enable Row Level Security
-ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
-
--- Create indexes for better performance
-CREATE INDEX idx_conlang_dictionary_conlang_code ON public."conlang-dictionary"(conlang_code);
-CREATE INDEX idx_conlang_dictionary_owner ON public."conlang-dictionary"(owner);
-CREATE INDEX idx_conlang_articles_conlang_code ON public."conlang-articles"(conlang_code);
-CREATE INDEX idx_conlang_created_by ON public.conlang(created_by);
-
--- Set up Row Level Security policies
--- Users can read all public conlangs
-CREATE POLICY "Allow public read access" ON public.conlang
-  FOR SELECT USING (true);
-
--- Users can insert/update/delete their own conlangs
-CREATE POLICY "Allow users to manage their own conlangs" ON public.conlang
-  FOR ALL USING (auth.jwt() ->> 'email' = created_by);
-
--- Similar policies for related tables
-CREATE POLICY "Allow public read access to dictionary" ON public."conlang-dictionary"
-  FOR SELECT USING (true);
-
-CREATE POLICY "Allow users to manage their own dictionary entries" ON public."conlang-dictionary"
-  FOR ALL USING (auth.jwt() ->> 'email' = owner);
-
--- Policies for other tables (adjust based on your needs)
-CREATE POLICY "Allow public read access to typology" ON public."conlang-typology"
-  FOR SELECT USING (true);
-
-CREATE POLICY "Allow public read access to phonology" ON public."conlang-phonology"
-  FOR SELECT USING (true);
-
-CREATE POLICY "Allow public read access to articles" ON public."conlang-articles"
-  FOR SELECT USING (true);
-
--- Policies for user profiles
-CREATE POLICY "Allow public read access to user profiles" ON public.user_profiles
-  FOR SELECT USING (true);
-
-CREATE POLICY "Allow users to manage their own profile" ON public.user_profiles
-  FOR ALL USING (split_part(auth.jwt() ->> 'email', '@', 1) = username);
+CREATE TABLE public.usernames (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  timestamp timestamp with time zone NOT NULL DEFAULT now(),
+  user_id text NOT NULL,
+  user_alias text NOT NULL,
+  CONSTRAINT usernames_pkey PRIMARY KEY (id)
+);
 ```
 
 ### 4. Optional: Insert sample data
