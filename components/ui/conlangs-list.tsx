@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase/database";
-import { InfoIcon } from "lucide-react";
+import { EyeIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -86,7 +86,7 @@ return (
                 className="inline-flex items-center justify-center py-2 px-4 rounded-lg text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
                 href={`dashboard/view/${conlang.code}`}
               >
-                View
+                <EyeIcon ></EyeIcon>
               </Link>
             </div>
           </div>

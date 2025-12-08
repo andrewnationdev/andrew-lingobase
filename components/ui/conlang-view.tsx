@@ -3,8 +3,10 @@ import { supabase } from "@/lib/supabase/database";
 import {
   InfoIcon,
   MessageSquareIcon,
+  PenIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
+  TrashIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -371,15 +373,17 @@ export default function ViewConlang({ id, loggedUser }) {
         {conlang?.created_by === loggedUser && (
           <div className="flex w-full gap-8 my-4">
             <Link
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               href={`/dashboard/create_conlang/${conlang?.code}`}
             >
+              <PenIcon className="mr-2" size="16"/>
               Edit
             </Link>
             <button
               onClick={handleDeleteConlang}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
+              <TrashIcon className="mr-2" size="16"/>
               Delete
             </button>
           </div>
