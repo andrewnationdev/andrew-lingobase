@@ -456,17 +456,11 @@ export default function ViewConlang({ id, loggedUser }) {
             }}
           />
         </div>
-        {/*<div className="flex w-full mt-2 flex-col gap-2">
-          <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-            Morphology
+        <div className="flex w-full mt-2 flex-col gap-2">
+          <button className="bg-yellow-400 my-2 hover:bg-yellow-800 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+            Conlang Maintenance Tool (SOON!)
           </button>
-          <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-            Syntax
-          </button>
-          <button className="bg-white my-2 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-            Semantics and Pragmatics
-          </button>
-        </div>*/}
+        </div>
       </div>
       <hr className="my-8" />
       <CommentAreaComponent
