@@ -67,6 +67,11 @@ export const TypologySchema = {
     "Dravidian",
     "Turkic",
     "Uralic",
+    "Nostratic",
+    "Boreal",
+    "Austral",
+    "Austronesian",
+    "Bantu",
     "Other",
   ],
   verbal_tenses: [

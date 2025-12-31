@@ -28,6 +28,14 @@ export default function Articles({
 
   return (
     <>
+      <hr className="my-2" />
+      <div id="view">
+        <ArticleView
+          id={id}
+          loggedUser={loggedUser ? loggedUser : "anonymous"}
+          onSelectArticle={handleEditArticle}
+        />
+      </div>
       {loggedUser !== "" && loggedUser !== undefined && loggedUser == conlangOwner && (
         <div id="form">
           <ArticleForm
@@ -38,14 +46,6 @@ export default function Articles({
           />
         </div>
       )}
-      <hr className="my-2" />
-      <div id="view">
-        <ArticleView
-          id={id}
-          loggedUser={loggedUser ? loggedUser : "anonymous"}
-          onSelectArticle={handleEditArticle}
-        />
-      </div>
     </>
   );
 }

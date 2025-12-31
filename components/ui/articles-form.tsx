@@ -131,9 +131,9 @@ export default function ArticleForm({
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
-        <div className="flex w-full flex-col gap-2 mt-8">
+        <div className="flex w-full flex-col gap-2 my-8">
           <span className="text-2xl font-bold text-gray-900 dark:text-white">
-            {isEditing ? 'Edit Article for' : 'Add New Article for'} {conlangName}
+            {isEditing ? 'Edit Article for' : 'New Article for'} {conlangName}
           </span>
         </div>
         <form
