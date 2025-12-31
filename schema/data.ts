@@ -18,6 +18,8 @@ export const partsOfSpeech = [
   { value: "infix", label: "Infix" },
   { value: "circumfix", label: "Circumfix" },
   { value: "phrases", label: "Phrases, Slang, Expressions, etc." },
+  { value: "numeral", label: "Numeral" },
+  { value: "discourse", label: "Discourse Marker" },
   { value: "other", label: "Other" },
 ];
 
