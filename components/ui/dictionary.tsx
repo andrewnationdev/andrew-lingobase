@@ -122,7 +122,7 @@ export default function Dictionary({
         item.definition.toLowerCase().includes(search.toLowerCase()) ||
         item.transliteration?.toLowerCase().includes(search.toLowerCase())
     )
-    .slice(0, 8);
+    .slice(0, 12);
 
   return (
     <div>
