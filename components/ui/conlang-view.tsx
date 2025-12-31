@@ -458,7 +458,7 @@ export default function ViewConlang({ id, loggedUser }) {
         </div>
         <div className="flex w-full mt-2 flex-col gap-2">
           <button className="bg-yellow-400 my-2 hover:bg-yellow-800 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-            Conlang Management Tool (SOON!)
+            Conlang Maintenance Tool (SOON!)
           </button>
         </div>
       </div>
