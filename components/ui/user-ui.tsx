@@ -118,7 +118,7 @@ export default function UserPageComponent({
 
       if (error) {
         console.log("Error saving description:", error);
-        showErrorToast("Failed to save description");
+        showErrorToast("Failed to save description or to change username");
       } else {
         setUserDescription(editDescription);
         setIsEditing(false);
@@ -126,7 +126,7 @@ export default function UserPageComponent({
       }
     } catch (err) {
       showErrorToast("Error:", err);
-      showErrorToast("Failed to save description");
+      showErrorToast("Failed to save description or to change username");
     } finally {
       setIsLoading(false);
     }
