@@ -1,4 +1,3 @@
-import Dictionary from "@/components/ui/dictionary";
 import QuickNavigationComponent from "@/components/ui/quicknavigation";
 import ReturnComponent from "@/components/ui/return";
 import { supabase } from "@/lib/supabase/database";
