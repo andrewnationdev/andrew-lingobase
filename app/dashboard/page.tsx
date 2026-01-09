@@ -45,7 +45,7 @@ export default async function DashboardPage() {
         <h2 className="font-bold text-2xl mb-4">Your Conlangs:</h2>
         <ConlangsList authOnly user={uname} />
         <Link
-          className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+          className="transition duration-150 ease-in-out hover:scale-125 w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
           href="/dashboard/create_conlang"
         >
           <PlusCircleIcon className="mr-2" />

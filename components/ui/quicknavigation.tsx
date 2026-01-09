@@ -7,6 +7,6 @@ export default function QuickNavigationComponent({data}:{data: {
 }[]}){
     return <nav className="light:bg-white shadow-lg p-4 flex justify-center space-x-6 rounded-lg">
         <span>Contents in this Page: </span>
-        {data.map((link, index) => <Link key={index} href={link.href} className="text-teal-600">{link.text}</Link>)}
+        {data.map((link, index) => <Link key={index} href={link.href} className="transition duration-150 ease-in-out hover:scale-125 text-teal-600">{link.text}</Link>)}
       </nav>
 }
