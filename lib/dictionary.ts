@@ -7,7 +7,7 @@ export interface IHomonynsResult {
 
 export function calculateHomonyns(words: IWord[]): IHomonynsResult {
     let counter = 0;
-    let homonyms = []
+    const homonyms = []
 
     if(words.length > 0){
         for(let w = 0; w < words.length; w++){
