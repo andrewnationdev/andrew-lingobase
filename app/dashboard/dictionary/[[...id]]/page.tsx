@@ -50,7 +50,7 @@ export default async function DictionaryPage({ params }) {
         {langCode !== "SHOW_ALL" && <div className="max-w-sm">
           <ReturnComponent id={langCode} />
         </div>}
-        <h1 className="mt-4 text-3xl font-bold">{langCode !== "SHOW_ALL" ? `Dictionary for ${conlang?.data[0]?.english_name} (${langCode})` : `Recently Added Words`}</h1>
+        <h1 className="text-3xl font-bold">{langCode !== "SHOW_ALL" ? `Dictionary for ${conlang?.data[0]?.english_name} (${langCode})` : `Recently Added Words`}</h1>
       </div>
       <Dictionary
         data={{

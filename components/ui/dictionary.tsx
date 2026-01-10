@@ -138,6 +138,12 @@ export default function Dictionary({
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+       <hr className="my-4" />
+      <div id="import-words">
+        {data.owner == data.loggedUser && (
+          <WordImport langCode={data.langCode} owner={data.owner} />
+        )}
+      </div>
       <div className="mt-2 flex gap-4 w-full flex-wrap" id="lexicon">
         {lexicon.length == 0 && (
           <div className="bg-accent-light text-gray-800 dark:bg-accent-dark dark:text-gray-300 text-sm p-3 px-5 rounded-md flex gap-3 items-center">
@@ -206,12 +212,6 @@ export default function Dictionary({
               </div>
             </div>
           ))}
-      </div>
-      <hr className="my-4" />
-      <div id="import-words">
-        {data.owner == data.loggedUser && (
-          <WordImport langCode={data.langCode} owner={data.owner} />
-        )}
       </div>
       <hr className="my-4" />
       <div id="add-words">
