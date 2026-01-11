@@ -8,6 +8,7 @@ import {
   IResult,
 } from "@/lib/dictionary";
 import StatsListComponent from "./stats-list";
+import PurgeDictionarySectionComponent from "./purge";
 
 interface IManagementStatsCard {
   langCode: string;
@@ -65,9 +66,7 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
         data={duplicateEntries}
       />
       <hr className="my-4 border-t border-gray-300 dark:border-gray-600" />
-      <button className="transition duration-150 ease-in-out hover:scale-125 w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-        Purge Dictionary (SOON!)
-      </button>
+      {lexicon?.length > 0 && (<PurgeDictionarySectionComponent langCode={props.langCode} />)}
     </div>
   );
 }
