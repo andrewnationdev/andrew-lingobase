@@ -28,6 +28,10 @@ export default async function ManagementPage({ params }) {
     uname = data?.claims?.email?.split("@")[0];
   }
 
+  if (c_owner != uname) {
+    redirect("/dashboard")
+  }
+
   return (
     <>
       {c_owner == uname && (

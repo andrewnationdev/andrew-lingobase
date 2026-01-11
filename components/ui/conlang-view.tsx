@@ -456,14 +456,15 @@ export default function ViewConlang({ id, loggedUser }) {
             }}
           />
         </div>
-        <div className="flex w-full mt-2 flex-col gap-2">
+        {conlang?.created_by == loggedUser && (
+          <div className="flex w-full mt-2 flex-col gap-2">
           <GreenButton
             props={{
               link: `/dashboard/dictionary/management/${conlang.code}`,
               title: "Conlang Management Tool",
             }}
           />
-        </div>
+        </div>)}
       </div>
       <hr className="my-8" />
       <CommentAreaComponent
