@@ -13,10 +13,9 @@ export type ICommentArea = {
   handleSendComment: (comment: Comment) => void;
   comments: Comment[] | [];
   loggedUser: string;
-  allowedToComment?: boolean;
 }
 
-const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comments, loggedUser, allowedToComment }) => {
+const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comments, loggedUser }) => {
   const [text, setText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {

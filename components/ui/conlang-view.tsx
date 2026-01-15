@@ -481,7 +481,6 @@ export default function ViewConlang({ id, loggedUser }) {
         }))}
         handleSendComment={handleSendComment}
         loggedUser={loggedUser}
-        allowedToComment={!(loggedUser === conlang.created_by)}
       />
     </div>
   );
