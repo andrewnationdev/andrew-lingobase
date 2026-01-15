@@ -38,9 +38,9 @@ export default function PurgeDictionarySectionComponent(
   return (
     <button
       onClick={handlePurgeDictionary}
-      className="transition duration-150 ease-in-out hover:scale-125 w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+      className="transition duration-150 ease-in-out hover:scale-125 mx-auto flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
     >
-      Purge Dictionary (SOON!)
+      Purge Dictionary (DANGEROUS!)
     </button>
   );
 }

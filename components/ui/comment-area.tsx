@@ -79,7 +79,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
                       <button
                         type="button"
                         onClick={() => handleReport(c.id)}
-                        className="inline-flex items-center justify-center py-2 px-3 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="transition duration-250 ease-in-out hover:scale-125 inline-flex items-center justify-center py-2 px-3 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label={`Report comment by ${c.author}`}
                       >
                         Report
@@ -93,7 +93,7 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
 
           <hr className="my-4 border-t border-gray-200 dark:border-gray-700" />
 
-          {allowedToComment && <form onSubmit={handleSubmit} className="mt-2">
+          <form onSubmit={handleSubmit} className="mt-2">
             <label htmlFor="comment" className="sr-only">
               Comment
             </label>
@@ -113,13 +113,13 @@ const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comme
               <span className="text-sm text-gray-500 dark:text-gray-400">{text.length}/180 characters</span>
               <button
                 type="submit"
-                className="inline-flex items-center justify-center py-2 px-4 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="transition duration-250 ease-in-out hover:scale-125 inline-flex items-center justify-center py-2 px-4 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!text.trim()}
               >
                 Send
               </button>
             </div>
-          </form>}
+          </form>
         </div>
       </div>
     </div>

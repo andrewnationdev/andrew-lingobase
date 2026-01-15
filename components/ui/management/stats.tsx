@@ -46,7 +46,7 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
 
   return (
     <div className="p-6 bg-white dark:bg-gray-800 rounded-xl my-2 min-w-[80%] mx-auto shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-200 w-full sm:w-[calc(50%-0.5rem)]">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4" id="overview">
         <span>
           <strong>Number of Words: </strong> {lexicon.length}
         </span>
@@ -61,12 +61,18 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
       <hr className="my-4 border-t border-gray-300 dark:border-gray-600" />
       <StatsListComponent title="List of Homonyms" data={homonyms} />
       <hr className="my-4 border-t border-gray-300 dark:border-gray-600" />
-      <StatsListComponent
-        title="List of Duplicate Entries"
-        data={duplicateEntries}
-      />
+      <div id="duplicates">
+        <StatsListComponent
+          title="List of Duplicate Entries"
+          data={duplicateEntries}
+        />
+      </div>
       <hr className="my-4 border-t border-gray-300 dark:border-gray-600" />
-      {lexicon?.length > 0 && (<PurgeDictionarySectionComponent langCode={props.langCode} />)}
+      <div id="purge-dictionary">
+        {lexicon?.length > 0 && (
+          <PurgeDictionarySectionComponent langCode={props.langCode} />
+        )}
+      </div>
     </div>
   );
 }

@@ -49,14 +49,14 @@ export default async function Home() {
               {!user ? (
                 <Link
                   href="/auth/sign-up"
-                  className="inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                  className="transition duration-150 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
                 >
                   Create Your Account For Free
                 </Link>
               ) : (
                 <Link
                   href="/dashboard"
-                  className="inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                  className="transition duration-250 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
                 >
                   Visit Your Dashboard
                 </Link>
@@ -137,7 +137,7 @@ export default async function Home() {
                 href={"https://github.com/andrewnationdev/andrew-lingobase"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                className="transition duration-250 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
               >
                 Contribute on GitHub
               </a>
@@ -155,7 +155,7 @@ export default async function Home() {
               </p>
               <a
                 href="/register"
-                className="inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                className="transition duration-250 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
               >
                 Sign Up Now
               </a>
@@ -165,7 +165,7 @@ export default async function Home() {
 
         <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300">
           <p>
-            Powered by{" "}
+            Built with the technology of{" "}
             <a
               href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
               target="_blank"

@@ -404,6 +404,7 @@ export default function ViewConlang({ id, loggedUser }) {
                   link: conlang.custom_links.link1.url,
                   title: conlang.custom_links.link1.title,
                   isCustom: true,
+                  animated: true, 
                 }}
               />
             )}
@@ -414,6 +415,7 @@ export default function ViewConlang({ id, loggedUser }) {
                   link: conlang.custom_links.link2.url,
                   title: conlang.custom_links.link2.title,
                   isCustom: true,
+                  animated: true,
                 }}
               />
             )}
@@ -433,12 +435,14 @@ export default function ViewConlang({ id, loggedUser }) {
             props={{
               link: `/dashboard/dictionary/${conlang.code}`,
               title: "Dictionary",
+              animated: true,
             }}
           />
           <GreenButton
             props={{
               link: `/dashboard/typology/${conlang.code}`,
               title: "Typology",
+              animated: true,
             }}
           />
         </div>
@@ -447,12 +451,14 @@ export default function ViewConlang({ id, loggedUser }) {
             props={{
               link: `/dashboard/phonology/${conlang.code}`,
               title: "Phonology",
+              animated: true
             }}
           />
           <GreenButton
             props={{
               link: `/dashboard/articles/${conlang.code}`,
               title: "Articles and Stuff",
+              animated: true
             }}
           />
         </div>
@@ -462,6 +468,7 @@ export default function ViewConlang({ id, loggedUser }) {
             props={{
               link: `/dashboard/dictionary/management/${conlang.code}`,
               title: "Conlang Management Tool",
+              animated: true
             }}
           />
         </div>)}

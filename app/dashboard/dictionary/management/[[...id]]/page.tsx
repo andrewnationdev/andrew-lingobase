@@ -38,16 +38,16 @@ export default async function ManagementPage({ params }) {
         <QuickNavigationComponent
           data={[
             {
-              href: "#lexicon",
-              text: "Lexicon",
+              href: "#overview",
+              text: "Overview",
             },
             {
-              href: "#import-words",
-              text: "Import Words",
+              href: "#duplicates",
+              text: "Duplicates",
             },
             {
-              href: "#add-words",
-              text: "Add Words",
+              href: "#purge-dictionary",
+              text: "Purge Dictionary",
             },
           ]}
         />
