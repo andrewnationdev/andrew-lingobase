@@ -13,7 +13,7 @@ export type ICommentArea = {
   handleSendComment: (comment: Comment) => void;
   comments: Comment[] | [];
   loggedUser: string;
-  allowedToComment: boolean;
+  allowedToComment?: boolean;
 }
 
 const CommentAreaComponent: React.FC<ICommentArea> = ({ handleSendComment, comments, loggedUser, allowedToComment }) => {
