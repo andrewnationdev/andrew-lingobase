@@ -60,3 +60,8 @@ export function calculateHomonyns(words: IWord[]): IResult {
 
     return {number: counter, data: homonyms}
 }
+
+export function calculateWordsWithEmptyPOS(words: IWord[]): IResult {
+    const data = words.filter(word => word.pos.trim() === "");
+    return {number: data.length, data: data}
+}

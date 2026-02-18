@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase/database";
 import {
   calculateDuplicateEntries,
   calculateHomonyns,
+  calculateWordsWithEmptyPOS,
   IResult,
 } from "@/lib/dictionary";
 import StatsListComponent from "./stats-list";
@@ -24,6 +25,10 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
     number: 0,
     data: [] as IWord[] | undefined,
   });
+  const [withoutPOS, setWithoutPOS] = useState<IResult>({
+    data: [] as IWord[] | undefined,
+    number: 0,
+  })
 
   const [lexicon, setLexicon] = useState<IWord[]>([]);
 
@@ -42,6 +47,7 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
   useEffect(() => {
     setHomonyms(calculateHomonyns(lexicon));
     setDuplicateEntries(calculateDuplicateEntries(lexicon));
+    setWithoutPOS(calculateWordsWithEmptyPOS(lexicon));
   }, [lexicon]);
 
   return (
@@ -49,6 +55,9 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
       <div className="flex flex-col gap-4" id="overview">
         <span>
           <strong>Number of Words: </strong> {lexicon.length}
+        </span>
+        <span>
+          <strong>Words without POS: </strong> {withoutPOS.number}
         </span>
         <span>
           <strong>Homonyms/Polyssemic words: </strong>
@@ -65,6 +74,13 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
         <StatsListComponent
           title="List of Duplicate Entries"
           data={duplicateEntries}
+        />
+      </div>
+      <hr className="my-4 border-t border-gray-300 dark:border-gray-600" />
+      <div>
+        <StatsListComponent
+          title="List of Words without POS"
+          data={withoutPOS}
         />
       </div>
       <hr className="my-4 border-t border-gray-300 dark:border-gray-600" />

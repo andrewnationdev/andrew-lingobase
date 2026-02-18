@@ -10,6 +10,6 @@ export default function StatsListComponent(props: IStatsList){
         <div className="flex flex-col gap-4 mt-4">
             {props.data.data && props.data.data.length > 0 ? props.data.data.map((item, index) => 
             <span key={index}>
-                <strong>{item.lexical_item}</strong> - <em>{item.pos}</em> : {item.definition}</span>) : <span>No items found.</span>}
+                <strong>{item.lexical_item}</strong> - <em>{item.pos != "" ? item.pos : "???"}</em> : {item.definition}</span>) : <span>No items found.</span>}
         </div></>
 }
