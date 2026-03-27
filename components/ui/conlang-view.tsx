@@ -42,7 +42,9 @@ export default function ViewConlang({ id, loggedUser }) {
   const [numberOfDislikes, setNumberOfDisLikes] = useState<number>(13);
   const [ratingChosen, setRatingChosen] = useState<boolean>(false);
   const [ownerDisplayName, setOwnerDisplayName] = useState<string>("");
-  const [commentAuthorDisplayMap, setCommentAuthorDisplayMap] = useState<Record<string,string>>({});
+  const [commentAuthorDisplayMap, setCommentAuthorDisplayMap] = useState<
+    Record<string, string>
+  >({});
 
   const handleSendComment = async (comment: Comment) => {
     if (!conlang?.code) {
@@ -50,8 +52,7 @@ export default function ViewConlang({ id, loggedUser }) {
       return;
     }
 
-    if(moderate(comment.text) == false)
-      return;
+    if (moderate(comment.text) == false) return;
 
     try {
       const existing = Array.isArray(conlang.ratings?.comments)
@@ -88,7 +89,7 @@ export default function ViewConlang({ id, loggedUser }) {
 
   const handleDeleteConlang = async () => {
     const _prompt = confirm(
-      "Are you sure you want to delete this conlang? This cannot be undone!"
+      "Are you sure you want to delete this conlang? This cannot be undone!",
     );
 
     if (_prompt) {
@@ -133,7 +134,7 @@ export default function ViewConlang({ id, loggedUser }) {
 
       const data = await conlangs?.data;
 
-        if (data?.length > 0) {
+      if (data?.length > 0) {
         console.log(data![0]);
         const row = data![0];
         setConlang(row);
@@ -150,24 +151,28 @@ export default function ViewConlang({ id, loggedUser }) {
         }
 
         try {
-          const comments = Array.isArray(row?.ratings?.comments) ? row.ratings.comments : [];
+          const comments = Array.isArray(row?.ratings?.comments)
+            ? row.ratings.comments
+            : [];
 
           const unique = Array.from(
             new Set(
               comments
                 .map((c) => {
                   const a = (c as unknown as { author?: unknown })?.author;
-                  return typeof a === "string" ? a.trim() : String(a ?? "").trim();
+                  return typeof a === "string"
+                    ? a.trim()
+                    : String(a ?? "").trim();
                 })
-                .filter((s) => s.length > 0)
-            )
+                .filter((s) => s.length > 0),
+            ),
           ) as string[];
           const fetches = unique.map(async (u: string) => {
             const r = await fetchUserProfileDisplay(u);
             return { username: u, display: r.displayName };
           });
           const results = await Promise.all(fetches);
-          const cmap: Record<string,string> = {};
+          const cmap: Record<string, string> = {};
           results.forEach((r) => (cmap[r.username] = r.display || r.username));
           setCommentAuthorDisplayMap(cmap);
         } catch (err) {
@@ -265,7 +270,7 @@ export default function ViewConlang({ id, loggedUser }) {
 
       if (res.error) {
         showErrorToast(
-          "There was an error processing your dislike. Try again."
+          "There was an error processing your dislike. Try again.",
         );
         return;
       }
@@ -376,14 +381,14 @@ export default function ViewConlang({ id, loggedUser }) {
               className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
               href={`/dashboard/create_conlang/${conlang?.code}`}
             >
-              <PenIcon className="mr-2" size="16"/>
+              <PenIcon className="mr-2" size="16" />
               Edit
             </Link>
             <button
               onClick={handleDeleteConlang}
               className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
             >
-              <TrashIcon className="mr-2" size="16"/>
+              <TrashIcon className="mr-2" size="16" />
               Delete
             </button>
           </div>
@@ -404,7 +409,7 @@ export default function ViewConlang({ id, loggedUser }) {
                   link: conlang.custom_links.link1.url,
                   title: conlang.custom_links.link1.title,
                   isCustom: true,
-                  animated: true, 
+                  animated: true,
                 }}
               />
             )}
@@ -451,37 +456,38 @@ export default function ViewConlang({ id, loggedUser }) {
             props={{
               link: `/dashboard/phonology/${conlang.code}`,
               title: "Phonology",
-              animated: true
+              animated: true,
             }}
           />
           <GreenButton
             props={{
               link: `/dashboard/articles/${conlang.code}`,
               title: "Articles and Stuff",
-              animated: true
+              animated: true,
             }}
           />
         </div>
         <div className="flex mt-2 w-full gap-2">
-        {conlang?.created_by == loggedUser && (
+          {conlang?.created_by == loggedUser && (
+            <div className="flex w-full mt-2 flex-col gap-2">
+              <GreenButton
+                props={{
+                  link: `/dashboard/dictionary/management/${conlang.code}`,
+                  title: "Management Tool",
+                  animated: true,
+                }}
+              />
+            </div>
+          )}
           <div className="flex w-full mt-2 flex-col gap-2">
-          <GreenButton
-            props={{
-              link: `/dashboard/dictionary/management/${conlang.code}`,
-              title: "Management Tool",
-              animated: true
-            }}
-          />
-        </div>)}
-        <div className="flex w-full mt-2 flex-col gap-2">
-          <GreenButton
-            props={{
-              link: `/dashboard/grammar/${conlang.code}`,
-              title: "Grammar (ALPHA)",
-              animated: true
-            }}
-          />
-        </div>
+            <GreenButton
+              props={{
+                link: `/dashboard/grammar/${conlang.code}`,
+                title: "Grammar (ALPHA)",
+                animated: true,
+              }}
+            />
+          </div>
         </div>
       </div>
       <hr className="my-8" />
