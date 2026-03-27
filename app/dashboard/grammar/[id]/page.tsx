@@ -18,6 +18,8 @@ export default async function GrammarPage({ params }) {
     uname = data?.claims?.email?.split("@")[0];
   }
 
+    console.log(conlangCode, uname)
+
   return (
     <>
       {" "}
@@ -25,7 +27,7 @@ export default async function GrammarPage({ params }) {
         <div className="w-full">
           <div className="bg-teal-500 text-sm p-3 px-5 rounded-md text-black flex gap-8 my-4 items-center">
             <InfoIcon size="16" strokeWidth={2} />
-            Here you will be able to showcase your conlang's amazing grammar!
+            {`Here you will be able to showcase your conlang's amazing grammar!`}
           </div>
           <span className="text-lg font-bold">Coming soon!</span>
         </div>
