@@ -462,6 +462,7 @@ export default function ViewConlang({ id, loggedUser }) {
             }}
           />
         </div>
+        <div className="flex mt-2 w-full gap-2">
         {conlang?.created_by == loggedUser && (
           <div className="flex w-full mt-2 flex-col gap-2">
           <GreenButton
@@ -480,6 +481,7 @@ export default function ViewConlang({ id, loggedUser }) {
               animated: true
             }}
           />
+        </div>
         </div>
       </div>
       <hr className="my-8" />
