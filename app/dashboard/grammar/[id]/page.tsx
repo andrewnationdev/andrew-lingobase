@@ -1,3 +1,6 @@
+import GrammarView from "@/components/ui/grammar/grammar-view";
+import QuickNavigationComponent from "@/components/ui/quicknavigation";
+import ReturnComponent from "@/components/ui/return";
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -18,20 +21,9 @@ export default async function GrammarPage({ params }) {
     uname = data?.claims?.email?.split("@")[0];
   }
 
-    console.log(conlangCode, uname)
-
   return (
     <>
-      {" "}
-      <div className="flex-1 w-full flex flex-col gap-12">
-        <div className="w-full">
-          <div className="bg-teal-500 text-sm p-3 px-5 rounded-md text-black flex gap-8 my-4 items-center">
-            <InfoIcon size="16" strokeWidth={2} />
-            {`Here you will be able to showcase your conlang's amazing grammar!`}
-          </div>
-          <span className="text-lg font-bold">Coming soon!</span>
-        </div>
-      </div>
+      <GrammarView id={conlangCode} user={uname}/>
     </>
   );
 }
