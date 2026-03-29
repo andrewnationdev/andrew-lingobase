@@ -19,6 +19,14 @@ export default function GrammarView(props: { id: string; user: string }) {
 
   const handleChange = () => {};
 
+  //Next steps:
+
+  /**
+   * Implement saving and updating
+   * Only show the form for the owner for the conlang
+   * Improve styling
+   */
+
   useEffect(() => {
     const getConlangFromId = async () => {
       const conlangs = await supabase
