@@ -1,8 +1,5 @@
 import GrammarView from "@/components/ui/grammar/grammar-view";
-import QuickNavigationComponent from "@/components/ui/quicknavigation";
-import ReturnComponent from "@/components/ui/return";
 import { createClient } from "@/lib/supabase/server";
-import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

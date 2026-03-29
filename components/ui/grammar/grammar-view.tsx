@@ -12,7 +12,9 @@ import QuickNavigationComponent from "../quicknavigation";
 export default function GrammarView(props: { id: string; user: string }) {
   const [conlang, setConlang] = useState(null);
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [message, setMessage] = useState(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = () => {};
