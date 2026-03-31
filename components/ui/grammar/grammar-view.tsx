@@ -12,14 +12,47 @@ import QuickNavigationComponent from "../quicknavigation";
 export default function GrammarView(props: { id: string; user: string }) {
   const [conlang, setConlang] = useState(null);
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
+  const [grammarText, setGrammarText] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [message, setMessage] = useState(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setMessage(null);
 
-  const handleChange = () => {};
+    try {
+      let error;
+      if (grammarText !== "" && conlang?.code) {
+        const { error: updateError } = await supabase
+          .from("conlang")
+          .update({
+            grammar_doc: grammarText,
+          })
+          .eq("id", conlang?.id);
+        error = updateError;
+      }
+
+      if (error) {
+        throw error;
+      }
+      setMessage({ type: "success", text: "Grammar updated successfully!"  });
+      window.location.reload();
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: `An error occurred while updating grammar: ` + error,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setGrammarText(e.target.value);
+  };
 
   //Next steps:
 
@@ -50,6 +83,8 @@ export default function GrammarView(props: { id: string; user: string }) {
             const res = await fetchUserProfileDisplay(owner);
             setOwnerDisplayName(res.displayName || owner);
           }
+
+          setGrammarText(row.grammar_doc || "");
         } catch (err) {
           console.debug("Error fetching owner display name", err);
         }
@@ -139,7 +174,7 @@ export default function GrammarView(props: { id: string; user: string }) {
                   id="grammar_doc"
                   required
                   rows={10}
-                  value={conlang?.grammar_doc || ""}
+                  value={grammarText}
                   onChange={handleChange}
                   className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
                 />
@@ -162,7 +197,7 @@ export default function GrammarView(props: { id: string; user: string }) {
               rehypePlugins={[rehypeRaw]}
               remarkPlugins={[remarkGfm]}
             >
-              {conlang?.grammar_doc?.replace(/\\n/g, "\n") ||
+              {grammarText.replace(/\\n/g, "\n") ||
                 "No grammar documentation available."}
             </ReactMarkdown>
           </div>
