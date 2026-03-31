@@ -2,12 +2,10 @@
 import { supabase } from "@/lib/supabase/database";
 import { fetchUserProfileDisplay } from "@/lib/user-utils";
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
 import ReturnComponent from "../return";
 import { InfoIcon } from "lucide-react";
 import QuickNavigationComponent from "../quicknavigation";
+import MarkdownViewerComponent from "../markdown/markdown-viewer";
 
 export default function GrammarView(props: { id: string; user: string }) {
   const [conlang, setConlang] = useState(null);
@@ -192,15 +190,8 @@ export default function GrammarView(props: { id: string; user: string }) {
             </div>
           </form>
           <hr />
-          <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
-            <ReactMarkdown
-              rehypePlugins={[rehypeRaw]}
-              remarkPlugins={[remarkGfm]}
-            >
-              {grammarText.replace(/\\n/g, "\n") ||
-                "No grammar documentation available."}
-            </ReactMarkdown>
-          </div>
+          <MarkdownViewerComponent content={grammarText.replace(/\\n/g, "\n") ||
+                "No grammar documentation available."} />
         </div>
       </div>
     </>
