@@ -126,7 +126,7 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
               },
             ]}
           />
-          {conlang?.created_by == loggedUser && (
+          {conlang?.created_by == props.loggedUser && (
             <>
               <form
                 onSubmit={handleSubmit}
