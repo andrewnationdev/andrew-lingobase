@@ -20,7 +20,7 @@ export default async function GrammarPage({ params }) {
 
   return (
     <>
-      <GrammarView id={conlangCode} user={uname}/>
+      <GrammarView id={conlangCode} loggedUser={uname}/>
     </>
   );
 }

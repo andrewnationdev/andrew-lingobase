@@ -7,7 +7,7 @@ import { InfoIcon } from "lucide-react";
 import QuickNavigationComponent from "../quicknavigation";
 import MarkdownViewerComponent from "../markdown/markdown-viewer";
 
-export default function GrammarView(props: { id: string; user: string }) {
+export default function GrammarView(props: { id: string; loggedUser: string }) {
   const [conlang, setConlang] = useState(null);
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
   const [grammarText, setGrammarText] = useState("");
@@ -36,7 +36,7 @@ export default function GrammarView(props: { id: string; user: string }) {
       if (error) {
         throw error;
       }
-      setMessage({ type: "success", text: "Grammar updated successfully!"  });
+      setMessage({ type: "success", text: "Grammar updated successfully!" });
       window.location.reload();
     } catch (error) {
       setMessage({
@@ -126,72 +126,80 @@ export default function GrammarView(props: { id: string; user: string }) {
               },
             ]}
           />
-          <form
-            onSubmit={handleSubmit}
-            className="max-w-3xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg"
-          >
-            {message && (
-              <div
-                className={`p-4 rounded-lg mb-4 ${
-                  message.type === "success"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}
+          {conlang?.created_by == loggedUser && (
+            <>
+              <form
+                onSubmit={handleSubmit}
+                className="max-w-3xl mx-auto p-8 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg"
               >
-                {message.text}
-              </div>
-            )}
-            <div className="space-y-6">
-              <div>
-                <label
-                  htmlFor="conlang_name"
-                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
-                >
-                  Conlang Name
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  id="conlang_name"
-                  required
-                  disabled
-                  value={conlang?.english_name || ""}
-                  className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
-                />
-              </div>
+                {message && (
+                  <div
+                    className={`p-4 rounded-lg mb-4 ${
+                      message.type === "success"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {message.text}
+                  </div>
+                )}
+                <div className="space-y-6">
+                  <div>
+                    <label
+                      htmlFor="conlang_name"
+                      className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Conlang Name
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      id="conlang_name"
+                      required
+                      disabled
+                      value={conlang?.english_name || ""}
+                      className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
+                    />
+                  </div>
 
-              <div>
-                <label
-                  htmlFor="grammar_doc"
-                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
-                >
-                  Grammar Text (in HTML or Markdown)
-                </label>
-                <textarea
-                  name="grammar_doc"
-                  id="grammar_doc"
-                  required
-                  rows={10}
-                  value={grammarText}
-                  onChange={handleChange}
-                  className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
-                />
-              </div>
+                  <div>
+                    <label
+                      htmlFor="grammar_doc"
+                      className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Grammar Text (in HTML or Markdown)
+                    </label>
+                    <textarea
+                      name="grammar_doc"
+                      id="grammar_doc"
+                      required
+                      rows={10}
+                      value={grammarText}
+                      onChange={handleChange}
+                      className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
+                    />
+                  </div>
 
-              <div>
-                <button
-                  type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Saving..." : "Save Article"}
-                </button>
-              </div>
-            </div>
-          </form>
-          <hr />
-          <MarkdownViewerComponent content={grammarText.replace(/\\n/g, "\n") ||
-                "No grammar documentation available."} />
+                  <div>
+                    <button
+                      type="submit"
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Saving..." : "Save Article"}
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <hr />
+            </>
+          )}
+          <MarkdownViewerComponent
+            content={
+              grammarText.replace(/\\n/g, "\n") ||
+              "No grammar documentation available."
+            }
+          />
         </div>
       </div>
     </>

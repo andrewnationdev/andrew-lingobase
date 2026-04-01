@@ -84,20 +84,27 @@ export default function ArticleForm({
           .eq("id", currArticle.id);
         error = updateError;
       } else {
-        const { error: insertError } = await supabase.from("conlang-articles").insert([
-          {
-            ...article,
-            conlang_code: conlangCode,
-            updated_at: new Date().toISOString(),
-            written_by: loggedUser,
-          },
-        ]);
+        const { error: insertError } = await supabase
+          .from("conlang-articles")
+          .insert([
+            {
+              ...article,
+              conlang_code: conlangCode,
+              updated_at: new Date().toISOString(),
+              written_by: loggedUser,
+            },
+          ]);
         error = insertError;
       }
       if (error) {
         throw error;
       }
-      setMessage({ type: "success", text: isEditing ? "Article updated successfully!" : "Article added successfully!" });
+      setMessage({
+        type: "success",
+        text: isEditing
+          ? "Article updated successfully!"
+          : "Article added successfully!",
+      });
       if (!isEditing) {
         setArticle({ title: "", content: "", written_by: loggedUser });
       }
@@ -105,7 +112,9 @@ export default function ArticleForm({
     } catch (error) {
       setMessage({
         type: "error",
-        text: `An error occurred while ${isEditing ? "updating" : "adding"} the article: ` + error,
+        text:
+          `An error occurred while ${isEditing ? "updating" : "adding"} the article: ` +
+          error,
       });
     } finally {
       setIsSubmitting(false);
@@ -133,7 +142,7 @@ export default function ArticleForm({
       <div className="w-full">
         <div className="flex w-full flex-col gap-2 my-8">
           <span className="text-2xl font-bold text-gray-900 dark:text-white">
-            {isEditing ? 'Edit Article for' : 'New Article for'} {conlangName}
+            {isEditing ? "Edit Article for" : "New Article for"} {conlangName}
           </span>
         </div>
         <form
