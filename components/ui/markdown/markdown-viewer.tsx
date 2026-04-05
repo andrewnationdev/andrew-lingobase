@@ -15,7 +15,9 @@ export default function MarkdownViewerComponent(props: IMarkdown) {
           width: '100%', 
           overflowX: 'auto', 
           WebkitOverflowScrolling: 'touch',
-          paddingBottom: '1rem' 
+          paddingBottom: '1rem',
+          paddingLeft: '1rem',
+          paddingRight: '1rem'
         }}
       >
         <div 
