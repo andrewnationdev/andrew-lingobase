@@ -55,8 +55,6 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
   //Next steps:
 
   /**
-   * Implement saving and updating
-   * Only show the form for the owner for the conlang
    * Improve styling
    */
 
@@ -106,23 +104,23 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
               {conlang?.english_name + "'s Grammar"}
             </h1>
           </div>
-          <div className="bg-teal-500 text-sm p-3 px-5 rounded-md text-black flex gap-8 my-4 items-center">
+          {conlang?.created_by == props.loggedUser && <div className="bg-teal-500 text-sm p-3 px-5 rounded-md text-black flex gap-8 my-4 items-center">
             <InfoIcon size="16" strokeWidth={2} />
             {`Here you will be able to showcase your conlang's amazing grammar!`}
-          </div>
+          </div>}
           <QuickNavigationComponent
             data={[
               {
-                href: "#intro",
-                text: "Introduction",
+                href: "#guide",
+                text: "Grammar",
               },
               {
-                href: "#lang-stats",
-                text: "Stats",
+                href: "https://www.markdownguide.org/basic-syntax/",
+                text: "Mardkdown Guide",
               },
               {
-                href: "#lang-info",
-                text: "Information",
+                href: "https://www.youtube.com/@Trevtutor",
+                text: "Linguistics",
               },
             ]}
           />
@@ -191,15 +189,17 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
                   </div>
                 </div>
               </form>
-              <hr />
+              <hr className="mt-8" />
             </>
           )}
+          <div id="guide" className="mt-8 w-full overflow-hidden">
           <MarkdownViewerComponent
             content={
               grammarText.replace(/\\n/g, "\n") ||
               "No grammar documentation available."
             }
           />
+          </div>
         </div>
       </div>
     </>
