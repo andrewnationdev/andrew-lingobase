@@ -90,7 +90,7 @@ export default function Dictionary({
   const handleDeleteWord = async (item: IWord) => {
     const confirmDelete = confirm(
       `Are you sure you want to delete the word "${item.lexical_item}"? 
-            This action cannot be undone.`
+            This action cannot be undone.`,
     );
 
     if (!confirmDelete) return;
@@ -115,17 +115,31 @@ export default function Dictionary({
     window.location.reload();
   };
 
-  const filteredLexicon = lexicon
-    .filter(
-      (item) =>
-        item.lexical_item.toLowerCase().includes(search.toLowerCase()) ||
-        item.definition.toLowerCase().includes(search.toLowerCase()) ||
-        item.transliteration?.toLowerCase().includes(search.toLowerCase())
-    )
-    .slice(0, 12);
+  const filteredLexicon = lexicon.filter(
+    (item) =>
+      item.lexical_item.toLowerCase().includes(search.toLowerCase()) ||
+      item.definition.toLowerCase().includes(search.toLowerCase()) ||
+      item.transliteration?.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <div>
+      <>
+        {data.owner == data.loggedUser && (
+          <div id="add-words" className="mb-8">
+            <DictionaryForm
+              editing={editing}
+              word={word}
+              onFinishEditing={onFinishEditing}
+              conlang_code={data.langCode}
+              owner={data.owner}
+            />
+            <div id="import-words">
+              <WordImport langCode={data.langCode} owner={data.owner} />
+            </div>
+          </div>
+        )}
+      </>
       <h1 className="text-3xl font-bold">
         {data.langCode === "SHOW_ALL" ? "Lingobase Dictionary" : "Your Lexicon"}
       </h1>
@@ -138,12 +152,7 @@ export default function Dictionary({
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-       <hr className="my-4" />
-      <div id="import-words">
-        {data.owner == data.loggedUser && (
-          <WordImport langCode={data.langCode} owner={data.owner} />
-        )}
-      </div>
+      <hr className="my-4" />
       <div className="mt-2 flex gap-4 w-full flex-wrap" id="lexicon">
         {lexicon.length == 0 && (
           <div className="bg-accent-light text-gray-800 dark:bg-accent-dark dark:text-gray-300 text-sm p-3 px-5 rounded-md flex gap-3 items-center">
@@ -169,8 +178,8 @@ export default function Dictionary({
                       item.conlang_code == "AR"
                         ? "semlek text-3xl"
                         : item.conlang_code == "ER-HU"
-                        ? "adric text-3xl"
-                        : "text-xl"
+                          ? "adric text-3xl"
+                          : "text-xl"
                     }`}
                   >
                     {item.lexical_item}
@@ -212,18 +221,6 @@ export default function Dictionary({
               </div>
             </div>
           ))}
-      </div>
-      <hr className="my-4" />
-      <div id="add-words">
-        {data.owner == data.loggedUser && (
-          <DictionaryForm
-            editing={editing}
-            word={word}
-            onFinishEditing={onFinishEditing}
-            conlang_code={data.langCode}
-            owner={data.owner}
-          />
-        )}
       </div>
     </div>
   );
