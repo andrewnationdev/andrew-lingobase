@@ -20,6 +20,7 @@ export const partsOfSpeech = [
   { value: "phrases", label: "Phrases, Slang, Expressions, etc." },
   { value: "numeral", label: "Numeral" },
   { value: "discourse", label: "Discourse Marker" },
+    { value: "affix", label: "Affix" },
   { value: "other", label: "Other" },
 ];
 
@@ -50,13 +51,23 @@ export const TypologySchema = {
     "German/Dutch-like V2",
     "No Default Word Order",
     "Pragmatic Word Order",
+    "Hierarchical Word Order",
+    "Topic-Comment",
+    "Other"
   ],
   morphosyntactic_alignment: [
     "Nominative-Accusative",
     "Ergative-Absolutive",
     "Tripartite",
-    "Austronesian/Arusian-like",
-    "Other",
+    "Austronesian",
+    "Split-Ergative",
+    "Neutral",
+    "Fluid-S",
+    "Arusian-like",
+    "Marked Nominative",
+    "Active-Stative",
+    "Direct-Inverse",
+    "Other"
   ],
   language_family: [
     "Indo-European",
@@ -72,13 +83,18 @@ export const TypologySchema = {
     "Austral",
     "Austronesian",
     "Bantu",
+    "Language Isolate",
+    "Romance-Based Pidgin",
+    "Germanic-Based Pidgin",
+    "Pidgin/Creole",
     "Other",
   ],
   verbal_tenses: [
     "Present, Past, Future",
     "Past, Non-Past",
     "Present, Non-Present",
-    "No Tenses",
+    "No Marking",
+    "Aspect Instead of Tenses",
     "Other",
   ],
   type_morphology: [
@@ -87,6 +103,7 @@ export const TypologySchema = {
     "Agglutinative",
     "Isolating",
     "Non-Concatenative",
+    "Polysynthetic",
     "Mixed",
   ],
   pro_drop: [
@@ -109,10 +126,10 @@ export const TypologySchema = {
     "Long, Short and Nasal Vowels",
     "Complex",
   ],
-  tonal: ["Non-Tonal", "Tonal", "Pitch Accent"],
-  syllable_structure: ["CV", "CVC", "CCV", "CCVC", "Complex"],
+  tonal: ["Non-Tonal", "Non-Tonal (Lexical Stress Instead)" "Tonal (2-3 tones)", "Mandarin-Like", "Cantonese-Like", "Vietnamese-Like", "Tonal (3+ tones)", "Pitch Accent"],
+  syllable_structure: ["CV", "CVC", "CCV", "CCVC", "CVCC", "CCVCC", "Complex"],
   inclusivity: ["No", "Inclusive and Exclusive WE"],
-  morphological_number: ["No distinction", "Singular and Plural", "Singular, Dual, and Plural", "Other System"],
+  morphological_number: ["No distinction", "Singular and Plural", "Singular, Dual, and Plural", "Singular, Dual, Paucal, and Plural", "Other System"],
   gender_system: [
     "No Grammatical Gender",
     "Masculine and Feminine",
@@ -145,4 +162,4 @@ export const LiteratureGenres = [
 
 export const MOD_EMAIL = "mailto:andrewnationdev@gmail.com"
 
-export const BANNED_WORDS = ["banned"]
+export const BANNED_WORDS = ["stupid", "idiot", "faggot", "ridiculous", "fuck", "fuck you", "fy", "shit"]
