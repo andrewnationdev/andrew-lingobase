@@ -126,7 +126,7 @@ export const TypologySchema = {
     "Long, Short and Nasal Vowels",
     "Complex",
   ],
-  tonal: ["Non-Tonal", "Non-Tonal (Lexical Stress Instead)" "Tonal (2-3 tones)", "Mandarin-Like", "Cantonese-Like", "Vietnamese-Like", "Tonal (3+ tones)", "Pitch Accent"],
+  tonal: ["Non-Tonal", "Non-Tonal (Lexical Stress Instead)", "Tonal (2-3 tones)", "Mandarin-Like", "Cantonese-Like", "Vietnamese-Like", "Tonal (3+ tones)", "Pitch Accent"],
   syllable_structure: ["CV", "CVC", "CCV", "CCVC", "CVCC", "CCVCC", "Complex"],
   inclusivity: ["No", "Inclusive and Exclusive WE"],
   morphological_number: ["No distinction", "Singular and Plural", "Singular, Dual, and Plural", "Singular, Dual, Paucal, and Plural", "Other System"],
