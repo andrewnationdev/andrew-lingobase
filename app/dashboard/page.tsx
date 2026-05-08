@@ -24,7 +24,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-4">
-      <LingobaseStats />
+    <LingobaseStats />
       <QuickNavigationComponent
         data={[
           {

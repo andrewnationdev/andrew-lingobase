@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/database";
 import { InfoIcon, PencilIcon, TrashIcon } from "lucide-react";
 import WordImport from "./wordimport";
 import { showSuccessToast } from "@/lib/toast";
+import LoadingComponent from "./loading";
 
 export interface IWord {
   id?: string | number;
@@ -29,6 +30,7 @@ export default function Dictionary({
 }) {
   const [lexicon, setLexicon] = useState<IWord[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
   const [editing, setEditing] = useState<boolean>(false);
   const [word, setWord] = useState<IWord>({
     lexical_item: "",
@@ -71,12 +73,14 @@ export default function Dictionary({
           .eq("conlang_code", data.langCode)
           .order("created_at", { ascending: false });
         setLexicon(lex?.data);
+        setLoading(false);
       } else {
         const lex = await supabase
           .from("conlang-dictionary")
           .select("*")
           .order("created_at", { ascending: false });
         setLexicon(lex?.data);
+        setLoading(false);
       }
     };
     fetchDictionary();
@@ -143,7 +147,8 @@ export default function Dictionary({
       <h1 className="text-3xl font-bold">
         {data.langCode === "SHOW_ALL" ? "Lingobase Dictionary" : "Your Lexicon"}
       </h1>
-      <div className="mt-4 mb-2 w-full">
+      {loading && <LoadingComponent/>}
+      {!loading && <><div className="mt-4 mb-2 w-full">
         <input
           type="text"
           className="block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-cyan-600 focus:ring-cyan-600 sm:text-sm p-2 bg-white dark:bg-gray-700 dark:text-gray-200"
@@ -221,7 +226,7 @@ export default function Dictionary({
               </div>
             </div>
           ))}
-      </div>
+      </div></>}
     </div>
   );
 }

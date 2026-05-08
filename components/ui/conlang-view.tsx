@@ -18,6 +18,7 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import CommentAreaComponent, { Comment } from "./comment-area";
 import { moderate } from "@/lib/mod";
 import { fetchUserProfileDisplay } from "@/lib/user-utils";
+import LoadingComponent from "./loading";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function ViewConlang({ id, loggedUser }) {
     },
     ratings: { likes: [], dislikes: [], comments: [] },
   });
+  const [loading, setLoading] = useState<boolean>(true);
   const [lexiconSize, setLexiconSize] = useState<number>(0);
   const [phonemesCount, setPhonemesCount] = useState<number>(0);
   const [articlesCount, setArticlesCount] = useState<number>(0);
@@ -147,6 +149,7 @@ export default function ViewConlang({ id, loggedUser }) {
             setOwnerDisplayName(res.displayName || owner);
           }
         } catch (err) {
+          setLoading(false);
           console.debug("Error fetching owner display name", err);
         }
 
@@ -175,7 +178,9 @@ export default function ViewConlang({ id, loggedUser }) {
           const cmap: Record<string, string> = {};
           results.forEach((r) => (cmap[r.username] = r.display || r.username));
           setCommentAuthorDisplayMap(cmap);
+          setLoading(false);
         } catch (err) {
+          setLoading(false);
           console.debug("Error fetching comment author displays", err);
         }
       }
@@ -303,202 +308,211 @@ export default function ViewConlang({ id, loggedUser }) {
             },
           ]}
         />
-        <div className="flex w-full flex-col gap-2 mt-8">
-          <span className="text-2xl">
-            <strong>
-              {conlang?.english_name
-                ? `${conlang?.english_name} [${conlang?.code}]`
-                : "Unnamed"}
-            </strong>
-          </span>
-          <span className="text-m">({conlang?.native_name})</span>
-          <span className="text-sm">
-            This language has been created by{" "}
-            <Link
-              className="text-teal-600 font-bold"
-              href={`/dashboard/user/${conlang?.created_by}`}
-            >
-              {ownerDisplayName || conlang?.created_by}
-            </Link>{" "}
-            {conlang?.created_at
-              ? new Date(conlang.created_at).toLocaleString()
-              : ""}
-          </span>
-        </div>
-        <div className="flex gap-8 my-4">
-          <div className="flex w-[280px] mt-8">
-            <button
-              onClick={async () => {
-                await handleLikes(1);
-              }}
-              disabled={
-                ratingChosen || Boolean(conlang?.created_by === loggedUser)
-              }
-              className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
-              {`(${numberOfLikes})`}
-            </button>
+        {loading && <LoadingComponent />}
+        {!loading && (
+          <>
+            <div className="flex w-full flex-col gap-2 mt-8">
+              <span className="text-2xl">
+                <strong>
+                  {conlang?.english_name
+                    ? `${conlang?.english_name} [${conlang?.code}]`
+                    : "Unnamed"}
+                </strong>
+              </span>
+              <span className="text-m">({conlang?.native_name})</span>
+              <span className="text-sm">
+                This language has been created by{" "}
+                <Link
+                  className="text-teal-600 font-bold"
+                  href={`/dashboard/user/${conlang?.created_by}`}
+                >
+                  {ownerDisplayName || conlang?.created_by}
+                </Link>{" "}
+                {conlang?.created_at
+                  ? new Date(conlang.created_at).toLocaleString()
+                  : ""}
+              </span>
+            </div>
+            <div className="flex gap-8 my-4">
+              <div className="flex w-[280px] mt-8">
+                <button
+                  onClick={async () => {
+                    await handleLikes(1);
+                  }}
+                  disabled={
+                    ratingChosen || Boolean(conlang?.created_by === loggedUser)
+                  }
+                  className="flex-1 flex justify-center py-2 px-4 border rounded-l-lg border-r-0 shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+                >
+                  <ThumbsUpIcon className="mr-2" size={16} strokeWidth={2} />
+                  {`(${numberOfLikes})`}
+                </button>
 
-            <button
-              onClick={async () => {
-                await handleLikes(-1);
-              }}
-              disabled={
-                ratingChosen || Boolean(conlang?.created_by === loggedUser)
-              }
-              className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
-              {`(${numberOfDislikes})`}
-            </button>
+                <button
+                  onClick={async () => {
+                    await handleLikes(-1);
+                  }}
+                  disabled={
+                    ratingChosen || Boolean(conlang?.created_by === loggedUser)
+                  }
+                  className="flex-1 flex justify-center py-2 px-4 border rounded-none border-r-0 shadow-md text-sm font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+                >
+                  <ThumbsDownIcon className="mr-2" size={16} strokeWidth={2} />
+                  {`(${numberOfDislikes})`}
+                </button>
 
-            <button
-              onClick={() => {
-                /*const canComment = Boolean(loggedUser) && !(loggedUser === conlang.created_by);
+                <button
+                  onClick={() => {
+                    /*const canComment = Boolean(loggedUser) && !(loggedUser === conlang.created_by);
                 if (!canComment) {
                   showErrorToast("You don't have permission to comment yet!");
                   return;
                 }*/
-                const el = document.getElementById("comments-section");
-                if (el) {
-                  el.scrollIntoView({ behavior: "smooth", block: "start" });
-                  // optionally focus the textarea inside the comment area
-                  const textarea = el.querySelector("textarea");
-                  if (textarea) (textarea as HTMLTextAreaElement).focus();
-                }
-              }}
-              className="flex-1 flex justify-center py-2 px-4 border rounded-r-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              <MessageSquareIcon className="mr-2" size={16} strokeWidth={2} />
-              Comment
-            </button>
-          </div>
-        </div>
-        {conlang?.created_by === loggedUser && (
-          <div className="flex w-full gap-8 my-4">
-            <Link
-              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-              href={`/dashboard/create_conlang/${conlang?.code}`}
-            >
-              <PenIcon className="mr-2" size="16" />
-              Edit
-            </Link>
-            <button
-              onClick={handleDeleteConlang}
-              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
-            >
-              <TrashIcon className="mr-2" size="16" />
-              Delete
-            </button>
-          </div>
-        )}
-        <hr className="my-4" />
-        <div id="intro">
-          <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
-        </div>
-        {(conlang.custom_links.link1.title != "" ||
-          conlang.custom_links.link2.title != "") && (
-          <h3 className="text-xl mt-4">Useful Links:</h3>
-        )}
-        <div className="flex my-4 w-full gap-2">
-          {conlang.custom_links.link1 &&
-            conlang.custom_links.link1.title != "" && (
+                    const el = document.getElementById("comments-section");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth", block: "start" });
+                      // optionally focus the textarea inside the comment area
+                      const textarea = el.querySelector("textarea");
+                      if (textarea) (textarea as HTMLTextAreaElement).focus();
+                    }
+                  }}
+                  className="flex-1 flex justify-center py-2 px-4 border rounded-r-lg shadow-md text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+                >
+                  <MessageSquareIcon
+                    className="mr-2"
+                    size={16}
+                    strokeWidth={2}
+                  />
+                  Comment
+                </button>
+              </div>
+            </div>
+            {conlang?.created_by === loggedUser && (
+              <div className="flex w-full gap-8 my-4">
+                <Link
+                  className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+                  href={`/dashboard/create_conlang/${conlang?.code}`}
+                >
+                  <PenIcon className="mr-2" size="16" />
+                  Edit
+                </Link>
+                <button
+                  onClick={handleDeleteConlang}
+                  className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm mt-8 font-semibold text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+                >
+                  <TrashIcon className="mr-2" size="16" />
+                  Delete
+                </button>
+              </div>
+            )}
+            <hr className="my-4" />
+            <div id="intro">
+              <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
+            </div>
+            {(conlang.custom_links.link1.title != "" ||
+              conlang.custom_links.link2.title != "") && (
+              <h3 className="text-xl mt-4">Useful Links:</h3>
+            )}
+            <div className="flex my-4 w-full gap-2">
+              {conlang.custom_links.link1 &&
+                conlang.custom_links.link1.title != "" && (
+                  <GreenButton
+                    props={{
+                      link: conlang.custom_links.link1.url,
+                      title: conlang.custom_links.link1.title,
+                      isCustom: true,
+                      animated: true,
+                    }}
+                  />
+                )}
+              {conlang.custom_links.link2 &&
+                conlang.custom_links.link2.title != "" && (
+                  <GreenButton
+                    props={{
+                      link: conlang.custom_links.link2.url,
+                      title: conlang.custom_links.link2.title,
+                      isCustom: true,
+                      animated: true,
+                    }}
+                  />
+                )}
+            </div>
+            <hr className="my-8" />
+            <span className="text-xl">Stats</span>
+            <div className="flex flex-col mt-2 w-full gap-4" id="lang-stats">
+              <span>
+                This language has {lexiconSize} words in its lexicon,{" "}
+                {phonemesCount} phonemes, and {articlesCount} articles.
+              </span>
+            </div>
+            <hr className="my-8" />
+            <span className="text-xl">Access Information</span>
+            <div className="flex mt-2 w-full gap-2" id="lang-info">
               <GreenButton
                 props={{
-                  link: conlang.custom_links.link1.url,
-                  title: conlang.custom_links.link1.title,
-                  isCustom: true,
+                  link: `/dashboard/dictionary/${conlang.code}`,
+                  title: "Dictionary",
                   animated: true,
                 }}
               />
-            )}
-          {conlang.custom_links.link2 &&
-            conlang.custom_links.link2.title != "" && (
               <GreenButton
                 props={{
-                  link: conlang.custom_links.link2.url,
-                  title: conlang.custom_links.link2.title,
-                  isCustom: true,
-                  animated: true,
-                }}
-              />
-            )}
-        </div>
-        <hr className="my-8" />
-        <span className="text-xl">Stats</span>
-        <div className="flex flex-col mt-2 w-full gap-4" id="lang-stats">
-          <span>
-            This language has {lexiconSize} words in its lexicon,{" "}
-            {phonemesCount} phonemes, and {articlesCount} articles.
-          </span>
-        </div>
-        <hr className="my-8" />
-        <span className="text-xl">Access Information</span>
-        <div className="flex mt-2 w-full gap-2" id="lang-info">
-          <GreenButton
-            props={{
-              link: `/dashboard/dictionary/${conlang.code}`,
-              title: "Dictionary",
-              animated: true,
-            }}
-          />
-          <GreenButton
-            props={{
-              link: `/dashboard/typology/${conlang.code}`,
-              title: "Typology",
-              animated: true,
-            }}
-          />
-        </div>
-        <div className="flex mt-2 w-full gap-2">
-          <GreenButton
-            props={{
-              link: `/dashboard/phonology/${conlang.code}`,
-              title: "Phonology",
-              animated: true,
-            }}
-          />
-          <GreenButton
-            props={{
-              link: `/dashboard/articles/${conlang.code}`,
-              title: "Articles and Stuff",
-              animated: true,
-            }}
-          />
-        </div>
-        <div className="flex mt-2 w-full gap-2">
-          {conlang?.created_by == loggedUser && (
-            <div className="flex w-full mt-2 flex-col gap-2">
-              <GreenButton
-                props={{
-                  link: `/dashboard/dictionary/management/${conlang.code}`,
-                  title: "Management Tool",
+                  link: `/dashboard/typology/${conlang.code}`,
+                  title: "Typology",
                   animated: true,
                 }}
               />
             </div>
-          )}
-          <div className="flex w-full mt-2 flex-col gap-2">
-            <GreenButton
-              props={{
-                link: `/dashboard/grammar/${conlang.code}`,
-                title: "Grammar (ALPHA)",
-                animated: true,
-              }}
+            <div className="flex mt-2 w-full gap-2">
+              <GreenButton
+                props={{
+                  link: `/dashboard/phonology/${conlang.code}`,
+                  title: "Phonology",
+                  animated: true,
+                }}
+              />
+              <GreenButton
+                props={{
+                  link: `/dashboard/articles/${conlang.code}`,
+                  title: "Articles and Stuff",
+                  animated: true,
+                }}
+              />
+            </div>
+            <div className="flex mt-2 w-full gap-2">
+              {conlang?.created_by == loggedUser && (
+                <div className="flex w-full mt-2 flex-col gap-2">
+                  <GreenButton
+                    props={{
+                      link: `/dashboard/dictionary/management/${conlang.code}`,
+                      title: "Management Tool",
+                      animated: true,
+                    }}
+                  />
+                </div>
+              )}
+              <div className="flex w-full mt-2 flex-col gap-2">
+                <GreenButton
+                  props={{
+                    link: `/dashboard/grammar/${conlang.code}`,
+                    title: "Grammar (ALPHA)",
+                    animated: true,
+                  }}
+                />
+              </div>
+            </div>
+            <hr className="my-8" />
+            <CommentAreaComponent
+              comments={(conlang?.ratings?.comments || []).map((c) => ({
+                ...c,
+                author: commentAuthorDisplayMap[c.author] ?? c.author,
+              }))}
+              handleSendComment={handleSendComment}
+              loggedUser={loggedUser}
             />
-          </div>
-        </div>
+          </>
+        )}
       </div>
-      <hr className="my-8" />
-      <CommentAreaComponent
-        comments={(conlang?.ratings?.comments || []).map((c) => ({
-          ...c,
-          author: commentAuthorDisplayMap[c.author] ?? c.author,
-        }))}
-        handleSendComment={handleSendComment}
-        loggedUser={loggedUser}
-      />
     </div>
   );
 }

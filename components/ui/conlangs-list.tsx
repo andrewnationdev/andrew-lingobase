@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase/database";
 import { EyeIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LoadingComponent from "./loading";
 
 export default function ConlangsList({
   authOnly = false,
@@ -11,7 +12,7 @@ export default function ConlangsList({
   authOnly?: boolean;
   user?: string;
 }) {
-  const [conlangs, setConlangs] = useState([]);
+  const [conlangs, setConlangs] = useState(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -69,7 +70,8 @@ return (
           />
         </div>
       )}
-      {filteredConlangs.length > 0 &&
+      {conlangs === null && <LoadingComponent/>}
+      {filteredConlangs !== null && filteredConlangs.length > 0 &&
         filteredConlangs.map((conlang) => (
           <div
             key={conlang.id}
@@ -91,7 +93,7 @@ return (
             </div>
           </div>
         ))}
-      {filteredConlangs.length == 0 && (
+      {filteredConlangs !== null && filteredConlangs.length == 0 && (
         <div className="bg-teal-500 fg-white text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
           Once you create your first conlang, it will appear here!
