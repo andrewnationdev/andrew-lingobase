@@ -4,6 +4,7 @@ import { TypologyFieldTitles, TypologySchema } from "../../schema/data";
 import { useState, useEffect } from "react";
 import ReturnComponent from "./return";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import LoadingComponent from "./loading";
 
 export default function TypologyForm({ id, loggedUser }) {
   const conlangCode = id;
@@ -103,7 +104,9 @@ export default function TypologyForm({ id, loggedUser }) {
   };
 
   if (loading) {
-    return <div>Loading typological data...</div>;
+    return <div>
+      <LoadingComponent/>
+    </div>;
   }
 
   const formatLabel = (key) => {
@@ -117,7 +120,7 @@ export default function TypologyForm({ id, loggedUser }) {
     <div className="flex-1 w-full flex flex-col gap-12">
       <ReturnComponent id={conlangCode} />
       <div className="w-full">
-        <div className="flex w-full flex-col gap-2 mt-8">
+        <div className="flex w-full flex-col gap-2 mt-4 mb-4">
           <span className="text-2xl">
             <strong>Typology of {conlangName}</strong>
           </span>

@@ -5,6 +5,7 @@ import { fetchUserProfileDisplay } from "@/lib/user-utils";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import LoadingComponent from "./loading";
 
 export interface Article {
   id: number;
@@ -91,7 +92,7 @@ export default function ArticleView({
   if (loading) {
     return (
       <div className="text-gray-700 dark:text-gray-300">
-        Loading articles...
+        <LoadingComponent/>
       </div>
     );
   }
@@ -117,7 +118,7 @@ export default function ArticleView({
       </h2>
       {articles.length === 0 ? (
         <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg">
-          No articles found for this conlang.
+          <LoadingComponent/>
         </div>
       ) : (
         <div className="space-y-4 mt-4">

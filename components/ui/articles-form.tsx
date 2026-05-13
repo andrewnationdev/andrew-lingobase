@@ -1,6 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase/database";
 import { useState, useEffect } from "react";
+import LoadingComponent from "./loading";
 
 const ArticleFieldTitles = {
   title: "Title",
@@ -133,7 +134,9 @@ export default function ArticleForm({
 
   if (loading) {
     return (
-      <div className="text-gray-700 dark:text-gray-300">Loading data...</div>
+      <div className="text-gray-700 dark:text-gray-300">
+        <LoadingComponent/>
+      </div>
     );
   }
 
