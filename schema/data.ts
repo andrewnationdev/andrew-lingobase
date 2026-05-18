@@ -117,6 +117,10 @@ export const TypologySchema = {
     "No Formality Distinctions",
     "T-V Distinction",
     "Honorifics",
+    "Politeness Discourse Markers",
+    "Word Order Marks Formality",
+    "Both Word Order and Politeness Markers",
+    "Separate Vulgar and Honoriphic Lexicon",
     "Mixed"
   ],
   vowel_inventory: [
