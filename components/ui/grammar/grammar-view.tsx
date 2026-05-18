@@ -6,11 +6,13 @@ import ReturnComponent from "../return";
 import { InfoIcon } from "lucide-react";
 import QuickNavigationComponent from "../quicknavigation";
 import MarkdownViewerComponent from "../markdown/markdown-viewer";
+import LoadingComponent from "../loading";
 
 export default function GrammarView(props: { id: string; loggedUser: string }) {
   const [conlang, setConlang] = useState(null);
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
   const [grammarText, setGrammarText] = useState("");
+  const [loading, setLoading] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [message, setMessage] = useState(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,15 +82,17 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
             setOwnerDisplayName(res.displayName || owner);
           }
 
+          setLoading(false);
           setGrammarText(row.grammar_doc || "");
         } catch (err) {
+          setLoading(false);
           console.debug("Error fetching owner display name", err);
         }
 
         console.log(ownerDisplayName);
       }
     };
-
+    
     getConlangFromId();
   }, []);
 
@@ -124,7 +128,7 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
               },
             ]}
           />
-          {conlang?.created_by == props.loggedUser && (
+          {conlang?.created_by == props.loggedUser && !loading && (
             <>
               <form
                 onSubmit={handleSubmit}
@@ -193,12 +197,16 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
             </>
           )}
           <div id="guide" className="mt-8 w-full overflow-hidden">
-          <MarkdownViewerComponent
-            content={
-              grammarText.replace(/\\n/g, "\n") ||
-              "No grammar documentation available."
-            }
-          />
+          {loading ? (
+            <LoadingComponent/>
+          ) : (
+            <MarkdownViewerComponent
+              content={
+                grammarText.replace(/\\n/g, "\n") ||
+                "No grammar documentation available."
+              }
+            />
+          )}
           </div>
         </div>
       </div>
