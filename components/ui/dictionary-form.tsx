@@ -110,7 +110,7 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full mx-auto p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
+        <form onSubmit={handleSubmit} className="w-full 3xl:max-w-[50%] mx-auto p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg">
             <div className="space-y-6">
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
                     {editing ? 'Edit Lexical Entry' : 'Add a New Word to Your Vocabulary'}
