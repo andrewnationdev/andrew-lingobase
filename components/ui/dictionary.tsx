@@ -72,14 +72,14 @@ export default function Dictionary({
           .select("*")
           .eq("conlang_code", data.langCode)
           .order("created_at", { ascending: false });
-        setLexicon(lex?.data);
+        setLexicon(lex?.data?.sort((a, b) => a.lexical_item.localeCompare(b.lexical_item)));
         setLoading(false);
       } else {
         const lex = await supabase
           .from("conlang-dictionary")
           .select("*")
           .order("created_at", { ascending: false });
-        setLexicon(lex?.data);
+        setLexicon(lex?.data?.sort((a, b) => a.lexical_item.localeCompare(b.lexical_item)));
         setLoading(false);
       }
     };
@@ -124,7 +124,7 @@ export default function Dictionary({
       item.lexical_item.toLowerCase().includes(search.toLowerCase()) ||
       item.definition.toLowerCase().includes(search.toLowerCase()) ||
       item.transliteration?.toLowerCase().includes(search.toLowerCase()),
-  );
+  ).sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
 
   return (
     <div>
