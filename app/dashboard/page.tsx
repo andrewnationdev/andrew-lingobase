@@ -7,6 +7,7 @@ import QuickNavigationComponent from "@/components/ui/quicknavigation";
 import LingobaseStats from "@/components/ui/stats";
 import PatreonFloatingCard from "@/components/ui/patreon";
 import { PlusCircleIcon } from "lucide-react";
+import { LINKS_TO_TOOLS } from "@/schema/data";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -41,6 +42,21 @@ export default async function DashboardPage() {
           },
         ]}
       />
+      <div className="light:bg-orange-100 dark:bg-orange-800 shadow-lg p-4 flex flex-col items-center justify-center space-x-6 rounded-lg">
+        <span className="font-bold text-lg">
+          Useful Tools and Resources (External)
+        </span>
+        <details>
+          <summary>Click Here to Show the Tools</summary>
+          {LINKS_TO_TOOLS.map((link, index) => (
+            <div key={index} className="mb-4">
+              <Link href={link.url} className="text-orange-500 hover:underline hover:text-white-700" target="_blank" rel="noopener noreferrer">
+                + {link.title}
+              </Link>
+            </div>
+          ))}
+        </details>
+      </div>
       <div className="light:bg-orange-100 dark:bg-orange-800 shadow-lg p-4 flex justify-center space-x-6 rounded-lg">
         <span className="font-bold text-lg">
           Did you know we are on Discord too?

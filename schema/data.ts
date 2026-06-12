@@ -1,3 +1,5 @@
+import { IToolsLinks } from "./types/schema";
+
 export const partsOfSpeech = [
   { value: "", label: "Select part of speech" },
   { value: "noun", label: "Noun" },
@@ -163,6 +165,11 @@ export const LiteratureGenres = [
   "Poetry",
   "Other"
 ]
+
+export const LINKS_TO_TOOLS: IToolsLinks[] = [{
+  title: 'X-SAMPA to IPA Converter',
+  url: 'https://www.vulgarlang.com/ipa-x-sampa-cxs-converter/'
+}]
 
 export const MOD_EMAIL = "mailto:andrewnationdev@gmail.com"
 
