@@ -231,15 +231,18 @@ export default function UserPageComponent({
           </span>
           <ol className="flex flex-col gap-2 max-w-xs text-center mx-auto">
             {userLangs.length > 0 &&
-              userLangs.map((c) => (
-                <GreenButton
-                  key={c.id}
-                  props={{
-                    title: c.english_name,
-                    link: `/dashboard/view/${c.code}`,
-                  }}
-                />
-              ))}
+              userLangs
+                .slice()
+                .sort((a, b) => a.english_name.localeCompare(b.english_name))
+                .map((c) => (
+                  <GreenButton
+                    key={c.id}
+                    props={{
+                      title: c.english_name,
+                      link: `/dashboard/view/${c.code}`,
+                    }}
+                  />
+                ))}
           </ol>
         </>
       )}
