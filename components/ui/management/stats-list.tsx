@@ -1,4 +1,4 @@
-import { IResult } from "@/lib/dictionary";
+import { IResult } from "@/schema/types/dictionary";
 
 interface IStatsList {
     title: string;
