@@ -51,12 +51,16 @@ export default function Notepad(){
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Notes and Ideas</h2>
-        <p className="text-gray-500 mb-4">Write down your notes and ideas for later. They will be saved automatically as you type.</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12 dark:bg-gray-900">
+      <div className="w-full max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
+        <h2 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white">
+          Notes and Ideas
+        </h2>
+        <p className="mb-4 text-gray-500 dark:text-gray-300">
+          Write down your notes and ideas for later. They will be saved automatically as you type.
+        </p>
         <textarea
-          className="w-full h-80 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 resize-none"
+          className="h-80 w-full resize-none rounded-lg border border-gray-300 bg-white p-4 text-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
           placeholder="Start typing here..."
           value={content}
           onChange={handleChange}

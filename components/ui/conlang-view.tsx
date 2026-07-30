@@ -18,7 +18,7 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import CommentAreaComponent, { Comment } from "./comment-area";
 import { moderate } from "@/lib/mod";
 import { fetchUserProfileDisplay } from "@/lib/user-utils";
-import LoadingComponent from "./loading";
+import StatusBanner from "./status-banner";
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
@@ -308,7 +308,13 @@ export default function ViewConlang({ id, loggedUser }) {
             },
           ]}
         />
-        {loading && <LoadingComponent />}
+        {loading && (
+          <StatusBanner
+            variant="loading"
+            message="Loading conlang details..."
+            className="mt-4"
+          />
+        )}
         {!loading && (
           <>
             <div className="flex w-full flex-col gap-2 mt-8">

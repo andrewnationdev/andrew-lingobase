@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import DictionaryForm from "./dictionary-form";
 import { supabase } from "@/lib/supabase/database";
-import { InfoIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { PencilIcon, TrashIcon } from "lucide-react";
 import WordImport from "./wordimport";
 import { showSuccessToast } from "@/lib/toast";
-import LoadingComponent from "./loading";
 import { IWord } from "@/schema/types/dictionary";
+import StatusBanner from "./status-banner";
 
 export default function Dictionary({
   data,
@@ -135,7 +135,7 @@ export default function Dictionary({
       <h1 className="text-3xl font-bold">
         {data.langCode === "SHOW_ALL" ? "Lingobase Dictionary" : "Your Lexicon"}
       </h1>
-      {loading && <LoadingComponent/>}
+      {loading && <StatusBanner variant="loading" message="Loading dictionary..." className="mt-4" />}
       {!loading && <><div className="mt-4 mb-2 w-full">
         <input
           type="text"
@@ -148,15 +148,16 @@ export default function Dictionary({
       <hr className="my-4" />
       <div className="mt-2 flex gap-4 w-full flex-wrap" id="lexicon">
         {lexicon.length == 0 && (
-          <div className="bg-accent-light text-gray-800 dark:bg-accent-dark dark:text-gray-300 text-sm p-3 px-5 rounded-md flex gap-3 items-center">
-            <InfoIcon size="16" strokeWidth={2} />
-            The vocabulary of this conlang is empty.
-            {data.loggedUser == data.owner && (
-              <span>
-                Remember that languages need words to describe the world.
-              </span>
-            )}
-          </div>
+          <StatusBanner
+            variant="empty"
+            message="The vocabulary of this conlang is empty."
+            details={
+              data.loggedUser == data.owner
+                ? "Remember that languages need words to describe the world."
+                : undefined
+            }
+            className="w-full"
+          />
         )}
         {!editing &&
           filteredLexicon.map((item, index) => (

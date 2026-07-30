@@ -6,7 +6,7 @@ import ReturnComponent from "../return";
 import { InfoIcon } from "lucide-react";
 import QuickNavigationComponent from "../quicknavigation";
 import MarkdownViewerComponent from "../markdown/markdown-viewer";
-import LoadingComponent from "../loading";
+import StatusBanner from "../status-banner";
 
 export default function GrammarView(props: { id: string; loggedUser: string }) {
   const [conlang, setConlang] = useState(null);
@@ -198,13 +198,23 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
           )}
           <div id="guide" className="mt-8 w-full overflow-hidden">
           {loading ? (
-            <LoadingComponent/>
+            <StatusBanner
+              variant="loading"
+              message="Loading grammar documentation..."
+            />
+          ) : grammarText.trim().length === 0 ? (
+            <StatusBanner
+              variant="empty"
+              message="No grammar documentation available."
+              details={
+                conlang?.created_by == props.loggedUser
+                  ? "Add some notes so visitors can learn how the language works."
+                  : undefined
+              }
+            />
           ) : (
             <MarkdownViewerComponent
-              content={
-                grammarText.replace(/\\n/g, "\n") ||
-                "No grammar documentation available."
-              }
+              content={grammarText.replace(/\\n/g, "\n")}
             />
           )}
           </div>
