@@ -1,67 +1,74 @@
-import { IWord } from "@/components/ui/dictionary";
-
-export interface IResult {
-    number: number;
-    data: IWord[] | undefined;
-}
+import { IWord, IResult } from "@/schema/types/dictionary";
 
 export function calculateDuplicateEntries(words: IWord[]): IResult {
-    let counter = 0;
-    let duplicates = []
+    const normalizeText = (value: string | undefined | null) =>
+        value?.trim().toLowerCase() ?? "";
 
-    if(words.length > 0){
-        for(let w = 0; w < words.length; w++){
-            const currWord = words[w];
-            
-            for(let c = 0; c < words.length; c++){
-                const compareWord = words[c];
+    const sortByLexicalItem = (items: IWord[]) =>
+        [...items].sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
 
-                if(currWord.lexical_item.toLowerCase() == compareWord.lexical_item.toLowerCase() &&
-                    currWord.definition.toLowerCase() == compareWord.definition.toLowerCase() &&
-                    currWord.id != compareWord.id){
-                        counter++;
-                        duplicates.push(currWord);
-                }
-            }
+    const groups = new Map<string, IWord[]>();
+
+    for (const word of words) {
+        const key = `${normalizeText(word.lexical_item)}::${normalizeText(word.definition)}`;
+        const group = groups.get(key);
+
+        if (group) {
+            group.push(word);
+        } else {
+            groups.set(key, [word]);
         }
-    } else return {number: 0, data: undefined};
-
-    if(duplicates.length > 0){
-        duplicates = duplicates.sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
     }
 
-    return {number: counter, data: duplicates}
+    const duplicates = sortByLexicalItem(
+        Array.from(groups.values())
+            .filter((group) => group.length > 1)
+            .flat(),
+    );
+
+    return { number: duplicates.length, data: duplicates };
 }
 
 export function calculateHomonyns(words: IWord[]): IResult {
-    let counter = 0;
-    let homonyms = []
+    const normalizeText = (value: string | undefined | null) =>
+        value?.trim().toLowerCase() ?? "";
 
-    if(words.length > 0){
-        for(let w = 0; w < words.length; w++){
-            const currWord = words[w];
+    const sortByLexicalItem = (items: IWord[]) =>
+        [...items].sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
 
-            for(let c = 0; c < words.length; c++){
-                const compareWord = words[c];
+    const groups = new Map<string, IWord[]>();
 
-                if(currWord.lexical_item.toLowerCase() == compareWord.lexical_item.toLowerCase() &&
-                    currWord.definition.toLowerCase() != compareWord.definition.toLowerCase() &&
-                    currWord.id != compareWord.id){
-                        counter++;
-                        homonyms.push(currWord);
-                }
-            }
+    for (const word of words) {
+        const key = normalizeText(word.lexical_item);
+        const group = groups.get(key);
+
+        if (group) {
+            group.push(word);
+        } else {
+            groups.set(key, [word]);
         }
-    } else return {number: 0, data: undefined};
-
-    if(homonyms.length > 0){
-        homonyms = homonyms.sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
     }
 
-    return {number: counter, data: homonyms}
+    const homonyms = sortByLexicalItem(
+        Array.from(groups.values())
+            .filter((group) => {
+                const uniqueDefinitions = new Set(
+                    group.map((word) => normalizeText(word.definition)),
+                );
+
+                return uniqueDefinitions.size > 1;
+            })
+            .flat(),
+    );
+
+    return { number: homonyms.length, data: homonyms };
 }
 
 export function calculateWordsWithEmptyPOS(words: IWord[]): IResult {
-    const data = words.filter(word => word.pos.trim() === "");
-    return {number: data.length, data: data}
+    const normalizeText = (value: string | undefined | null) =>
+        value?.trim().toLowerCase() ?? "";
+
+    const data = words.filter((word) => normalizeText(word.pos) === "");
+
+    return { number: data.length, data };
 }

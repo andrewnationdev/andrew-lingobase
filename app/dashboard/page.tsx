@@ -8,6 +8,7 @@ import LingobaseStats from "@/components/ui/stats";
 import PatreonFloatingCard from "@/components/ui/patreon";
 import { PlusCircleIcon } from "lucide-react";
 import { LINKS_TO_TOOLS } from "@/schema/data";
+import { ctaActionClass } from "@/components/ui/cta-link";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -62,7 +63,7 @@ export default async function DashboardPage() {
           Did you know we are on Discord too?
         </span>
         <Link
-          className="max-w-[150px] transition duration-150 ease-in-out hover:scale-110 w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+          className={`${ctaActionClass} max-w-[150px]`}
           href="https://discord.gg/6BEpySdDdv"
         >
           Join Now
@@ -72,7 +73,7 @@ export default async function DashboardPage() {
         <h2 className="font-bold text-2xl mb-4">Your Conlangs:</h2>
         <ConlangsList authOnly user={uname} />
         <Link
-          className="transition duration-150 ease-in-out hover:scale-125 w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-200"
+          className={ctaActionClass}
           href="/dashboard/create_conlang"
         >
           <PlusCircleIcon className="mr-2" />

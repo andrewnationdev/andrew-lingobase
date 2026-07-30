@@ -54,19 +54,19 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: the tutorial encourages unsafe typing in a codebase that otherwise uses TypeScript.
   - Suggested change: define a `Note` interface and type the state as `Note[] | null`.
 
-- [ ] Type the note editor state and event handler.
+- [X] Type the note editor state and event handler.
   - File: [components/ui/texteditor.tsx](components/ui/texteditor.tsx)
   - Current snippet: `function useDebounce(value, delay) { ... }`, `const [content, setContent] = useState('');`, `const handleChange = (e) => { ... }`
   - Problem: the component currently has untyped hook parameters and an untyped change handler.
   - Suggested change: add explicit `string`/`number` types to the hook and `React.ChangeEvent<HTMLTextAreaElement>` to the handler.
 
-- [ ] Type the dictionary utility result containers.
+- [X] Type the dictionary utility result containers.
   - File: [lib/dictionary.ts](lib/dictionary.ts)
   - Current snippet: `let duplicates = []` and `let homonyms = []`
   - Problem: empty arrays infer `never[]` or weakly inferred array types depending on usage, which makes the code fragile.
   - Suggested change: declare the arrays as `IWord[]` and return a dedicated result type with `data: IWord[] | undefined`.
 
-- [ ] Normalize the `IResult` interface in the dictionary utilities.
+- [X] Normalize the `IResult` interface in the dictionary utilities.
   - File: [lib/dictionary.ts](lib/dictionary.ts)
   - Current snippet: `export interface IResult { number: number; data: IWord[] | undefined; }`
   - Problem: `data` being `undefined` forces repeated null checks and does not clearly describe empty-result semantics.
@@ -80,7 +80,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
 
 ## Bug-Prone Logic
 
-- [ ] Stop reloading the page after deleting a dictionary entry.
+- [X] Stop reloading the page after deleting a dictionary entry.
   - File: [components/ui/dictionary.tsx](components/ui/dictionary.tsx)
   - Current snippet: `window.location.reload();`
   - Problem: full-page reloads mask state bugs and create a worse UX than updating local state.
@@ -92,13 +92,13 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: the state is sometimes assigned `undefined`, even though later code assumes an array.
   - Suggested change: always coerce to `[]` and handle query errors explicitly.
 
-- [ ] Fix the button hover color typo on delete actions.
+- [X] Fix the button hover color typo on delete actions.
   - File: [components/ui/dictionary.tsx](components/ui/dictionary.tsx)
   - Current snippet: `hover:bg-emerald-600` on the red delete button
   - Problem: the hover color does not match the destructive intent and looks inconsistent.
   - Suggested change: use a red hover class for destructive actions.
 
-- [ ] Avoid duplicate work in `calculateDuplicateEntries` and `calculateHomonyns`.
+- [X] Avoid duplicate work in `calculateDuplicateEntries` and `calculateHomonyns`.
   - File: [lib/dictionary.ts](lib/dictionary.ts)
   - Current snippet: nested loops that compare each word against every other word and increment `counter` on every pair match.
   - Problem: the current algorithm counts the same logical duplicate many times and can over-report duplicates/homonyms.
@@ -150,25 +150,25 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: raw images skip built-in optimization and often miss accessibility details like alt text.
   - Suggested change: use `next/image` and add meaningful alt text.
 
-- [ ] Remove duplicate `transition` classes and inconsistent hover scales.
+- [X] Remove duplicate `transition` classes and inconsistent hover scales.
   - File: [app/page.tsx](app/page.tsx), [app/dashboard/page.tsx](app/dashboard/page.tsx)
   - Current snippet: classes such as `transition duration-150 ease-in-out hover:scale-125 ... transition-colors duration-200`
   - Problem: multiple transition declarations overlap, and hover scaling is inconsistent across CTAs.
   - Suggested change: standardize a small button/link utility pattern and reuse it everywhere.
 
-- [ ] Fix invalid Tailwind-like classes that likely do nothing.
+- [X] Fix invalid Tailwind-like classes that likely do nothing.
   - File: [components/ui/texteditor.tsx](components/ui/texteditor.tsx), [app/dashboard/page.tsx](app/dashboard/page.tsx)
   - Current snippet: `light:bg-white`, `light:text-gray-800`, `light:bg-orange-100`
   - Problem: `light:` is not a standard Tailwind variant in this codebase, so those classes may be ignored.
   - Suggested change: replace them with plain classes or a supported theme strategy.
 
-- [ ] Make the notepad screen visually consistent with the rest of the app.
+- [+-] Make the notepad screen visually consistent with the rest of the app.
   - File: [components/ui/texteditor.tsx](components/ui/texteditor.tsx)
   - Current snippet: `className="min-h-screen flex items-center justify-center font-inter"`
   - Problem: `font-inter` does not match the rest of the app typography, and the layout appears disconnected from the dashboard style.
   - Suggested change: reuse the app’s primary font and shared surface/background tokens.
 
-- [ ] Align the protected layout and landing page navigation branding.
+- [X] Align the protected layout and landing page navigation branding.
   - File: [app/layout.tsx](app/layout.tsx), [app/dashboard/layout.tsx](app/dashboard/layout.tsx), [app/page.tsx](app/page.tsx)
   - Current snippet: `Andrew Lingobase (Early Access)` on one page and `LINGOBASE (BETA)` on another.
   - Problem: the brand copy is inconsistent across entry points.

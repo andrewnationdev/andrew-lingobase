@@ -6,8 +6,11 @@ import Link from "next/link";
 
 import React from "react";
 import { createClient } from "@/lib/supabase/server";
+import { ctaLinkClass } from "@/components/ui/cta-link";
 
-const Card = ({ title, children }) => (
+type CardProps = React.PropsWithChildren<{ title: string }>;
+
+const Card = ({ title, children }: CardProps) => (
   <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 h-full">
     <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">
       {title}
@@ -30,7 +33,7 @@ export default async function Home() {
           <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
             <div className="flex gap-5 items-center font-semibold text-gray-800 dark:text-white">
               <img src="/img/LINGOBASE_4.webp" width="32px" height="32px" />
-              <Link href={"/dashboard"}>Andrew Lingobase (Early Access)</Link>
+              <Link href={"/dashboard"}>LINGOBASE (BETA)</Link>
             </div>
             {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
           </div>
@@ -49,14 +52,14 @@ export default async function Home() {
               {!user ? (
                 <Link
                   href="/auth/sign-up"
-                  className="transition duration-150 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                  className={ctaLinkClass}
                 >
                   Create Your Account For Free
                 </Link>
               ) : (
                 <Link
                   href="/dashboard"
-                  className="transition duration-250 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                  className={ctaLinkClass}
                 >
                   Visit Your Dashboard
                 </Link>
@@ -137,7 +140,7 @@ export default async function Home() {
                 href={"https://github.com/andrewnationdev/andrew-lingobase"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition duration-250 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                className={ctaLinkClass}
               >
                 Contribute on GitHub
               </a>
@@ -154,8 +157,8 @@ export default async function Home() {
                 you need to bring your language to life.
               </p>
               <a
-                href="/register"
-                className="transition duration-250 ease-in-out hover:scale-125 inline-block px-8 py-4 bg-teal-600 text-white rounded-lg text-lg font-bold hover:bg-teal-700 transition-colors duration-200 shadow-lg"
+                href="/auth/sign-up"
+                className={ctaLinkClass}
               >
                 Sign Up Now
               </a>

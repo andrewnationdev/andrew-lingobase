@@ -7,17 +7,7 @@ import { InfoIcon, PencilIcon, TrashIcon } from "lucide-react";
 import WordImport from "./wordimport";
 import { showSuccessToast } from "@/lib/toast";
 import LoadingComponent from "./loading";
-
-export interface IWord {
-  id?: string | number;
-  lexical_item: string;
-  definition: string;
-  pos: string;
-  notes: string;
-  transliteration: string;
-  conlang_code: string;
-  owner: string;
-}
+import { IWord } from "@/schema/types/dictionary";
 
 export default function Dictionary({
   data,
@@ -115,8 +105,6 @@ export default function Dictionary({
     setLexicon(lex?.data || []);
 
     showSuccessToast("Word deleted successfully!");
-
-    window.location.reload();
   };
 
   const filteredLexicon = lexicon.filter(
@@ -216,7 +204,7 @@ export default function Dictionary({
                       <PencilIcon />
                     </button>
                     <button
-                      className="ml-4 px-4 py-2 bg-red-500 text-white font-medium text-sm rounded-full shadow-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-200"
+                      className="ml-4 px-4 py-2 bg-red-500 text-white font-medium text-sm rounded-full shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-200"
                       onClick={() => handleDeleteWord(item)}
                     >
                       <TrashIcon />

@@ -19,14 +19,14 @@ export default function ManagementStatsCard(props: IManagementStatsCard) {
   //Homonyms, duplicate entries, number of words
   const [homonyms, setHomonyms] = useState<IResult>({
     number: 0,
-    data: [] as IWord[] | undefined,
+    data: [],
   });
   const [duplicateEntries, setDuplicateEntries] = useState<IResult>({
     number: 0,
-    data: [] as IWord[] | undefined,
+    data: [],
   });
   const [withoutPOS, setWithoutPOS] = useState<IResult>({
-    data: [] as IWord[] | undefined,
+    data: [],
     number: 0,
   })
 

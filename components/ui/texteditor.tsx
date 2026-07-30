@@ -20,7 +20,7 @@ function useDebounce(value, delay) {
 export default function Notepad(){
   const localStorageKey = 'editorContent';
 
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState<string>('');
 
   const debouncedContent = useDebounce(content, 500);
 
@@ -46,15 +46,15 @@ export default function Notepad(){
     }
   }, [debouncedContent]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setContent(e.target.value);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center font-inter">
-      <div className="light:bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl">
-        <h2 className="text-2xl font-bold mb-4 light:text-gray-800">Notes and Ideas</h2>
-        <p className="light:text-gray-500 mb-4">Write down your notes and ideas for later. They will be saved automatically as you type.</p>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Notes and Ideas</h2>
+        <p className="text-gray-500 mb-4">Write down your notes and ideas for later. They will be saved automatically as you type.</p>
         <textarea
           className="w-full h-80 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 resize-none"
           placeholder="Start typing here..."
