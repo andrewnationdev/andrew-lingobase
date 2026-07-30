@@ -3,9 +3,9 @@
 import { supabase } from '@/lib/supabase/database';
 import { partsOfSpeech } from '@/schema/data';
 import { useEffect, useState } from 'react';
-import { IWord } from './dictionary';
 import { useRouter } from 'next/navigation'; // <-- add
 import { showSuccessToast } from '@/lib/toast';
+import { IWord } from '@/schema/types/dictionary';
 
 export default function DictionaryForm({ conlang_code, owner, word, editing, onFinishEditing }: {
     conlang_code: string,
