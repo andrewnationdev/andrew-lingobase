@@ -1,15 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { IWord } from "../dictionary";
 import { supabase } from "@/lib/supabase/database";
 import {
   calculateDuplicateEntries,
   calculateHomonyns,
-  calculateWordsWithEmptyPOS,
-  IResult,
+  calculateWordsWithEmptyPOS
 } from "@/lib/dictionary";
 import StatsListComponent from "./stats-list";
 import PurgeDictionarySectionComponent from "./purge";
+import { IResult, IWord } from "@/schema/types/dictionary";
 
 interface IManagementStatsCard {
   langCode: string;
