@@ -96,33 +96,44 @@ export default function ViewConlang({ id, loggedUser }) {
 
     if (_prompt) {
       try {
-        const req = await supabase.from("conlang").delete().eq("code", id);
-        const deleteAllInfo = async () => {
-          await supabase
-            .from("conlang-dictionary")
-            .delete()
-            .eq("conlang_code", id);
-          await supabase
-            .from("conlang-phonology")
-            .delete()
-            .eq("conlang_id", id);
-          await supabase
-            .from("conlang-typology")
-            .delete()
-            .eq("conlang_code", id);
-          await supabase
-            .from("conlang-articles")
-            .delete()
-            .eq("conlang_code", id);
-        };
+        const deleteDictionary = await supabase
+          .from("conlang-dictionary")
+          .delete()
+          .eq("conlang_code", id);
+        const deletePhonology = await supabase
+          .from("conlang-phonology")
+          .delete()
+          .eq("conlang_id", id);
+        const deleteTypology = await supabase
+          .from("conlang-typology")
+          .delete()
+          .eq("conlang_code", id);
+        const deleteArticles = await supabase
+          .from("conlang-articles")
+          .delete()
+          .eq("conlang_code", id);
 
-        await deleteAllInfo();
+        const childDeleteError =
+          deleteDictionary.error ||
+          deletePhonology.error ||
+          deleteTypology.error ||
+          deleteArticles.error;
 
-        if (req?.status === 204) {
-          router.push("/dashboard");
+        if (childDeleteError) {
+          throw childDeleteError;
         }
+
+        const req = await supabase.from("conlang").delete().eq("code", id);
+
+        if (req.error) {
+          throw req.error;
+        }
+
+        showSuccessToast("Conlang deleted successfully.");
+        router.push("/dashboard");
       } catch (err) {
         console.error(err);
+        showErrorToast("Unable to delete the conlang. Please try again.");
       }
     }
   };

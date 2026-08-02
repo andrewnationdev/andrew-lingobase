@@ -5,7 +5,7 @@ import DictionaryForm from "./dictionary-form";
 import { supabase } from "@/lib/supabase/database";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import WordImport from "./wordimport";
-import { showSuccessToast } from "@/lib/toast";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { IWord } from "@/schema/types/dictionary";
 import StatusBanner from "./status-banner";
 
@@ -32,6 +32,25 @@ export default function Dictionary({
     owner: "",
   });
 
+  const normalizeLexicon = (rows: IWord[] | null | undefined) =>
+    (rows ?? []).sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
+
+  const refreshLexicon = async () => {
+    const query = supabase.from("conlang-dictionary").select("*");
+    const response =
+      data.langCode !== "SHOW_ALL"
+        ? await query.eq("conlang_code", data.langCode).order("created_at", { ascending: false })
+        : await query.order("created_at", { ascending: false });
+
+    if (response.error) {
+      showErrorToast("Unable to refresh the dictionary. Please try again.");
+      setLexicon([]);
+      return;
+    }
+
+    setLexicon(normalizeLexicon(response.data));
+  };
+
   const onFinishEditing = async () => {
     setEditing(false);
     setWord({
@@ -44,35 +63,17 @@ export default function Dictionary({
       owner: "",
     });
 
-    const lex = await supabase
-      .from("conlang-dictionary")
-      .select("*")
-      .eq("conlang_code", data.langCode);
-
-    setLexicon(lex?.data);
+    await refreshLexicon();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
     const fetchDictionary = async () => {
-      if (data.langCode !== "SHOW_ALL") {
-        const lex = await supabase
-          .from("conlang-dictionary")
-          .select("*")
-          .eq("conlang_code", data.langCode)
-          .order("created_at", { ascending: false });
-        setLexicon(lex?.data?.sort((a, b) => a.lexical_item.localeCompare(b.lexical_item)));
-        setLoading(false);
-      } else {
-        const lex = await supabase
-          .from("conlang-dictionary")
-          .select("*")
-          .order("created_at", { ascending: false });
-        setLexicon(lex?.data?.sort((a, b) => a.lexical_item.localeCompare(b.lexical_item)));
-        setLoading(false);
-      }
+      await refreshLexicon();
+      setLoading(false);
     };
+
     fetchDictionary();
   }, [editing, word, data]);
 
@@ -89,7 +90,7 @@ export default function Dictionary({
 
     if (!confirmDelete) return;
 
-    await supabase
+    const { error: deleteError } = await supabase
       .from("conlang-dictionary")
       .delete()
       .eq("id", item.id)
@@ -97,12 +98,12 @@ export default function Dictionary({
       .eq("conlang_code", data.langCode)
       .eq("owner", data.owner);
 
-    const lex = await supabase
-      .from("conlang-dictionary")
-      .select("*")
-      .eq("conlang_code", data.langCode);
+    if (deleteError) {
+      showErrorToast("Unable to delete the word. Please try again.");
+      return;
+    }
 
-    setLexicon(lex?.data || []);
+    await refreshLexicon();
 
     showSuccessToast("Word deleted successfully!");
   };

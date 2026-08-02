@@ -4,13 +4,13 @@ This file collects concrete improvement ideas found during a repository scan. Ea
 
 ## High Priority
 
-- [ ] Fix the broken signup CTA on the landing page.
+- [X] Fix the broken signup CTA on the landing page.
   - File: [app/page.tsx](app/page.tsx)
   - Current snippet: `href="/register"`
   - Problem: the app appears to use `/auth/sign-up` everywhere else, so `/register` can lead to a 404 or a dead end.
   - Suggested change: point the CTA to the existing sign-up route or add a matching route if `/register` is meant to exist.
 
-- [ ] Add stronger typing to the home page `Card` component.
+- [X] Add stronger typing to the home page `Card` component.
   - File: [app/page.tsx](app/page.tsx)
   - Current snippet: `const Card = ({ title, children }) => (`
   - Problem: `title` and `children` are implicitly `any`-ish here, which weakens TypeScript coverage.
@@ -34,7 +34,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: the code relies on an `any` cast and a magic error code.
   - Suggested change: create a typed guard for PostgREST errors and avoid suppressing type checking with `any`.
 
-- [ ] Prevent silent failures after conlang delete.
+- [X] Prevent silent failures after conlang delete.
   - File: [components/ui/conlang-view.tsx](components/ui/conlang-view.tsx)
   - Current snippet: `try { const req = await supabase.from("conlang").delete().eq("code", id); ... } catch (err) { console.error(err); }`
   - Problem: deletion errors are only logged, and the user gets no feedback if the cascade cleanup fails.
@@ -162,7 +162,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: `light:` is not a standard Tailwind variant in this codebase, so those classes may be ignored.
   - Suggested change: replace them with plain classes or a supported theme strategy.
 
-- [+-] Make the notepad screen visually consistent with the rest of the app.
+- [X] Make the notepad screen visually consistent with the rest of the app.
   - File: [components/ui/texteditor.tsx](components/ui/texteditor.tsx)
   - Current snippet: `className="min-h-screen flex items-center justify-center font-inter"`
   - Problem: `font-inter` does not match the rest of the app typography, and the layout appears disconnected from the dashboard style.
@@ -188,7 +188,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: logs are useful during development but do not help end users when something fails.
   - Suggested change: keep logs for debugging, but pair them with user-visible fallback states or toasts where appropriate.
 
-- [ ] Consolidate repeated empty-state and loading UI patterns.
+- [X] Consolidate repeated empty-state and loading UI patterns.
   - File: [components/ui/dictionary.tsx](components/ui/dictionary.tsx), [components/ui/conlang-view.tsx](components/ui/conlang-view.tsx), [components/ui/grammar/grammar-view.tsx](components/ui/grammar/grammar-view.tsx)
   - Current snippet: multiple ad hoc loading spinners, alert cards, and empty-state blocks.
   - Problem: the same UX patterns are implemented slightly differently in multiple places.
