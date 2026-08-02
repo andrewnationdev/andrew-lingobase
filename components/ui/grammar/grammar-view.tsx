@@ -12,6 +12,7 @@ import type { ConlangRecord } from "@/schema/types/conlang";
 
 export default function GrammarView(props: { id: string; loggedUser: string }) {
   const [conlang, setConlang] = useState<ConlangRecord | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
   const [grammarText, setGrammarText] = useState("");
   const [loading, setLoading] = useState(true);
@@ -98,6 +99,7 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
         } catch (err) {
           setLoading(false);
           showErrorToast("Unable to load the conlang owner display name.");
+          console.error(err)
         }
       } else {
         setLoadError("No grammar was found for this conlang.");

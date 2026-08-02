@@ -209,6 +209,7 @@ export default function ViewConlang({ id, loggedUser }) {
         router.push("/dashboard");
       } catch (err) {
         showErrorToast("Unable to delete the conlang. Please try again.");
+        console.error(err);
       }
     }
   };
@@ -246,6 +247,7 @@ export default function ViewConlang({ id, loggedUser }) {
         } catch (err) {
           setLoading(false);
           setOwnerDisplayName(row.created_by || "");
+          console.error(err);
         }
 
         try {
@@ -277,6 +279,7 @@ export default function ViewConlang({ id, loggedUser }) {
         } catch (err) {
           setLoading(false);
           setCommentAuthorDisplayMap({});
+          console.error(err);
         }
       } else {
         setLoadError("No conlang was found for this link.");

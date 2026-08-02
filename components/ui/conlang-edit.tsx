@@ -135,6 +135,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
       router.push(redirectToPath);
     } catch (err) {
       showErrorToast("Unable to save the conlang. Please try again.");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }

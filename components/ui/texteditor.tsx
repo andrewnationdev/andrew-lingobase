@@ -63,6 +63,7 @@ export default function Notepad(){
       }
     } catch (error) {
       showErrorToast("Unable to load saved notes. Starting with a blank editor.");
+      console.error("Error loading saved notes:", error);
     }
   }, []);
 
@@ -82,6 +83,7 @@ export default function Notepad(){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (error) {
       showErrorToast("Failed to save notes locally.");
+      console.error("Error saving notes:", error);
     }
   }, [debouncedContent]);
 
