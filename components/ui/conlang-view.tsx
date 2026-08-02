@@ -19,10 +19,73 @@ import CommentAreaComponent, { Comment } from "./comment-area";
 import { moderate } from "@/lib/mod";
 import { fetchUserProfileDisplay } from "@/lib/user-utils";
 import StatusBanner from "./status-banner";
+import type { ConlangComment, ConlangRecord } from "@/schema/types/conlang";
+
+const isValidComment = (comment: unknown): comment is ConlangComment => {
+  if (!comment || typeof comment !== "object") return false;
+
+  const candidate = comment as Partial<ConlangComment>;
+  return (
+    typeof candidate.id === "string" &&
+    candidate.id.trim().length > 0 &&
+    typeof candidate.text === "string" &&
+    candidate.text.trim().length > 0 &&
+    typeof candidate.author === "string" &&
+    candidate.author.trim().length > 0 &&
+    typeof candidate.createdAt === "string" &&
+    !Number.isNaN(Date.parse(candidate.createdAt))
+  );
+};
+
+const normalizeComment = (comment: Comment): ConlangComment | null => {
+  const normalized = {
+    id: String(comment.id ?? "").trim(),
+    text: String(comment.text ?? "").trim(),
+    author: String(comment.author ?? "").trim(),
+    createdAt: String(comment.createdAt ?? "").trim(),
+  };
+
+  if (!normalized.id || !normalized.text || !normalized.author) {
+    return null;
+  }
+
+  if (Number.isNaN(Date.parse(normalized.createdAt))) {
+    normalized.createdAt = new Date().toISOString();
+  }
+
+  return normalized;
+};
+
+const normalizeCommentList = (comments: unknown): ConlangComment[] => {
+  if (!Array.isArray(comments)) return [];
+
+  return comments
+    .filter(isValidComment)
+    .map((comment) => ({
+      id: comment.id.trim(),
+      text: comment.text.trim(),
+      author: comment.author.trim(),
+      createdAt: comment.createdAt,
+    }));
+};
+
+const normalizeStringList = (values: unknown): string[] => {
+  if (!Array.isArray(values)) return [];
+
+  return Array.from(
+    new Set(
+      values
+        .map((value) =>
+          typeof value === "string" ? value.trim() : String(value ?? "").trim(),
+        )
+        .filter((value) => value.length > 0),
+    ),
+  );
+};
 
 export default function ViewConlang({ id, loggedUser }) {
   const router = useRouter();
-  const [conlang, setConlang] = useState({
+  const [conlang, setConlang] = useState<ConlangRecord>({
     english_name: "",
     id: "",
     code: "",
@@ -49,20 +112,33 @@ export default function ViewConlang({ id, loggedUser }) {
   >({});
   const [loadError, setLoadError] = useState<string>("");
 
+  const resolveCommentAuthorLabel = (author: string) =>
+    commentAuthorDisplayMap[author] ?? author;
+
   const handleSendComment = async (comment: Comment) => {
     if (!conlang?.code) {
       showErrorToast("Unable to identify this conlang.");
       return;
     }
 
-    if (moderate(comment.text) == false) return;
+    const normalizedComment = normalizeComment(comment);
+
+    if (!normalizedComment) {
+      showErrorToast("Comment is missing required fields.");
+      return;
+    }
+
+    if (moderate(normalizedComment.text) == false) return;
 
     try {
-      const existing = Array.isArray(conlang.ratings?.comments)
-        ? conlang.ratings.comments
-        : [];
+      const existing = normalizeCommentList(conlang.ratings?.comments);
 
-      const updatedComments = [...existing, comment];
+      if (existing.some((existingComment) => existingComment.id === normalizedComment.id)) {
+        showErrorToast("This comment was already saved.");
+        return;
+      }
+
+      const updatedComments = [...existing, normalizedComment];
 
       const { data, error } = await supabase
         .from("conlang")
@@ -163,6 +239,9 @@ export default function ViewConlang({ id, loggedUser }) {
           if (owner) {
             const res = await fetchUserProfileDisplay(owner);
             setOwnerDisplayName(res.displayName || owner);
+            if (res.status === "error") {
+              showErrorToast("Unable to load the conlang owner display name.");
+            }
           }
         } catch (err) {
           setLoading(false);
@@ -209,6 +288,29 @@ export default function ViewConlang({ id, loggedUser }) {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const hydrateLoggedUserDisplay = async () => {
+      if (!loggedUser) return;
+
+      const profile = await fetchUserProfileDisplay(loggedUser);
+
+      if (!isMounted) return;
+
+      setCommentAuthorDisplayMap((prev) => ({
+        ...prev,
+        [loggedUser]: profile.displayName || loggedUser,
+      }));
+    };
+
+    hydrateLoggedUserDisplay();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [loggedUser]);
+
+  useEffect(() => {
     const countNumberOfWords = async () => {
       const lexicon = await supabase
         .from("conlang-dictionary")
@@ -250,15 +352,15 @@ export default function ViewConlang({ id, loggedUser }) {
 
     const data = await ratings?.data;
 
-    setNumberOfLikes(data?.ratings.likes.length);
-    setNumberOfDisLikes(data?.ratings.dislikes.length);
+    setNumberOfLikes(data?.ratings?.likes?.length ?? 0);
+    setNumberOfDisLikes(data?.ratings?.dislikes?.length ?? 0);
 
-    if (
-      data?.ratings?.likes.includes(loggedUser) ||
-      data?.ratings?.dislikes.includes(loggedUser)
-    ) {
-      setRatingChosen(true);
-    }
+    setRatingChosen(
+      Boolean(
+        data?.ratings?.likes?.includes(loggedUser) ||
+          data?.ratings?.dislikes?.includes(loggedUser),
+      ),
+    );
   };
 
   useEffect(() => {
@@ -270,12 +372,31 @@ export default function ViewConlang({ id, loggedUser }) {
   }, [conlang, ratingChosen]);
 
   const handleLikes = async (arg: number) => {
+    if (!loggedUser || !String(loggedUser).trim()) {
+      showErrorToast("Unable to register your vote right now.");
+      return;
+    }
+
+    if (conlang.created_by === loggedUser) {
+      showErrorToast("You cannot vote on your own conlang.");
+      return;
+    }
+
+    const likes = normalizeStringList(conlang.ratings.likes);
+    const dislikes = normalizeStringList(conlang.ratings.dislikes);
+
     if (arg === 1) {
-      const data = [...conlang.ratings.likes, loggedUser];
+      if (likes.includes(loggedUser)) {
+        showErrorToast("You already liked this conlang.");
+        return;
+      }
+
+      const data = Array.from(new Set([...likes, loggedUser]));
+      const nextDislikes = dislikes.filter((user) => user !== loggedUser);
 
       const res = await supabase
         .from("conlang")
-        .update({ ratings: { ...conlang.ratings, likes: data } })
+        .update({ ratings: { ...conlang.ratings, likes: data, dislikes: nextDislikes } })
         .eq("code", conlang.code);
 
       if (res.error) {
@@ -285,11 +406,17 @@ export default function ViewConlang({ id, loggedUser }) {
     }
 
     if (arg === -1) {
-      const data = [...conlang.ratings.dislikes, loggedUser];
+      if (dislikes.includes(loggedUser)) {
+        showErrorToast("You already disliked this conlang.");
+        return;
+      }
+
+      const data = Array.from(new Set([...dislikes, loggedUser]));
+      const nextLikes = likes.filter((user) => user !== loggedUser);
 
       const res = await supabase
         .from("conlang")
-        .update({ ratings: { ...conlang.ratings, dislikes: data } })
+        .update({ ratings: { ...conlang.ratings, dislikes: data, likes: nextLikes } })
         .eq("code", conlang.code);
 
       if (res.error) {
@@ -442,13 +569,13 @@ export default function ViewConlang({ id, loggedUser }) {
             <div id="intro">
               <ReactMarkdown>{conlang?.summary}</ReactMarkdown>
             </div>
-            {(conlang.custom_links.link1.title != "" ||
-              conlang.custom_links.link2.title != "") && (
+            {(conlang.custom_links.link1.title !== "" ||
+              conlang.custom_links.link2.title !== "") && (
               <h3 className="text-xl mt-4">Useful Links:</h3>
             )}
             <div className="flex my-4 w-full gap-2">
               {conlang.custom_links.link1 &&
-                conlang.custom_links.link1.title != "" && (
+                conlang.custom_links.link1.title !== "" && (
                   <GreenButton
                     props={{
                       link: conlang.custom_links.link1.url,
@@ -459,7 +586,7 @@ export default function ViewConlang({ id, loggedUser }) {
                   />
                 )}
               {conlang.custom_links.link2 &&
-                conlang.custom_links.link2.title != "" && (
+                conlang.custom_links.link2.title !== "" && (
                   <GreenButton
                     props={{
                       link: conlang.custom_links.link2.url,
@@ -538,7 +665,7 @@ export default function ViewConlang({ id, loggedUser }) {
             <CommentAreaComponent
               comments={(conlang?.ratings?.comments || []).map((c) => ({
                 ...c,
-                author: commentAuthorDisplayMap[c.author] ?? c.author,
+                author: resolveCommentAuthorLabel(c.author),
               }))}
               handleSendComment={handleSendComment}
               loggedUser={loggedUser}

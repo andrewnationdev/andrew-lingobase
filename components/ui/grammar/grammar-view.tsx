@@ -8,9 +8,10 @@ import QuickNavigationComponent from "../quicknavigation";
 import MarkdownViewerComponent from "../markdown/markdown-viewer";
 import StatusBanner from "../status-banner";
 import { showErrorToast } from "@/lib/toast";
+import type { ConlangRecord } from "@/schema/types/conlang";
 
 export default function GrammarView(props: { id: string; loggedUser: string }) {
-  const [conlang, setConlang] = useState(null);
+  const [conlang, setConlang] = useState<ConlangRecord | null>(null);
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
   const [grammarText, setGrammarText] = useState("");
   const [loading, setLoading] = useState(true);
@@ -87,6 +88,9 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
           if (owner) {
             const res = await fetchUserProfileDisplay(owner);
             setOwnerDisplayName(res.displayName || owner);
+            if (res.status === "error") {
+              showErrorToast("Unable to load the conlang owner display name.");
+            }
           }
 
           setLoading(false);
@@ -205,32 +209,32 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
             </>
           )}
           <div id="guide" className="mt-8 w-full overflow-hidden">
-          {loading ? (
-            <StatusBanner
-              variant="loading"
-              message="Loading grammar documentation..."
-            />
-          ) : loadError ? (
-            <StatusBanner
-              variant="empty"
-              message={loadError}
-              details="Try reloading the page or going back to the dashboard."
-            />
-          ) : grammarText.trim().length === 0 ? (
-            <StatusBanner
-              variant="empty"
-              message="No grammar documentation available."
-              details={
-                conlang?.created_by == props.loggedUser
-                  ? "Add some notes so visitors can learn how the language works."
-                  : undefined
-              }
-            />
-          ) : (
-            <MarkdownViewerComponent
-              content={grammarText.replace(/\\n/g, "\n")}
-            />
-          )}
+            {loading ? (
+              <StatusBanner
+                variant="loading"
+                message="Loading grammar documentation..."
+              />
+            ) : loadError ? (
+              <StatusBanner
+                variant="empty"
+                message={loadError}
+                details="Try reloading the page or going back to the dashboard."
+              />
+            ) : grammarText.trim().length === 0 ? (
+              <StatusBanner
+                variant="empty"
+                message="No grammar documentation available."
+                details={
+                  conlang?.created_by == props.loggedUser
+                    ? "Add some notes so visitors can learn how the language works."
+                    : undefined
+                }
+              />
+            ) : (
+              <MarkdownViewerComponent
+                content={grammarText.replace(/\\n/g, "\n")}
+              />
+            )}
           </div>
         </div>
       </div>

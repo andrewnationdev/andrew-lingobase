@@ -5,11 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { showErrorToast } from "@/lib/toast";
-
-type CustomLinks = {
-  link1: { title: string; url: string };
-  link2: { title: string; url: string };
-};
+import type { ConlangCustomLinks } from "@/schema/types/conlang";
 
 const isSafeExternalUrl = (value: string) => {
   const trimmed = value.trim();
@@ -26,7 +22,7 @@ const isSafeExternalUrl = (value: string) => {
   }
 };
 
-const defaultLinks: CustomLinks = {
+const defaultLinks: ConlangCustomLinks = {
   link1: { title: "", url: "" },
   link2: { title: "", url: "" },
 };
@@ -41,7 +37,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
     code: string;
     summary: string;
     native_name: string;
-    custom_links: CustomLinks;
+    custom_links: ConlangCustomLinks;
   }>({
     english_name: "",
     code: "",
@@ -77,7 +73,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
     e.preventDefault();
     setIsLoading(true);
 
-    const normalizedLinks: CustomLinks = {
+    const normalizedLinks: ConlangCustomLinks = {
       link1: {
         title: conlang.custom_links.link1.title.trim(),
         url: conlang.custom_links.link1.url.trim(),

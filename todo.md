@@ -40,7 +40,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: deletion errors are only logged, and the user gets no feedback if the cascade cleanup fails.
   - Suggested change: surface a visible error state/toast and verify all delete operations before redirecting.
 
-- [ ] Validate comment and rating updates before writing them.
+- [X] Validate comment and rating updates before writing them.
   - File: [components/ui/conlang-view.tsx](components/ui/conlang-view.tsx)
   - Current snippet: `const updatedComments = [...existing, comment];` and `const data = [...conlang.ratings.likes, loggedUser];`
   - Problem: duplicate likes/dislikes and malformed comment payloads can be introduced if the UI or client state is inconsistent.
@@ -72,7 +72,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: `data` being `undefined` forces repeated null checks and does not clearly describe empty-result semantics.
   - Suggested change: use `data: IWord[]` and represent empty results with `[]`.
 
-- [ ] Add a shared type for conlang and nested custom links.
+- [X] Add a shared type for conlang and nested custom links.
   - File: [components/ui/conlang-edit.tsx](components/ui/conlang-edit.tsx), [components/ui/conlang-view.tsx](components/ui/conlang-view.tsx), [components/ui/grammar/grammar-view.tsx](components/ui/grammar/grammar-view.tsx)
   - Current snippet: ad hoc object literals such as `custom_links: { link1: { title: "", url: "" }, link2: { title: "", url: "" } }`
   - Problem: the same data shape is duplicated across multiple files and can drift over time.
@@ -110,7 +110,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: if data is incomplete, these calls can throw at runtime.
   - Suggested change: normalize with safe fallback strings before calling string methods.
 
-- [ ] Make profile display lookups handle missing aliases and query errors more consistently.
+- [X] Make profile display lookups handle missing aliases and query errors more consistently.
   - File: [lib/user-utils.ts](lib/user-utils.ts)
   - Current snippet: `if (error) { return result; }` and `if (alias && String(alias).trim().length > 0) { ... }`
   - Problem: failures are silently swallowed, which makes user-facing names harder to debug.
@@ -131,12 +131,6 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Suggested change: validate URLs on input and render only safe, well-formed destinations.
 
 ## Styling and Consistency
-
-- [ ] Replace raw `<img>` usage with `next/image` where possible.
-  - File: [app/page.tsx](app/page.tsx), [app/dashboard/layout.tsx](app/dashboard/layout.tsx)
-  - Current snippet: `<img src="/img/LINGOBASE_4.webp" width="32px" height="32px" />`
-  - Problem: raw images skip built-in optimization and often miss accessibility details like alt text.
-  - Suggested change: use `next/image` and add meaningful alt text.
 
 - [X] Remove duplicate `transition` classes and inconsistent hover scales.
   - File: [app/page.tsx](app/page.tsx), [app/dashboard/page.tsx](app/dashboard/page.tsx)
@@ -162,7 +156,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: the brand copy is inconsistent across entry points.
   - Suggested change: centralize the product name and status label in a shared constant.
 
-- [ ] Clean up mixed spacing and nesting in the dashboard page layout.
+- [X] Clean up mixed spacing and nesting in the dashboard page layout.
   - File: [app/dashboard/page.tsx](app/dashboard/page.tsx)
   - Current snippet: the first child is rendered with inconsistent indentation and several sections repeat the same container patterns.
   - Problem: layout structure is harder to scan and maintain.

@@ -19,6 +19,16 @@ const isSafeExternalUrl = (value: string) => {
   }
 };
 
+function DashboardPanel({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={`shadow-lg p-4 rounded-lg ${className}`}>{children}</div>;
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient();
 
@@ -37,7 +47,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-4">
-    <LingobaseStats />
+      <LingobaseStats />
       <QuickNavigationComponent
         data={[
           {
@@ -54,7 +64,7 @@ export default async function DashboardPage() {
           },
         ]}
       />
-      <div className="light:bg-orange-100 dark:bg-orange-800 shadow-lg p-4 flex flex-col items-center justify-center space-x-6 rounded-lg">
+      <DashboardPanel className="light:bg-orange-100 dark:bg-orange-800 flex flex-col items-center justify-center space-y-6">
         <span className="font-bold text-lg">
           Useful Tools and Resources (External)
         </span>
@@ -62,14 +72,19 @@ export default async function DashboardPage() {
           <summary>Click Here to Show the Tools</summary>
           {safeTools.map((link, index) => (
             <div key={index} className="mb-4">
-              <Link href={link.url} className="text-orange-500 hover:underline hover:text-white-700" target="_blank" rel="noopener noreferrer">
+              <Link
+                href={link.url}
+                className="text-orange-500 hover:underline hover:text-white-700"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 + {link.title}
               </Link>
             </div>
           ))}
         </details>
-      </div>
-      <div className="light:bg-orange-100 dark:bg-orange-800 shadow-lg p-4 flex justify-center space-x-6 rounded-lg">
+      </DashboardPanel>
+      <DashboardPanel className="light:bg-orange-100 dark:bg-orange-800 flex justify-center gap-6">
         <span className="font-bold text-lg">
           Did you know we are on Discord too?
         </span>
@@ -79,7 +94,7 @@ export default async function DashboardPage() {
         >
           Join Now
         </Link>
-      </div>
+      </DashboardPanel>
       <div className="flex flex-col gap-2 items-start" id="your-conlangs">
         <h2 className="font-bold text-2xl mb-4">Your Conlangs:</h2>
         <ConlangsList authOnly user={uname} />

@@ -4,6 +4,8 @@ export type FetchProfileResult = {
   username: string;
   user_alias?: string | null;
   displayName: string;
+  status: "ok" | "not_found" | "error";
+  errorMessage?: string;
 };
 
 export async function fetchUserProfileDisplay(username: string): Promise<FetchProfileResult> {
@@ -11,6 +13,7 @@ export async function fetchUserProfileDisplay(username: string): Promise<FetchPr
     username,
     user_alias: null,
     displayName: username,
+    status: "ok",
   };
 
   if (!username) return result;
@@ -23,6 +26,14 @@ export async function fetchUserProfileDisplay(username: string): Promise<FetchPr
       .single();
 
     if (error) {
+      result.status = "error";
+      result.errorMessage = error.message;
+      console.error("Failed to fetch user profile display:", error);
+      return result;
+    }
+
+    if (!data) {
+      result.status = "not_found";
       return result;
     }
 
@@ -34,6 +45,8 @@ export async function fetchUserProfileDisplay(username: string): Promise<FetchPr
 
     return result;
   } catch (err) {
+    result.status = "error";
+    result.errorMessage = err instanceof Error ? err.message : String(err);
     console.error("fetchUserProfileDisplay error:", err);
     return result;
   }

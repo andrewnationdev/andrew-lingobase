@@ -1,13 +1,9 @@
 import { MOD_EMAIL } from "@/schema/data";
+import type { ConlangComment } from "@/schema/types/conlang";
 import { MessageCircleIcon } from "lucide-react";
 import React, { useState } from "react";
 
-export type Comment = {
-  id: string;
-  text: string;
-  author: string;
-  createdAt: string;
-};
+export type Comment = ConlangComment;
 
 export type ICommentArea = {
   handleSendComment: (comment: Comment) => void;
