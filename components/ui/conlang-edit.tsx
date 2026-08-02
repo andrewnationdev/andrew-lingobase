@@ -11,6 +11,21 @@ type CustomLinks = {
   link2: { title: string; url: string };
 };
 
+const isSafeExternalUrl = (value: string) => {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return true;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 const defaultLinks: CustomLinks = {
   link1: { title: "", url: "" },
   link2: { title: "", url: "" },
@@ -62,11 +77,28 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
     e.preventDefault();
     setIsLoading(true);
 
+    const normalizedLinks: CustomLinks = {
+      link1: {
+        title: conlang.custom_links.link1.title.trim(),
+        url: conlang.custom_links.link1.url.trim(),
+      },
+      link2: {
+        title: conlang.custom_links.link2.title.trim(),
+        url: conlang.custom_links.link2.url.trim(),
+      },
+    };
+
+    if (!isSafeExternalUrl(normalizedLinks.link1.url) || !isSafeExternalUrl(normalizedLinks.link2.url)) {
+      showErrorToast("Please use valid http or https URLs for custom links.");
+      setIsLoading(false);
+      return;
+    }
+
     const conlang_with_user = {
       ...conlang,
       code: conlang.code.toUpperCase().trim(),
       created_by: userName || "anonymous",
-      custom_links: conlang.custom_links ?? defaultLinks,
+      custom_links: normalizedLinks,
     };
 
     try {
@@ -87,7 +119,6 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- legacy fetchError shape, narrow later if needed
         if (fetchError && (fetchError as any).code !== "PGRST116") {
-          console.error("Error checking conlang code existence:", fetchError);
           showErrorToast("Failed to check conlang code existence");
           throw fetchError;
         }
@@ -107,7 +138,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
       const redirectToPath = `/dashboard/view/${targetCode}`;
       router.push(redirectToPath);
     } catch (err) {
-      console.error("Error:", err);
+      showErrorToast("Unable to save the conlang. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -119,7 +150,7 @@ export default function EditConlang({ conlangCode, userName }: { conlangCode?: s
       setIsLoading(true);
       const { data, error } = await supabase.from("conlang").select("*").eq("code", conlangCode).single();
       if (error) {
-        console.error("Error fetching conlang:", error);
+        showErrorToast("Unable to load the conlang for editing.");
       } else if (data) {
         setConlang({
           english_name: data.english_name ?? "",

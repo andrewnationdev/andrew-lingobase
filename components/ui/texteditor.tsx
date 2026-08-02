@@ -1,7 +1,18 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
+import { showErrorToast } from "@/lib/toast";
 
-function useDebounce(value, delay) {
+type StoredNote = {
+  version: 2;
+  content: string;
+  savedAt: string;
+};
+
+const STORAGE_KEY = "editorContent:v2";
+const LEGACY_STORAGE_KEY = "editorContent";
+const MAX_CONTENT_LENGTH = 50_000;
+
+function useDebounce<T>(value: T, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -18,35 +29,63 @@ function useDebounce(value, delay) {
 }
 
 export default function Notepad(){
-  const localStorageKey = 'editorContent';
-
   const [content, setContent] = useState<string>('');
 
   const debouncedContent = useDebounce(content, 500);
 
   useEffect(() => {
     try {
-      const savedContent = localStorage.getItem(localStorageKey);
-      if (savedContent) {
+      const savedContent = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (!savedContent) {
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(savedContent) as Partial<StoredNote> | string;
+        if (typeof parsed === "string") {
+          setContent(parsed);
+          return;
+        }
+
+        if (parsed?.version === 2 && typeof parsed.content === "string") {
+          setContent(parsed.content);
+          return;
+        }
+
+        if (typeof parsed === "object" && typeof parsed?.content === "string") {
+          setContent(parsed.content);
+          return;
+        }
+
+        setContent(savedContent);
+      } catch {
         setContent(savedContent);
       }
     } catch (error) {
-      console.error("Failed to load content from localStorage", error);
+      showErrorToast("Unable to load saved notes. Starting with a blank editor.");
     }
   }, []);
 
   useEffect(() => {
-    if (debouncedContent !== null) {
-      try {
-        localStorage.setItem(localStorageKey, debouncedContent);
-        console.log("Content saved to localStorage.");
-      } catch (error) {
-        console.error("Failed to save content to localStorage", error);
-      }
+    if (debouncedContent.length > MAX_CONTENT_LENGTH) {
+      showErrorToast("Your note is too large to save locally.");
+      return;
+    }
+
+    try {
+      const payload: StoredNote = {
+        version: 2,
+        content: debouncedContent,
+        savedAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      showErrorToast("Failed to save notes locally.");
     }
   }, [debouncedContent]);
 
-  const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
 
@@ -68,4 +107,4 @@ export default function Notepad(){
       </div>
     </div>
   );
-};
+}

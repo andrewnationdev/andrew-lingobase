@@ -7,12 +7,14 @@ import { InfoIcon } from "lucide-react";
 import QuickNavigationComponent from "../quicknavigation";
 import MarkdownViewerComponent from "../markdown/markdown-viewer";
 import StatusBanner from "../status-banner";
+import { showErrorToast } from "@/lib/toast";
 
 export default function GrammarView(props: { id: string; loggedUser: string }) {
   const [conlang, setConlang] = useState(null);
   const [ownerDisplayName, setOwnerDisplayName] = useState("");
   const [grammarText, setGrammarText] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [message, setMessage] = useState(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,7 +41,6 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
         throw error;
       }
       setMessage({ type: "success", text: "Grammar updated successfully!" });
-      window.location.reload();
     } catch (error) {
       setMessage({
         type: "error",
@@ -67,10 +68,16 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
         .select("*")
         .eq("code", props.id);
 
+      if (conlangs.error) {
+        setLoadError("Unable to load grammar right now.");
+        setLoading(false);
+        return;
+      }
+
       const data = await conlangs?.data;
 
       if (data?.length > 0) {
-        console.log(data![0]);
+        setLoadError("");
         const row = data![0];
         setConlang(row);
 
@@ -86,10 +93,11 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
           setGrammarText(row.grammar_doc || "");
         } catch (err) {
           setLoading(false);
-          console.debug("Error fetching owner display name", err);
+          showErrorToast("Unable to load the conlang owner display name.");
         }
-
-        console.log(ownerDisplayName);
+      } else {
+        setLoadError("No grammar was found for this conlang.");
+        setLoading(false);
       }
     };
     
@@ -128,7 +136,7 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
               },
             ]}
           />
-          {conlang?.created_by == props.loggedUser && !loading && (
+          {conlang?.created_by == props.loggedUser && !loading && !loadError && (
             <>
               <form
                 onSubmit={handleSubmit}
@@ -201,6 +209,12 @@ export default function GrammarView(props: { id: string; loggedUser: string }) {
             <StatusBanner
               variant="loading"
               message="Loading grammar documentation..."
+            />
+          ) : loadError ? (
+            <StatusBanner
+              variant="empty"
+              message={loadError}
+              details="Try reloading the page or going back to the dashboard."
             />
           ) : grammarText.trim().length === 0 ? (
             <StatusBanner

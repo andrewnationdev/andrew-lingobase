@@ -10,6 +10,15 @@ import { PlusCircleIcon } from "lucide-react";
 import { LINKS_TO_TOOLS } from "@/schema/data";
 import { ctaActionClass } from "@/components/ui/cta-link";
 
+const isSafeExternalUrl = (value: string) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 export default async function DashboardPage() {
   const supabase = await createClient();
 
@@ -23,6 +32,8 @@ export default async function DashboardPage() {
   if (data?.claims?.email) {
     uname = data?.claims?.email?.split("@")[0];
   }
+
+  const safeTools = LINKS_TO_TOOLS.filter((link) => isSafeExternalUrl(link.url));
 
   return (
     <div className="flex-1 w-full flex flex-col gap-4">
@@ -49,7 +60,7 @@ export default async function DashboardPage() {
         </span>
         <details>
           <summary>Click Here to Show the Tools</summary>
-          {LINKS_TO_TOOLS.map((link, index) => (
+          {safeTools.map((link, index) => (
             <div key={index} className="mb-4">
               <Link href={link.url} className="text-orange-500 hover:underline hover:text-white-700" target="_blank" rel="noopener noreferrer">
                 + {link.title}

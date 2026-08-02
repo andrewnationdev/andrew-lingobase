@@ -1,11 +1,10 @@
 import { IWord, IResult } from "@/schema/types/dictionary";
 
 export function calculateDuplicateEntries(words: IWord[]): IResult {
-    const normalizeText = (value: string | undefined | null) =>
-        value?.trim().toLowerCase() ?? "";
+    const normalizeText = (value: unknown) => String(value ?? "").trim().toLowerCase();
 
     const sortByLexicalItem = (items: IWord[]) =>
-        [...items].sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
+        [...items].sort((a, b) => normalizeText(a.lexical_item).localeCompare(normalizeText(b.lexical_item)));
 
     const groups = new Map<string, IWord[]>();
 
@@ -30,11 +29,10 @@ export function calculateDuplicateEntries(words: IWord[]): IResult {
 }
 
 export function calculateHomonyns(words: IWord[]): IResult {
-    const normalizeText = (value: string | undefined | null) =>
-        value?.trim().toLowerCase() ?? "";
+    const normalizeText = (value: unknown) => String(value ?? "").trim().toLowerCase();
 
     const sortByLexicalItem = (items: IWord[]) =>
-        [...items].sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
+        [...items].sort((a, b) => normalizeText(a.lexical_item).localeCompare(normalizeText(b.lexical_item)));
 
     const groups = new Map<string, IWord[]>();
 
@@ -65,8 +63,7 @@ export function calculateHomonyns(words: IWord[]): IResult {
 }
 
 export function calculateWordsWithEmptyPOS(words: IWord[]): IResult {
-    const normalizeText = (value: string | undefined | null) =>
-        value?.trim().toLowerCase() ?? "";
+    const normalizeText = (value: unknown) => String(value ?? "").trim().toLowerCase();
 
     const data = words.filter((word) => normalizeText(word.pos) === "");
 

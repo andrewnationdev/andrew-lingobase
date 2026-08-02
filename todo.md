@@ -48,7 +48,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
 
 ## Type Safety
 
-- [ ] Remove `any[] | null` from the tutorial fetch example.
+- [X] Remove `any[] | null` from the tutorial fetch example.
   - File: [components/tutorial/fetch-data-steps.tsx](components/tutorial/fetch-data-steps.tsx)
   - Current snippet: `const [notes, setNotes] = useState<any[] | null>(null)`
   - Problem: the tutorial encourages unsafe typing in a codebase that otherwise uses TypeScript.
@@ -86,7 +86,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: full-page reloads mask state bugs and create a worse UX than updating local state.
   - Suggested change: refresh the dictionary state in React after the delete succeeds.
 
-- [ ] Handle possible null Supabase responses in dictionary refresh flows.
+- [X] Handle possible null Supabase responses in dictionary refresh flows.
   - File: [components/ui/dictionary.tsx](components/ui/dictionary.tsx)
   - Current snippet: `setLexicon(lex?.data);` and `setLexicon(lex?.data || []);`
   - Problem: the state is sometimes assigned `undefined`, even though later code assumes an array.
@@ -104,7 +104,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
   - Problem: the current algorithm counts the same logical duplicate many times and can over-report duplicates/homonyms.
   - Suggested change: compare each pair once or use a map keyed by normalized lexical item + definition.
 
-- [ ] Guard against empty or missing strings in dictionary analytics.
+- [X] Guard against empty or missing strings in dictionary analytics.
   - File: [lib/dictionary.ts](lib/dictionary.ts)
   - Current snippet: `currWord.lexical_item.toLowerCase()` and `currWord.definition.toLowerCase()`
   - Problem: if data is incomplete, these calls can throw at runtime.
@@ -118,25 +118,13 @@ This file collects concrete improvement ideas found during a repository scan. Ea
 
 ## Validation and Data Integrity
 
-- [ ] Validate local-storage content in the notepad before persisting.
+- [X] Validate local-storage content in the notepad before persisting.
   - File: [components/ui/texteditor.tsx](components/ui/texteditor.tsx)
   - Current snippet: `localStorage.setItem(localStorageKey, debouncedContent);`
   - Problem: any string is saved without size checks or migration logic.
   - Suggested change: guard against oversized content and version the stored format if the editor schema changes.
 
-- [ ] Add input constraints for login and sign-up to reduce invalid submissions.
-  - File: [components/login-form.tsx](components/login-form.tsx), [components/sign-up-form.tsx](components/sign-up-form.tsx)
-  - Current snippet: email and password are accepted as-is and sent directly to Supabase.
-  - Problem: there is no client-side normalization for whitespace or basic password guidance.
-  - Suggested change: trim email values, consider password strength hints, and validate repeat-password before submit.
-
-- [ ] Add a clearer redirect target for sign-up email confirmation.
-  - File: [components/sign-up-form.tsx](components/sign-up-form.tsx)
-  - Current snippet: `emailRedirectTo: `${window.location.origin}/protected`,`
-  - Problem: the redirect path is not obviously aligned with the app’s route structure.
-  - Suggested change: confirm that `/protected` is the intended landing page and centralize that URL in one constant.
-
-- [ ] Validate external link data before rendering it as clickable navigation.
+- [X] Validate external link data before rendering it as clickable navigation.
   - File: [app/dashboard/page.tsx](app/dashboard/page.tsx), [components/ui/conlang-edit.tsx](components/ui/conlang-edit.tsx)
   - Current snippet: `href={link.url}` and user-authored custom links in conlang data.
   - Problem: malformed URLs can break navigation or create bad external-link behavior.
@@ -182,7 +170,7 @@ This file collects concrete improvement ideas found during a repository scan. Ea
 
 ## Maintainability
 
-- [ ] Replace console logging with structured error handling where users rely on the result.
+- [X] Replace console logging with structured error handling where users rely on the result.
   - File: [components/ui/conlang-view.tsx](components/ui/conlang-view.tsx), [components/ui/grammar/grammar-view.tsx](components/ui/grammar/grammar-view.tsx), [components/ui/texteditor.tsx](components/ui/texteditor.tsx)
   - Current snippet: `console.log(...)`, `console.debug(...)`, `console.error(...)`
   - Problem: logs are useful during development but do not help end users when something fails.

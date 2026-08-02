@@ -47,6 +47,7 @@ export default function ViewConlang({ id, loggedUser }) {
   const [commentAuthorDisplayMap, setCommentAuthorDisplayMap] = useState<
     Record<string, string>
   >({});
+  const [loadError, setLoadError] = useState<string>("");
 
   const handleSendComment = async (comment: Comment) => {
     if (!conlang?.code) {
@@ -83,7 +84,6 @@ export default function ViewConlang({ id, loggedUser }) {
 
       showSuccessToast("Comment posted successfully");
     } catch (err: unknown) {
-      console.error("Error saving comment:", err);
       const message = err instanceof Error ? err.message : String(err);
       showErrorToast(message || "Unable to post comment");
     }
@@ -132,7 +132,6 @@ export default function ViewConlang({ id, loggedUser }) {
         showSuccessToast("Conlang deleted successfully.");
         router.push("/dashboard");
       } catch (err) {
-        console.error(err);
         showErrorToast("Unable to delete the conlang. Please try again.");
       }
     }
@@ -145,10 +144,16 @@ export default function ViewConlang({ id, loggedUser }) {
         .select("*")
         .eq("code", id);
 
+      if (conlangs.error) {
+        setLoadError("Unable to load this conlang right now.");
+        setLoading(false);
+        return;
+      }
+
       const data = await conlangs?.data;
 
       if (data?.length > 0) {
-        console.log(data![0]);
+        setLoadError("");
         const row = data![0];
         setConlang(row);
 
@@ -161,7 +166,7 @@ export default function ViewConlang({ id, loggedUser }) {
           }
         } catch (err) {
           setLoading(false);
-          console.debug("Error fetching owner display name", err);
+          setOwnerDisplayName(row.created_by || "");
         }
 
         try {
@@ -192,8 +197,11 @@ export default function ViewConlang({ id, loggedUser }) {
           setLoading(false);
         } catch (err) {
           setLoading(false);
-          console.debug("Error fetching comment author displays", err);
+          setCommentAuthorDisplayMap({});
         }
+      } else {
+        setLoadError("No conlang was found for this link.");
+        setLoading(false);
       }
     };
 
@@ -326,7 +334,15 @@ export default function ViewConlang({ id, loggedUser }) {
             className="mt-4"
           />
         )}
-        {!loading && (
+        {!loading && loadError && (
+          <StatusBanner
+            variant="empty"
+            message={loadError}
+            details="Try reloading the page or go back to the dashboard."
+            className="mt-4"
+          />
+        )}
+        {!loading && !loadError && (
           <>
             <div className="flex w-full flex-col gap-2 mt-8">
               <span className="text-2xl">
