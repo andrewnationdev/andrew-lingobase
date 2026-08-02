@@ -169,6 +169,9 @@ export const LiteratureGenres = [
 export const LINKS_TO_TOOLS: IToolsLinks[] = [{
   title: 'X-SAMPA to IPA Converter',
   url: 'https://www.vulgarlang.com/ipa-x-sampa-cxs-converter/'
+},{
+  title: 'Sound Change Applier (ALPHA)',
+  url: 'https://andrewphonostudio.vercel.app/'
 }]
 
 export const MOD_EMAIL = "mailto:andrewnationdev@gmail.com"
