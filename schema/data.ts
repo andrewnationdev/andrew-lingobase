@@ -172,6 +172,12 @@ export const LINKS_TO_TOOLS: IToolsLinks[] = [{
 },{
   title: 'Sound Change Applier (ALPHA)',
   url: 'https://andrewphonostudio.vercel.app/'
+},{
+  title: 'Piter Keo\'s Channel (Brazilian Portuguese)',
+  url: 'https://www.youtube.com/@PiterKeo'
+},{
+  title: 'Artifexian - Worldbuilding',
+  url: 'https://www.youtube.com/@Artifexian'
 }]
 
 export const MOD_EMAIL = "mailto:andrewnationdev@gmail.com"
