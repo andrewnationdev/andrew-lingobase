@@ -23,6 +23,7 @@ export default function Dictionary({
   const [loading, setLoading] = useState<boolean>(true);
   const [editing, setEditing] = useState<boolean>(false);
   const [word, setWord] = useState<IWord>({
+    id: "",
     lexical_item: "",
     definition: "",
     pos: "",
@@ -61,6 +62,7 @@ export default function Dictionary({
       transliteration: "",
       conlang_code: "",
       owner: "",
+      id: ""
     });
 
     await refreshLexicon();

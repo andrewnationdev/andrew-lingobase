@@ -58,11 +58,7 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
                         owner: formData.owner,
                         conlang_code: formData.conlang_code,
                     })
-                    .match({
-                        lexical_item: word.lexical_item,
-                        conlang_code: word.conlang_code,
-                        owner: word.owner,
-                    })
+                    .eq('id', word.id)
                 );
             } else {
                 ({ error } = await supabase
@@ -85,7 +81,7 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
                 throw error;
             }
 
-            showSuccessToast("New word added successfully!")
+            showSuccessToast(editing ? "Word updated successfully!" : "New word added successfully!");
 
             setFormData({
                 lexical_item: '',
