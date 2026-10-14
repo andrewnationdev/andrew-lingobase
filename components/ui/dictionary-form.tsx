@@ -59,6 +59,7 @@ export default function DictionaryForm({ conlang_code, owner, word, editing, onF
                         conlang_code: formData.conlang_code,
                     })
                     .eq('id', word.id)
+                    .eq('conlang_code', conlang_code)
                 );
             } else {
                 ({ error } = await supabase
