@@ -317,7 +317,7 @@ export default function ViewConlang({ id, loggedUser }) {
     const countNumberOfWords = async () => {
       const lexicon = await supabase
         .from("conlang-dictionary")
-        .select("*")
+        .select("*").range(0, 99999)
         .eq("conlang_code", id);
       const phonemes = await supabase
         .from("conlang-phonology")
