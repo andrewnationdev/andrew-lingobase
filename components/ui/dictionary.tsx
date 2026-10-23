@@ -37,7 +37,7 @@ export default function Dictionary({
     (rows ?? []).sort((a, b) => a.lexical_item.localeCompare(b.lexical_item));
 
   const refreshLexicon = async () => {
-    const query = supabase.from("conlang-dictionary").select("*");
+    const query = supabase.from("conlang-dictionary").select("*").range(0, 99999);;
     const response =
       data.langCode !== "SHOW_ALL"
         ? await query.eq("conlang_code", data.langCode).order("created_at", { ascending: false })
