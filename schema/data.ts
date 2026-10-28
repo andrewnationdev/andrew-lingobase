@@ -89,6 +89,7 @@ export const TypologySchema = {
     "Romance-Based Pidgin",
     "Germanic-Based Pidgin",
     "Pidgin/Creole",
+    "Eru",
     "Other",
   ],
   verbal_tenses: [
@@ -97,6 +98,7 @@ export const TypologySchema = {
     "Present, Non-Present",
     "No Marking",
     "Aspect Instead of Tenses",
+    "Aspect + Tense Combinations",
     "Other",
   ],
   type_morphology: [
@@ -144,6 +146,7 @@ export const TypologySchema = {
     "Animate and Inanimate",
     "Virile and Non-Virile",
     "Noun Classes (Bantu Type)",
+    "Noun Classifiers (Asian-like)",
     "Other"
   ]
 };
